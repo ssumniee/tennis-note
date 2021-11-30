@@ -29,16 +29,4 @@ module.exports = {
   cors: {
     allowedOrigin: required("CORS_ALLOW_ORIGIN"),
   },
-  mongodb: {
-    connectionCode: required("MONGO_CONNECTION_CODE"),
-  },
-  nodeEnv: required("NODE_ENV"),
-  google: {
-    googleClientId: required("GOOGLE_CLIENT_ID"),
-    googleClientSecret: required("GOOGLE_CLIENT_SECRET"),
-  },
-  kakao: {
-    kakaoClientId: required("KAKAO_CLIENT_ID"),
-    kakaoClientSecret: required("KAKAO_CLIENT_SECRET"),
-  },
 };
