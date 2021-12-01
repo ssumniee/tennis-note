@@ -1,17 +1,16 @@
 import React from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/" exact component={Landing} />
-        <Route path="/home" component={Home} />
+      <Routes>
+        <Route path="/" exact element={<Landing />} />
+        <Route path="/home" element={<Home />} />
         <Route />
-        <Redirect from="*" to="/" />
-      </Switch>
+      </Routes>
     </BrowserRouter>
   );
 };
