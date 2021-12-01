@@ -1,13 +1,23 @@
+const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
-const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const { sequelize } = require("./models");
 const config = require("./config");
+const {
+  cors: { allowedOrigin },
+} = require("./config");
 
 const app = express();
 
+const corsOption = { origin: allowedOrigin, optionsSuccessStatus: 200, credentials: true };
+app.use(cors(corsOption));
 app.use(helmet());
 app.use(morgan("tiny"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("Tennis Note!");
