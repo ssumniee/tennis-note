@@ -20,6 +20,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      club_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        // onDelete: "CASCADE",
+        // references: {
+        //   model: {
+        //     tableName: "clubs",
+        //     schema: "",
+        //   },
+        //   key: "id",
+        // },
+      },
     },
     {
       sequelize,

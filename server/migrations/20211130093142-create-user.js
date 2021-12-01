@@ -12,14 +12,37 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      club_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        // onDelete: "CASCADE",
+        // references: {
+        //   model: {
+        //     tableName: "clubs",
+        //     schema: "",
+        //   },
+        //   key: "id",
+        // },
+      },
+      teacher_id: {
+        type: Sequelize.INTEGER,
+        // onDelete: "CASCADE",
+        // references: {
+        //   model: {
+        //     tableName: "teachers",
+        //     schema: "",
+        //   },
+        //   key: "id",
+        // },
+      },
       tel: {
         type: Sequelize.STRING,
       },
       start_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
       end_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
       count: {
         type: Sequelize.INTEGER,

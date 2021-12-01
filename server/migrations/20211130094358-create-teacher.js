@@ -12,6 +12,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      club_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        // onDelete: "CASCADE",
+        // references: {
+        //   model: {
+        //     tableName: "clubs",
+        //     schema: "",
+        //   },
+        //   key: "id",
+        // },
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),

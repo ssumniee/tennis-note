@@ -16,7 +16,32 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   user_day.init(
-    {},
+    {
+      user_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        // onDelete: "CASCADE",
+        // references: {
+        //   model: {
+        //     tableName: "users",
+        //     schema: "",
+        //   },
+        //   key: "id",
+        // },
+      },
+      day_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        // onDelete: "CASCADE",
+        // references: {
+        //   model: {
+        //     tableName: "days",
+        //     schema: "",
+        //   },
+        //   key: "id",
+        // },
+      },
+    },
     {
       sequelize,
       modelName: "user_day",
