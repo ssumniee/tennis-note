@@ -1,13 +1,10 @@
-import { EXAMPLE_TYPE } from "./actionTypes";
+import { LOG_IN, LOG_OUT } from "./actionTypes";
 
-// action
-export const exampleAction = {
-  type: EXAMPLE_TYPE,
-  payload: "Example payload",
-};
-
-// action creator
-export const exampleActionCreator = (payload) => ({
-  type: EXAMPLE_TYPE,
-  payload,
+// Auth
+export const loginAction = (data) => ({
+  type: LOG_IN,
+  payload: { ...data },
 });
+export const logoutAction = {
+  type: LOG_OUT,
+};
