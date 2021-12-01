@@ -28,25 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       club_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        //   onDelete: "CASCADE",
-        //   references: {
-        //     model: {
-        //       tableName: "clubs",
-        //       schema: "",
-        //     },
-        //     key: "id",
-        //   },
       },
       teacher_id: {
         type: DataTypes.INTEGER,
-        //   onDelete: "CASCADE",
-        //   references: {
-        //     model: {
-        //       tableName: "teachers",
-        //       schema: "",
-        //     },
-        //     key: "id",
-        //   },
       },
       tel: {
         type: DataTypes.STRING,

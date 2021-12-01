@@ -15,14 +15,6 @@ module.exports = {
       club_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // onDelete: "CASCADE",
-        // references: {
-        //   model: {
-        //     tableName: "clubs",
-        //     schema: "",
-        //   },
-        //   key: "id",
-        // },
       },
       createdAt: {
         allowNull: false,

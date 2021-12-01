@@ -11,26 +11,10 @@ module.exports = {
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // onDelete: "CASCADE",
-        // references: {
-        //   model: {
-        //     tableName: "users",
-        //     schema: "",
-        //   },
-        //   key: "id",
-        // },
       },
       day_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        // onDelete: "CASCADE",
-        // references: {
-        //   model: {
-        //     tableName: "days",
-        //     schema: "",
-        //   },
-        //   key: "id",
-        // },
       },
       createdAt: {
         allowNull: false,
