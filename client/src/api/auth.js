@@ -17,6 +17,14 @@ const authApi = {
       console.error(err);
     }
   },
+  me: async () => {
+    try {
+      const res = await api.get("/auth/me");
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };
 
 export default authApi;
