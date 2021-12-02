@@ -12,7 +12,6 @@ module.exports = {
           teacher_id: 1,
           tel: "010-1234-5678",
           start_date: "2021-12-01",
-          end_date: "2021-12-27",
           count: 4,
         },
         {
@@ -22,7 +21,6 @@ module.exports = {
           teacher_id: 1,
           tel: "010-5678-1234",
           start_date: "2021-12-01",
-          end_date: "2021-12-27",
           count: 8,
         },
         {
@@ -32,7 +30,6 @@ module.exports = {
           teacher_id: 2,
           tel: "010-4321-8765",
           start_date: "2021-12-01",
-          end_date: "2021-12-27",
           count: 4,
         },
       ],

@@ -25,9 +25,6 @@ module.exports = {
       start_date: {
         type: Sequelize.DATEONLY,
       },
-      end_date: {
-        type: Sequelize.DATEONLY,
-      },
       count: {
         type: Sequelize.INTEGER,
       },

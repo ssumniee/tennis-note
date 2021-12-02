@@ -38,9 +38,6 @@ module.exports = (sequelize, DataTypes) => {
       start_date: {
         type: DataTypes.DATEONLY,
       },
-      end_date: {
-        type: DataTypes.DATEONLY,
-      },
       count: {
         type: DataTypes.INTEGER,
       },
