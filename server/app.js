@@ -9,6 +9,7 @@ const {
   cors: { allowedOrigin },
 } = require("./config");
 
+const authRouter = require("./router/auth");
 const app = express();
 
 const corsOption = { origin: allowedOrigin, optionsSuccessStatus: 200, credentials: true };
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("Tennis Note!");
 });
+app.use("/auth", authRouter);
 
 app.listen(config.port, async () => {
   console.log(`🚀 Listening on PORT: ${config.port}`);
