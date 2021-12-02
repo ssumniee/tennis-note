@@ -31,4 +31,14 @@ module.exports = {
       DBERROR(res, err);
     }
   },
+  me: async (req, res) => {
+    try {
+      const { club_id } = res.locals;
+      const clubInfo = await findOneClub({ id: club_id });
+      const { id, name, tel } = clubInfo;
+      return res.status(200).json({ id, name, tel });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
 };
