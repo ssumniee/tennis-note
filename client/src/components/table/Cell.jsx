@@ -37,7 +37,7 @@ const CellContainer = styled.th`
         `;
       if (props.id === "count")
         return css`
-          justify-content: center;
+          justify-content: space-around;
         `;
     }}
   }
