@@ -1,13 +1,28 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import styled from "styled-components";
+import media from "styled-media-query";
 import authApi from "../api/auth";
-import { loginAction, logoutAction } from "../store/actions";
+import clubApi from "../api/club";
+import { getAllUserInfoAction, loginAction, logoutAction } from "../store/actions";
+import Table from "../components/table/Table";
+
+const HomeContainer = styled.div`
+  width: 100vw;
+  height: 100%;
+  padding: 2rem;
+  ${media.lessThan("medium")`
+    padding: 1rem;
+  `}
+`;
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id, name, tel, isLogin } = useSelector(({ authReducer }) => authReducer);
+  const { id: clubId } = useParams();
+  const { users } = useSelector(({ clubReducer }) => clubReducer);
 
   useEffect(() => {
     const checkValidUser = async () => {
@@ -26,13 +41,25 @@ const Home = () => {
     checkValidUser();
   }, []);
 
+  useEffect(() => {
+    const getAndSetAllUserInfo = async () => {
+      try {
+        const res = await clubApi.getAllUserInfo(clubId);
+        if (res.status === 200) {
+          dispatch(getAllUserInfoAction(res.data));
+          console.log(res.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getAndSetAllUserInfo();
+  }, []);
+
   return (
-    <div>
-      <div>{`isLogin: ${isLogin}`}</div>
-      <div>{`id: ${id}`}</div>
-      <div>{`name: ${name}`}</div>
-      <div>{`tel: ${tel}`}</div>
-    </div>
+    <HomeContainer>
+      <Table users={users} />
+    </HomeContainer>
   );
 };
 
