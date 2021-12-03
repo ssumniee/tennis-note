@@ -13,7 +13,6 @@ const TableContainer = styled.table`
 `;
 const TableHead = styled.thead`
   font-size: 0.875rem;
-  padding: 0.125rem 0;
   border-bottom: 1px solid var(--color-gray);
 `;
 const TableBody = styled.tbody`
@@ -42,7 +41,7 @@ const Table = ({ users }) => {
           num: idx + 1,
           name: info.name,
           tel: info.tel || "-",
-          start: info.start_date ? info.start_date.split("-").join(".") : "-",
+          start: info.start_date ? info.start_date.split("-").join(". ") : "-",
           teacher: info.teacher_name || "-",
           days: info.days.join(", "),
           count: info.count || 0,

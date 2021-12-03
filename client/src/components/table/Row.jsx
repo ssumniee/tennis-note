@@ -1,13 +1,8 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import media from "styled-media-query";
 
 const RowContainer = styled.tr`
-  padding: 0.375rem 1rem;
-  ${media.lessThan("medium")`
-    padding: 0.5rem;
-  `}
   ${(props) =>
     !props.isOnHead &&
     css`
@@ -17,7 +12,7 @@ const RowContainer = styled.tr`
       }
     `}
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
 const Row = ({ isOnHead, children }) => {
