@@ -7,11 +7,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: { name: "user_id", allowNull: true },
         targetKey: "id",
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
       models.user_day.belongsTo(models.day, {
         foreignKey: { name: "day_id", allowNull: true },
         targetKey: "id",
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
     }
   }
