@@ -47,7 +47,6 @@ const Home = () => {
         const res = await clubApi.getAllUserInfo(clubId);
         if (res.status === 200) {
           dispatch(getAllUserInfoAction(res.data));
-          console.log(res.data);
         }
       } catch (err) {
         console.error(err);
