@@ -107,23 +107,19 @@ const GlobalStyle = createGlobalStyle`
     --lineHeight-normal: 1;
     --lineHeight-loose: 1.25;
     --lineHeight-relaxed: 1.5;
-    --color-maingreen--100: #36CCC8;
-    --color-maingreen--75: #68D9D6;
-    --color-maingreen--50: #9BE6E3;
-    --color-maingreen--25: #CDF2F1;
-    --color-maingreen--10: #EBFAFA;
-    --color-red: #FF5252;
-    --color-red--25: #FFD4D4;
-    --color-red--10: #FFEDED;
-    --color-yellow: #F9CD50;
-    --color-yellow--10: #FEFAED;
-    --color-green: #278400;
-    --color-green--10: #E9F2E5;
-    --color-blue: #2762F4;
-    --color-black: #3A3A42; /* 변경 전 : #1D1D21 */
-    --color-darkgray: #62626A; /* 변경 전 : #474751 */
-    --color-gray: #919196; /* 변경 전 : #969699 */
-    --color-lightgray: #DCDCE0; /* 변경 전 : #DCDCDD */ 
+    --color-red: #F07884;
+    --color-palered: #FAE6EB;
+    --color-lightred: #F8D0D7;
+    --color-green: #40DAAC;
+    --color-palegreen: #E0F7F3;
+    --color-lightgreen: #C4F2E6;
+    --color-blue: #3E7DF6;
+    --color-paleblue: #E0E9FE;
+    --color-lightblue: #C3D6FC;
+    --color-black: #3A3A42;
+    --color-darkgray: #62626A;
+    --color-gray: #919196;
+    --color-lightgray: #DCDCE0;
     --color-palegray: #EEF2F6;
     --color-darkwhite: #F6F6FA;
     --color-white: #FCFCFF;
