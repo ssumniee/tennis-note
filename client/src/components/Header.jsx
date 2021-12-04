@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import media from "styled-media-query";
 import authApi from "../api/auth";
 import { logoutAction } from "../store/actions";
 
@@ -11,6 +12,9 @@ const HeaderContainer = styled.header`
   height: 4rem;
   z-index: 10;
   padding: 1rem 2rem;
+  ${media.lessThan("medium")`
+    padding: 1rem;
+  `}
   display: flex;
   justify-content: space-between;
   align-items: center;
