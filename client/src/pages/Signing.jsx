@@ -110,7 +110,7 @@ const Signing = () => {
       const res = await authApi.login({ ...inputValue });
       if (res.status === 200) {
         dispatch(loginAction(res.data));
-        navigate("/home", { replace: true });
+        navigate(`/home/${res.data.id}`, { replace: true });
       }
     } catch (err) {
       setIsAlert(true);
