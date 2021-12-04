@@ -55,7 +55,7 @@ const Table = ({ users }) => {
       <TableHead>
         <Row isOnHead>
           {Object.keys(heads).map((el, idx) => (
-            <Cell key={idx} id={el}>
+            <Cell key={idx} content={el} isOnHead>
               {heads[el]}
             </Cell>
           ))}
@@ -65,7 +65,7 @@ const Table = ({ users }) => {
         {bodies.map((info, idx) => (
           <Row key={idx}>
             {Object.keys(heads).map((el, idx) => (
-              <Cell key={idx} id={el}>
+              <Cell key={idx} content={el}>
                 {info[el]}
               </Cell>
             ))}
