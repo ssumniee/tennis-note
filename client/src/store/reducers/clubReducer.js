@@ -2,6 +2,8 @@ import { GET_ALL_USER_INFO } from "../actions/actionTypes";
 
 const initialState = {
   users: [],
+  teacherList: [],
+  dayList: [],
 };
 
 const clubReducer = (prevState = initialState, action) => {
@@ -10,7 +12,9 @@ const clubReducer = (prevState = initialState, action) => {
     case GET_ALL_USER_INFO:
       state = {
         ...prevState,
-        ...action.payload,
+        users: action.payload.users,
+        teacherList: action.payload.teachers,
+        dayList: action.payload.days,
       };
       break;
     default:

@@ -10,7 +10,7 @@ export const logoutAction = {
 };
 
 // Club
-export const getAllUserInfoAction = (users) => ({
+export const getAllUserInfoAction = (data) => ({
   type: GET_ALL_USER_INFO,
-  payload: { users },
+  payload: { ...data },
 });
