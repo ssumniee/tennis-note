@@ -1,20 +1,18 @@
 import { GET_ALL_USER_INFO } from "../actions/actionTypes";
 
 const initialState = {
+  days: [],
+  teachers: [],
   users: [],
-  teacherList: [],
-  dayList: [],
 };
 
-const clubReducer = (prevState = initialState, action) => {
+const tableReducer = (prevState = initialState, action) => {
   let state;
   switch (action.type) {
     case GET_ALL_USER_INFO:
       state = {
         ...prevState,
-        users: action.payload.users,
-        teacherList: action.payload.teachers,
-        dayList: action.payload.days,
+        ...action.payload,
       };
       break;
     default:
@@ -24,4 +22,4 @@ const clubReducer = (prevState = initialState, action) => {
   return state;
 };
 
-export default clubReducer;
+export default tableReducer;

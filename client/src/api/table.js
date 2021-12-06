@@ -1,9 +1,9 @@
 import api from "./index";
 
-const clubApi = {
+const tableApi = {
   getAllUserInfo: async (clubId) => {
     try {
-      const res = await api.get(`/club/${clubId}`);
+      const res = await api.get(`/table/${clubId}`);
       if (res.status === 200) return res;
     } catch (err) {
       console.error(err);
@@ -11,7 +11,7 @@ const clubApi = {
   },
   modifyUserInfo: async (clubId, userInfo) => {
     try {
-      const res = await api.put(`/club/${clubId}`, { updated: { ...userInfo } });
+      const res = await api.put(`/table/${clubId}`, { updated: { ...userInfo } });
       if (res.status === 200) return res;
     } catch (err) {
       console.error(err);
@@ -19,4 +19,4 @@ const clubApi = {
   },
 };
 
-export default clubApi;
+export default tableApi;

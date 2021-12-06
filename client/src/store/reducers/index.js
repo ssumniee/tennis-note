@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
-import clubReducer from "./clubReducer";
+import tableReducer from "./tableReducer";
 
 const rootReducer = combineReducers({
   authReducer,
-  clubReducer,
+  tableReducer,
   // ...
 });
 

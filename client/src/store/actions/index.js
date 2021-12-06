@@ -9,7 +9,7 @@ export const logoutAction = {
   type: LOG_OUT,
 };
 
-// Club
+// Table
 export const getAllUserInfoAction = (data) => ({
   type: GET_ALL_USER_INFO,
   payload: { ...data },
