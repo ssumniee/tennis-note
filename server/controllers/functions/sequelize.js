@@ -68,14 +68,16 @@ module.exports = {
     return { ...updated };
   },
   findAllTeacherInfo: async (club_id) => {
-    return await teacher.findAll({
+    const teachersData = await teacher.findAll({
       where: { club_id },
       attributes: ["id", "name"],
     });
+    return teachersData.map((data) => data.dataValues);
   },
   findAllDayInfo: async () => {
-    return await day.findAll({
+    const daysData = await day.findAll({
       attributes: ["id", "name"],
     });
+    return daysData.map((data) => data.dataValues);
   },
 };

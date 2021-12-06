@@ -10,7 +10,7 @@ const {
 } = require("./config");
 
 const authRouter = require("./router/auth");
-const clubRouter = require("./router/club");
+const tableRouter = require("./router/table");
 const app = express();
 
 const corsOption = { origin: allowedOrigin, optionsSuccessStatus: 200, credentials: true };
@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
   res.send("Tennis Note!");
 });
 app.use("/auth", authRouter);
-app.use("/club", clubRouter);
+app.use("/table", tableRouter);
 
 app.listen(config.port, async () => {
   console.log(`🚀 Listening on PORT: ${config.port}`);

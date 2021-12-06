@@ -1,8 +1,8 @@
 const {
   findAllUserInfo,
   updateUserInfo,
-  findAllTeacherInfo,
   findAllDayInfo,
+  findAllTeacherInfo,
 } = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 
@@ -15,7 +15,7 @@ module.exports = {
       const allDayInfo = await findAllDayInfo();
       return res
         .status(200)
-        .json({ teachers: allTeacherInfo, days: allDayInfo, users: allUserInfo });
+        .json({ days: allDayInfo, teachers: allTeacherInfo, users: allUserInfo });
     } catch (err) {
       DBERROR(res, err);
     }
@@ -27,7 +27,7 @@ module.exports = {
       await updateUserInfo(updated);
       const { id: club_id } = req.params;
       const updatedAllUserInfo = await findAllUserInfo(club_id);
-      return res.status(200).json(updatedAllUserInfo);
+      return res.status(200).json({ users: updatedAllUserInfo });
     } catch (err) {
       DBERROR(res, err);
     }

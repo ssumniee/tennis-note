@@ -15,9 +15,9 @@ module.exports = {
       if (!clubAccount) {
         return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
       }
-      const token = generateAccessToken(clubAccount.dataValues.id);
-      setCookie(res, token);
       const { id, tel } = clubAccount.dataValues;
+      const token = generateAccessToken(id);
+      setCookie(res, token);
       return res.status(200).json({ id, name, tel });
     } catch (err) {
       DBERROR(res, err);
