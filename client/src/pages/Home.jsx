@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
-import clubApi from "../api/club";
+import tableApi from "../api/table";
 import { getAllUserInfoAction, loginAction, logoutAction } from "../store/actions";
 import Table from "../components/table/Table";
 
@@ -22,7 +22,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id: clubId } = useParams();
-  const { users } = useSelector(({ clubReducer }) => clubReducer);
+  const { users } = useSelector(({ tableReducer }) => tableReducer);
 
   useEffect(() => {
     const checkValidUser = async () => {
@@ -44,7 +44,7 @@ const Home = () => {
   useEffect(() => {
     const getAndSetAllUserInfo = async () => {
       try {
-        const res = await clubApi.getAllUserInfo(clubId);
+        const res = await tableApi.getAllUserInfo(clubId);
         if (res.status === 200) {
           dispatch(getAllUserInfoAction(res.data));
         }
