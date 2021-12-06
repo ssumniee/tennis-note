@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: var(--fontSize-root--big);
     font-family: var(--fontFamily);
     color: var(--color-black);
-    background-color: var(--color-darkwhite);
+    background-color: var(--color-white);
     
     ${media.lessThan("medium")`
       font-size: var(--fontSize-root--small);
@@ -60,6 +60,11 @@ const GlobalStyle = createGlobalStyle`
   ul {
     padding: 0;
     list-style: none;
+  }
+
+  th {
+    font-weight: normal;
+    text-align: unset;
   }
 
   /* CSS Custom Properties Definitions */
