@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import media from "styled-media-query";
 import Cell from "./Cell";
+import BtnCell from "./BtnCell";
 import { FaPencilAlt } from "react-icons/fa";
 import { HiX, HiCheck } from "react-icons/hi";
+import tableApi from "../../api/table";
+import { getAllUserInfoAction } from "../../store/actions";
 
 const RowContainer = styled.tr`
   ${(props) =>
@@ -16,101 +19,90 @@ const RowContainer = styled.tr`
       }
     `}
   display: flex;
+  justify-content: space-between;
 `;
 
-const ContentContainer = styled.div`
-  flex: 1 1 0;
-  display: flex;
-`;
+const heads = {
+  num: "",
+  name: "이름",
+  tel: "전화번호",
+  start_date: "시작일",
+  teacher_id: "선생님",
+  days: "요일",
+  count: "횟수",
+};
 
-const ButtonContainer = styled.div`
-  flex: 0 0 1;
-  width: 5rem;
-  height: 100%;
-  display: flex;
-  ${media.lessThan("small")`
-    display: none;
-  `}
-`;
+const Row = ({ isOnHead, info }) => {
+  const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
+  const [userInfo, setUserInfo] = useState({ ...info });
 
-const Button = styled.button`
-  &.clear {
-    color: var(--color-red);
-    border: 1px solid var(--color-red);
-    background-color: var(--color-palered);
-    :hover {
-      background-color: var(--color-lightred);
+  const handleUpdateInfo = async () => {
+    try {
+      // 바뀐 정보 userInfo로 DB 업데이트
+      const res = await tableApi.modifyUserInfo(userInfo.club_id, userInfo);
+      // 리덕스 스토어 업데이트
+      dispatch(getAllUserInfoAction(res.data));
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
     }
-  }
-  &.apply {
-    color: var(--color-green);
-    border: 1px solid var(--color-green);
-    background-color: var(--color-palegreen);
-    :hover {
-      background-color: var(--color-lightgreen);
-    }
-  }
-  &.edit {
-    color: var(--color-blue);
-    border: 1px solid var(--color-blue);
-    background-color: var(--color-paleblue);
-    :hover {
-      background-color: var(--color-lightblue);
-    }
-  }
-  font-size: 0.875rem;
-  border-radius: 0.25rem;
-  padding: 0.125rem;
-  margin-right: 0.25rem;
-  :last-child {
-    margin: 0;
-  }
-  flex: 1 1 0;
-  height: 1.75rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+  };
 
-const Row = ({ isOnHead, children }) => {
-  const [isEditable, setIsEditable] = useState(false);
+  const handleQuitUpdate = () => {
+    setUserInfo({ ...info });
+    setIsEditing(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      setIsEditing(false);
+    };
+  }, []);
+
   return (
     <RowContainer isOnHead={isOnHead}>
-      <ContentContainer>{children}</ContentContainer>
-      <ButtonContainer>
-        <Cell content="edit">
-          {!isOnHead &&
-            (isEditable ? (
-              <>
-                <Button
-                  className="apply btn"
-                  onClick={() => {
-                    setIsEditable(false);
-                  }}
-                >
-                  <HiCheck />
-                </Button>
-                <Button
-                  className="clear btn"
-                  onClick={() => {
-                    setIsEditable(false);
-                  }}
-                >
-                  <HiX />
-                </Button>
-              </>
-            ) : (
-              <Button
-                className="edit btn"
-                onClick={() => {
-                  setIsEditable(true);
-                }}
+      <>
+        {isOnHead
+          ? Object.keys(heads).map((el, idx) => (
+              <Cell key={idx} content={el} isOnHead>
+                {heads[el]}
+              </Cell>
+            ))
+          : Object.keys(heads).map((el, idx) => (
+              <Cell
+                key={idx}
+                content={el}
+                isEditing={isEditing}
+                userInfo={userInfo}
+                setUserInfo={setUserInfo}
               >
-                <FaPencilAlt />
-              </Button>
+                {userInfo[el]}
+              </Cell>
             ))}
-        </Cell>
-      </ButtonContainer>
+      </>
+      <BtnCell>
+        {!isOnHead &&
+          (isEditing ? (
+            <>
+              <button className="apply button" onClick={handleUpdateInfo}>
+                <HiCheck />
+              </button>
+              <button className="clear button" onClick={handleQuitUpdate}>
+                <HiX />
+              </button>
+            </>
+          ) : (
+            <button
+              className="edit button"
+              onClick={() => {
+                setIsEditing(true);
+              }}
+            >
+              <FaPencilAlt />
+            </button>
+          ))}
+      </BtnCell>
     </RowContainer>
   );
 };
@@ -121,7 +113,17 @@ Row.defalutProps = {
 
 Row.propTypes = {
   isOnHead: PropTypes.bool,
-  children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]).isRequired,
+  info: PropTypes.exact({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    club_id: PropTypes.number,
+    teacher_id: PropTypes.number,
+    tel: PropTypes.string,
+    start_date: PropTypes.string,
+    count: PropTypes.number,
+    days: PropTypes.arrayOf(PropTypes.number),
+    num: PropTypes.number,
+  }),
 };
 
 export default Row;
