@@ -22,6 +22,10 @@ const CellContainer = styled.th`
     display: flex;
     justify-content: center;
     align-items: center;
+    :disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
   .clear {
     color: var(--color-red);
@@ -29,6 +33,9 @@ const CellContainer = styled.th`
     background-color: var(--color-palered);
     :hover {
       background-color: var(--color-lightred);
+      &:disabled {
+        background-color: var(--color-palered);
+      }
     }
   }
   .apply {
@@ -37,15 +44,25 @@ const CellContainer = styled.th`
     background-color: var(--color-palegreen);
     :hover {
       background-color: var(--color-lightgreen);
+      &:disabled {
+        background-color: var(--color-palegreen);
+      }
     }
   }
-  .edit {
+  .edit,
+  .submit {
     color: var(--color-blue);
     border: 1px solid var(--color-blue);
     background-color: var(--color-paleblue);
     :hover {
       background-color: var(--color-lightblue);
+      &:disabled {
+        background-color: var(--color-paleblue);
+      }
     }
+  }
+  .submit {
+    font-size: 1.25rem;
   }
 `;
 

@@ -8,6 +8,7 @@ import authApi from "../api/auth";
 import tableApi from "../api/table";
 import { getAllUserInfoAction, loginAction, logoutAction } from "../store/actions";
 import Table from "../components/table/Table";
+import AddForm from "../components/table/AddForm";
 
 const HomeContainer = styled.div`
   width: 100vw;
@@ -58,6 +59,7 @@ const Home = () => {
   return (
     <HomeContainer>
       <Table users={users} />
+      <AddForm />
     </HomeContainer>
   );
 };

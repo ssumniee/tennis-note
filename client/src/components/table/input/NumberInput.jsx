@@ -14,19 +14,6 @@ const InputContainer = styled.div`
   }
 `;
 
-const InputInner = styled.input`
-  flex: 1 1 0;
-  width: 100%;
-  height: 100%;
-  border: 1px solid var(--color-lightblue);
-  border-radius: 0.25rem;
-  padding: 0 0.5rem;
-  :focus,
-  :active {
-    border: 1px solid var(--color-blue);
-  }
-`;
-
 const PlusMinus = styled.button`
   font-size: 0.875rem;
   flex: 0 0 1;
@@ -41,31 +28,26 @@ const PlusMinus = styled.button`
   border-radius: 1rem;
 `;
 
-const PlainInput = ({ content, value, setValue }) => {
-  const handleInputChange = (event) => {
-    setValue((prevState) => ({ ...prevState, [content]: event.target.value }));
-  };
+const PlainInput = ({ content, inputValue, setInputValue }) => {
   const handleInputMinus = () => {
-    setValue((prevState) => ({ ...prevState, count: prevState.count - 1 }));
+    setInputValue((prevState) => ({ ...prevState, count: prevState.count - 1 }));
   };
   const handleInputPlus = () => {
-    setValue((prevState) => ({ ...prevState, count: prevState.count + 1 }));
+    setInputValue((prevState) => ({ ...prevState, count: prevState.count + 1 }));
   };
 
   return (
     <InputContainer>
-      {content === "count" ? (
+      {content === "count" && (
         <>
-          <PlusMinus onClick={handleInputMinus} disabled={value <= 0}>
+          <PlusMinus onClick={handleInputMinus} disabled={inputValue <= 0}>
             <HiOutlineMinusSm />
           </PlusMinus>
-          <div className="value">{value}</div>
+          <div className="value">{inputValue}</div>
           <PlusMinus onClick={handleInputPlus}>
             <HiOutlinePlusSm />
           </PlusMinus>
         </>
-      ) : (
-        <InputInner type="text" value={value} onChange={handleInputChange} />
       )}
     </InputContainer>
   );
@@ -73,8 +55,8 @@ const PlainInput = ({ content, value, setValue }) => {
 
 PlainInput.propTypes = {
   content: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  setValue: PropTypes.func.isRequired,
+  inputValue: PropTypes.PropTypes.number.isRequired,
+  setInputValue: PropTypes.func.isRequired,
 };
 
 export default PlainInput;

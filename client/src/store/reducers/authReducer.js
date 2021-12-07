@@ -3,8 +3,8 @@ import { LOG_IN, LOG_OUT } from "../actions/actionTypes";
 const initialState = {
   isLogin: false,
   id: null,
-  name: null,
-  tel: null,
+  name: "",
+  tel: "",
 };
 
 const authReducer = (prevState = initialState, action) => {

@@ -3,9 +3,11 @@ import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
-import PlainInput from "./editing/PlainInput";
-import SelectInput from "./editing/SelectInput";
-import DatePicker from "./editing/DatePicker";
+import TextInput from "./input/TextInput";
+import NumberInput from "./input/NumberInput";
+import SelectInput from "./input/SelectInput";
+import MultiSelectInput from "./input/MultiSelectInput";
+import DatePickerInput from "./input/DatePickerInput";
 
 const rates = { num: 1, name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, count: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
@@ -76,21 +78,28 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
   useEffect(() => {
     if (!isOnHead) {
       switch (content) {
+        case "name":
+          setDisplayed(userInfo[content] || "-");
+          break;
         case "tel":
           setDisplayed(userInfo[content] || "-");
           break;
         case "start_date":
-          setDisplayed(
-            userInfo[content] ? userInfo[content].split("-").join(". ") : setDisplayed("-")
-          );
+          setDisplayed(userInfo[content] || "-");
           break;
         case "teacher_id":
-          setDisplayed(teacherList.find((teacher) => teacher.id === userInfo.teacher_id).name);
+          setDisplayed(
+            teacherList.find((teacher) => teacher.id === userInfo.teacher_id)?.name || "-"
+          );
           break;
         case "days":
           setDisplayed(
-            userInfo.days.map((dayId) => dayList.find((day) => day.id === dayId).name).join(", ")
+            userInfo.days.map((dayId) => dayList.find((day) => day.id === dayId).name).join(", ") ||
+              "-"
           );
+          break;
+        case "count":
+          setDisplayed(userInfo[content] || 0);
           break;
         case "edit":
           break;
@@ -109,26 +118,41 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
         <Content className="content">{displayed}</Content>
       ) : (
         <>
-          {(content === "name" || content === "tel" || content === "count") && (
-            <PlainInput content={content} value={userInfo[content]} setValue={setUserInfo} />
+          {(content === "name" || content === "tel") && (
+            <TextInput
+              content={content}
+              inputValue={userInfo[content]}
+              setInputValue={setUserInfo}
+            />
+          )}
+          {content === "count" && (
+            <NumberInput
+              content={content}
+              inputValue={userInfo.count}
+              setInputValue={setUserInfo}
+            />
           )}
           {content === "start_date" && (
-            <DatePicker content={content} value={userInfo.start_date} setValue={setUserInfo} />
+            <DatePickerInput
+              content={content}
+              inputValue={userInfo.start_date}
+              setInputValue={setUserInfo}
+            />
           )}
           {content === "teacher_id" && (
             <SelectInput
               content={content}
-              value={userInfo.teacher_id}
-              setValue={setUserInfo}
+              inputValue={userInfo.teacher_id}
+              setInputValue={setUserInfo}
               list={teacherList}
             />
           )}
           {content === "days" && (
-            <SelectInput
+            <MultiSelectInput
               content={content}
-              value={userInfo.days}
-              setValue={setUserInfo}
               list={dayList}
+              inputValue={userInfo.days}
+              setInputValue={setUserInfo}
             />
           )}
         </>
@@ -149,10 +173,10 @@ Cell.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     club_id: PropTypes.number,
-    teacher_id: PropTypes.number,
+    teacher_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     tel: PropTypes.string,
     start_date: PropTypes.string,
-    count: PropTypes.number,
+    count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     days: PropTypes.arrayOf(PropTypes.number),
     num: PropTypes.number,
   }),
