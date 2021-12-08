@@ -73,7 +73,6 @@ module.exports = {
     const { id: user_id } = created.dataValues;
     // 수업 요일 id값들에 따라 수업 요일 정보 user_day 테이블에 생성
     await Promise.all(days.map(async (id) => await user_day.create({ user_id, day_id: id })));
-    console.log("created", created.dataValues);
     return { user_id, ...user, days };
   },
   destroyUserInfo: async (user_id) => {
