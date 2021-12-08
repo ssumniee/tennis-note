@@ -10,9 +10,9 @@ import MultiSelectInput from "./input/MultiSelectInput";
 import DatePickerInput from "./input/DatePickerInput";
 import { MdCancel } from "react-icons/md";
 
-const rates = { num: 1, name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, duration: 3 };
+const rates = { name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, duration: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
-const onlyPCSum = sum - (rates.num + rates.teacher_id);
+const onlyPCSum = sum - rates.teacher_id;
 
 const InputContainer = styled.th`
   display: flex;
@@ -21,23 +21,18 @@ const InputContainer = styled.th`
   min-height: 2.5rem;
   padding: 0.25rem;
   border-right: 1px solid var(--color-lightgray);
+  :last-child {
+    border: none;
+  }
   ${(props) => css`
     flex: ${rates[props.content] / sum} ${rates[props.content] / sum} 0;
-    min-width: calc(${rates[props.content] / sum} * (100% - 4.5rem));
+    min-width: calc(${rates[props.content] / sum} * (100% - 2.5rem - 4.5rem));
     ${media.lessThan("small")`
       flex: ${rates[props.content] / onlyPCSum} ${rates[props.content] / onlyPCSum} 0;
-      min-width: calc(${rates[props.content] / onlyPCSum} * (100% - 4.5rem));
+      min-width: calc(${rates[props.content] / onlyPCSum} * (100% - 2.5rem - 4.5rem));
     `}
   `}
   ${(props) => {
-    if (props.content === "num")
-      return css`
-        max-width: 2rem;
-        border-left: none;
-        ${media.lessThan("small")`
-          display: none;
-        `}
-      `;
     if (props.content === "teacher_id")
       return css`
         ${media.lessThan("small")`
@@ -49,17 +44,16 @@ const InputContainer = styled.th`
   .content {
     display: flex;
     ${(props) => {
-      if (props.content === "num")
-        return css`
-          width: 100%;
-          padding: 0 0.25rem;
-          justify-content: center;
-        `;
       if (props.content === "duration")
         return css`
           justify-content: space-around;
         `;
     }}
+  }
+  .clear-input {
+    ${media.lessThan("medium")`
+      display: none;
+    `}
   }
 `;
 
@@ -114,8 +108,6 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
 
   const handleInputClear = () => {
     switch (content) {
-      case "num":
-        break;
       case "days":
         setNewUserInfo((prevState) => ({ ...prevState, [content]: [] }));
         break;
@@ -138,7 +130,7 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
         <TextInput
           className="content"
           content={content}
-          inputValue={newUserInfo[content]}
+          inputValue={newUserInfo[content] || ""}
           setInputValue={setNewUserInfo}
         />
       )}
@@ -154,7 +146,7 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
         <SelectInput
           className="content"
           content={content}
-          inputValue={newUserInfo.teacher_id}
+          inputValue={newUserInfo.teacher_id || ""}
           setInputValue={setNewUserInfo}
           list={teacherList}
         />
@@ -176,17 +168,15 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
           setInputValue={setNewUserInfo}
         />
       )}
-      {content === "num" && <div className="content">{newUserInfo.num}</div>}
-      {content !== "num" &&
-        content !== "duration" &&
+      {content !== "duration" &&
         (content === "days"
           ? newUserInfo[content].length > 0 && (
-              <ClearBtn onClick={handleInputClear} content={content}>
+              <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             )
           : !!newUserInfo[content] && (
-              <ClearBtn onClick={handleInputClear} content={content}>
+              <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             ))}

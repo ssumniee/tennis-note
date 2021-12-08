@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -25,6 +25,9 @@ const InputInner = styled.input`
 `;
 
 const TextInput = ({ content, inputValue, setInputValue }) => {
+  useEffect(() => {
+    setInputValue((prevState) => ({ ...prevState, [content]: inputValue || "" }));
+  }, []);
   const handleInputChange = (event) => {
     switch (content) {
       case "tel":

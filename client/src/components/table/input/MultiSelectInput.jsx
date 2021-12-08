@@ -60,7 +60,7 @@ const MultiSelectInput = ({ content, list, inputValue, setInputValue, placeholde
           }));
         }}
         renderValue={(inputValue) =>
-          inputValue.map((id) => list.find((item) => item.id === id).name).join(", ") || ""
+          inputValue.map((id) => list.find((item) => item.id === id)?.name)?.join(", ") || ""
         }
       >
         {list.map((item, idx) => (

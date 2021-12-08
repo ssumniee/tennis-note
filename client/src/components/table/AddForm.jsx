@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
+import media from "styled-media-query";
 import AddCell from "./AddCell";
 import BtnCell from "./BtnCell";
+import NumCell from "./NumCell";
 import { HiPlusSm } from "react-icons/hi";
 import tableApi from "../../api/table";
 import { getAllUserInfoAction } from "../../store/actions";
@@ -18,6 +20,12 @@ const AddContainer = styled.form`
     width: 100%;
     display: flex;
   }
+  .plus.text {
+    font-size: 1rem;
+  }
+  ${media.lessThan("medium")`
+    display: none;
+  `}
 `;
 
 const InputContainer = styled.tr`
@@ -29,7 +37,6 @@ const InputContainer = styled.tr`
 `;
 
 const heads = {
-  num: "",
   name: "이름",
   tel: "전화번호",
   start_date: "시작일",
@@ -42,7 +49,6 @@ const AddForm = () => {
   const dispatch = useDispatch();
   const { id: clubId } = useSelector(({ authReducer }) => authReducer);
   const [newUserInfo, setNewUserInfo] = useState({
-    num: "+",
     name: "",
     tel: "",
     start_date: null,
@@ -68,12 +74,10 @@ const AddForm = () => {
       };
       // 새로운 유저 정보를 userInfo로 DB에 추가
       const res = await tableApi.addUserInfo(clubId, toAdd);
-      console.log("response", res);
       // 리덕스 스토어 업데이트
       dispatch(getAllUserInfoAction(res.data));
       // 유저 정보 state 초기화
       setNewUserInfo({
-        num: "+",
         name: "",
         tel: "",
         start_date: null,
@@ -91,6 +95,9 @@ const AddForm = () => {
       <table>
         <tbody>
           <InputContainer>
+            <NumCell>
+              <HiPlusSm className="plus text" />
+            </NumCell>
             {Object.keys(heads).map((id, idx) => (
               <AddCell
                 key={idx}

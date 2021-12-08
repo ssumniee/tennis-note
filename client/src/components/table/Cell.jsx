@@ -10,9 +10,9 @@ import MultiSelectInput from "./input/MultiSelectInput";
 import DatePickerInput from "./input/DatePickerInput";
 import { MdCancel } from "react-icons/md";
 
-const rates = { num: 1, name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, count: 3 };
+const rates = { name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, count: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
-const onlyPCSum = sum - (rates.num + rates.teacher_id);
+const onlyPCSum = sum - rates.teacher_id;
 
 const CellContainer = styled.th`
   display: flex;
@@ -21,23 +21,18 @@ const CellContainer = styled.th`
   min-height: 2.5rem;
   padding: 0.25rem;
   border-right: 1px solid var(--color-lightgray);
+  :last-child {
+    border: none;
+  }
   ${(props) => css`
     flex: ${rates[props.content] / sum} ${rates[props.content] / sum} 0;
-    min-width: calc(${rates[props.content] / sum} * (100% - 4.5rem));
+    min-width: calc(${rates[props.content] / sum} * (100% - 2.5rem - 4.5rem));
     ${media.lessThan("small")`
       flex: ${rates[props.content] / onlyPCSum} ${rates[props.content] / onlyPCSum} 0;
-      min-width: calc(${rates[props.content] / onlyPCSum} * (100% - 4.5rem));
+      min-width: calc(${rates[props.content] / onlyPCSum} * (100% - 2.5rem - 4.5rem));
     `}
   `}
   ${(props) => {
-    if (props.content === "num")
-      return css`
-        max-width: 2rem;
-        border-left: none;
-        ${media.lessThan("small")`
-          display: none;
-        `}
-      `;
     if (props.content === "teacher_id")
       return css`
         ${media.lessThan("small")`
@@ -49,16 +44,16 @@ const CellContainer = styled.th`
   .content {
     display: flex;
     ${(props) => {
-      if (props.content === "num")
-        return css`
-          padding: 0 0.25rem;
-          justify-content: center;
-        `;
       if (props.content === "count")
         return css`
           justify-content: space-around;
         `;
     }}
+  }
+  .clear-input {
+    ${media.lessThan("medium")`
+      display: none;
+    `}
   }
 `;
 
@@ -157,7 +152,7 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
 
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
-      {isOnHead || content === "num" ? (
+      {isOnHead ? (
         <Content className="content">{children}</Content>
       ) : !isEditing ? (
         <Content className="content">{displayed}</Content>
@@ -166,7 +161,7 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
           {(content === "name" || content === "tel") && (
             <TextInput
               content={content}
-              inputValue={userInfo[content]}
+              inputValue={userInfo[content] || ""}
               setInputValue={setUserInfo}
             />
           )}
@@ -187,7 +182,7 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
           {content === "teacher_id" && (
             <SelectInput
               content={content}
-              inputValue={userInfo.teacher_id}
+              inputValue={userInfo.teacher_id || ""}
               setInputValue={setUserInfo}
               list={teacherList}
             />
@@ -204,16 +199,15 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
       )}
       {!isOnHead &&
         isEditing &&
-        content !== "num" &&
         content !== "duration" &&
         (content === "days"
           ? userInfo[content].length > 0 && (
-              <ClearBtn onClick={handleInputClear} content={content}>
+              <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             )
           : !!userInfo[content] && (
-              <ClearBtn onClick={handleInputClear} content={content}>
+              <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             ))}

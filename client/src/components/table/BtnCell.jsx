@@ -27,13 +27,13 @@ const CellContainer = styled.th`
     }
   }
   .clear {
-    color: var(--color-red);
-    border: 1px solid var(--color-red);
-    background-color: var(--color-palered);
+    color: var(--color-gray);
+    border: 1px solid var(--color-gray);
+    background-color: var(--color-palegray);
     :hover {
-      background-color: var(--color-lightred);
+      background-color: var(--color-lightgray);
       &:disabled {
-        background-color: var(--color-palered);
+        background-color: var(--color-palegray);
       }
     }
   }

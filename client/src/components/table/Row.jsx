@@ -4,8 +4,9 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import Cell from "./Cell";
 import BtnCell from "./BtnCell";
+import NumCell from "./NumCell";
 import { FaPencilAlt } from "react-icons/fa";
-import { HiX, HiCheck } from "react-icons/hi";
+import { HiX, HiCheck, HiMinus } from "react-icons/hi";
 import tableApi from "../../api/table";
 import { getAllUserInfoAction } from "../../store/actions";
 
@@ -20,10 +21,34 @@ const RowContainer = styled.tr`
     `}
   display: flex;
   justify-content: space-between;
+  .button {
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+    padding: 0.125rem;
+    margin: 0 0.125rem;
+    flex: 1 1 0;
+    height: 1.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    :disabled {
+      opacity: 0.4;
+    }
+  }
+  .delete {
+    color: var(--color-red);
+    border: 1px solid var(--color-red);
+    background-color: var(--color-palered);
+    :hover {
+      background-color: var(--color-lightred);
+      &:disabled {
+        background-color: var(--color-palered);
+      }
+    }
+  }
 `;
 
 const heads = {
-  num: "",
   name: "이름",
   tel: "전화번호",
   start_date: "시작일",
@@ -54,6 +79,18 @@ const Row = ({ isOnHead, info }) => {
     setIsEditing(false);
   };
 
+  const handleDeleteInfo = async () => {
+    try {
+      // userInfo 삭제하도록 DB 업데이트
+      const res = await tableApi.deleteUserInfo(userInfo.club_id, userInfo.id);
+      // 리덕스 스토어 업데이트
+      dispatch(getAllUserInfoAction(res.data));
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     return () => {
       setIsEditing(false);
@@ -62,6 +99,17 @@ const Row = ({ isOnHead, info }) => {
 
   return (
     <RowContainer isOnHead={isOnHead}>
+      <NumCell>
+        {isOnHead ? (
+          ""
+        ) : isEditing ? (
+          <button className="delete button" onClick={handleDeleteInfo}>
+            <HiMinus />
+          </button>
+        ) : (
+          info.num
+        )}
+      </NumCell>
       <>
         {isOnHead
           ? Object.keys(heads).map((el, idx) => (

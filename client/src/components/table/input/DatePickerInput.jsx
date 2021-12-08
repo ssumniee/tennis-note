@@ -45,7 +45,7 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
 
   return (
     <DatePickerContainer>
-      <Stack>
+      <Stack sx={{ width: "100%" }}>
         <DatePicker
           reduceAnimations={true}
           allowSameDateSelection
@@ -58,6 +58,7 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
           renderInput={({ inputRef, inputProps, InputProps }) => (
             <Box
               sx={{
+                width: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -67,10 +68,13 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
                 input: {
                   width: "calc(100% - 2rem)",
                 },
+                position: "relative",
                 div: {
                   padding: "0",
                   margin: "0",
                   button: {
+                    position: "absolute",
+                    right: "0.25rem",
                     padding: "0.25rem",
                     margin: "0",
                     ":hover": {
@@ -90,15 +94,6 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
           )}
           mask="____. __. __"
           inputFormat="yyyy. MM. dd"
-          // components={{
-          //   LeftArrowButton: <></>,
-          //   LeftArrowIcon: <></>,
-          //   OpenPickerIcon: <></>,
-          //   RightArrowButton: <></>,
-          //   RightArrowIcon: <></>,
-          //   SwitchViewButton: <></>,
-          //   SwitchViewIcon: <></>,
-          // }}
         ></DatePicker>
       </Stack>
     </DatePickerContainer>

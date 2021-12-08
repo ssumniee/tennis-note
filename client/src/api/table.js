@@ -26,6 +26,18 @@ const tableApi = {
       console.error(err);
     }
   },
+  deleteUserInfo: async (clubId, userId) => {
+    try {
+      const res = await api.delete(`/table/${clubId}`, {
+        data: {
+          id: userId,
+        },
+      });
+      if (res.status === 200) return res;
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };
 
 export default tableApi;
