@@ -76,6 +76,11 @@ module.exports = {
     console.log("created", created.dataValues);
     return { user_id, ...user, days };
   },
+  destroyUserInfo: async (user_id) => {
+    // 유저 정보 삭제
+    await user.destroy({ where: { id: user_id } });
+    return { user_id };
+  },
   findAllTeacherInfo: async (club_id) => {
     const teachersData = await teacher.findAll({
       where: { club_id },

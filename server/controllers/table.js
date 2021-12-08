@@ -4,6 +4,7 @@ const {
   findAllDayInfo,
   findAllTeacherInfo,
   createUserInfo,
+  destroyUserInfo,
 } = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 
@@ -40,8 +41,17 @@ module.exports = {
       await createUserInfo({ user, days });
       const { id: club_id } = req.params;
       const updatedAllUserInfo = await findAllUserInfo(club_id);
-      console.log("all updated", updatedAllUserInfo);
       return res.status(200).json({ users: updatedAllUserInfo });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
+  deleteUserInfo: async (req, res) => {
+    try {
+      // 유저 정보 삭제
+      const { id: user_id } = req.body;
+      await destroyUserInfo(user_id);
+      return res.status(200).json({ message: "user deleted", data: { user_id } });
     } catch (err) {
       DBERROR(res, err);
     }
