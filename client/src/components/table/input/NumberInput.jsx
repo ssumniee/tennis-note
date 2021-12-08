@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
@@ -9,8 +9,10 @@ const InputContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  .value {
-    margin: 0 0.25rem;
+  .input {
+    width: calc(100% - 4rem);
+    padding: 0 0.25rem;
+    text-align: center;
   }
 `;
 
@@ -28,35 +30,61 @@ const PlusMinus = styled.button`
   border-radius: 1rem;
 `;
 
-const PlainInput = ({ content, inputValue, setInputValue }) => {
+const NumberInput = ({ content, inputValue, setInputValue }) => {
+  const input = useRef(null);
+  const plus = useRef(null);
+  const minus = useRef(null);
+  const [displayed, setDisplayed] = useState(inputValue ? String(inputValue) : "0");
+
   const handleInputMinus = () => {
-    setInputValue((prevState) => ({ ...prevState, count: prevState.count - 1 }));
+    setInputValue((prevState) => ({ ...prevState, [content]: prevState[content] - 1 }));
   };
+
   const handleInputPlus = () => {
-    setInputValue((prevState) => ({ ...prevState, count: prevState.count + 1 }));
+    setInputValue((prevState) => ({ ...prevState, [content]: prevState[content] + 1 }));
   };
+
+  useEffect(() => {
+    setDisplayed(String(inputValue));
+  }, [inputValue]);
 
   return (
     <InputContainer>
-      {content === "count" && (
-        <>
-          <PlusMinus onClick={handleInputMinus} disabled={inputValue <= 0}>
-            <HiOutlineMinusSm />
-          </PlusMinus>
-          <div className="value">{inputValue}</div>
-          <PlusMinus onClick={handleInputPlus}>
-            <HiOutlinePlusSm />
-          </PlusMinus>
-        </>
-      )}
+      <PlusMinus type="button" onClick={handleInputMinus} disabled={inputValue <= 0} ref={minus}>
+        <HiOutlineMinusSm />
+      </PlusMinus>
+      <input
+        ref={input}
+        className="input"
+        onFocus={() => {
+          minus.current.disabled = true;
+          plus.current.disabled = true;
+        }}
+        onBlur={() => {
+          setInputValue((prevState) => ({
+            ...prevState,
+            [content]: displayed ? Number(displayed) : 0,
+          }));
+          minus.current.disabled = false;
+          plus.current.disabled = false;
+        }}
+        type="text"
+        value={displayed}
+        onChange={(event) => {
+          setDisplayed(event.target.value.replace(/[^0-9]/g, ""));
+        }}
+      />
+      <PlusMinus type="button" onClick={handleInputPlus} ref={plus}>
+        <HiOutlinePlusSm />
+      </PlusMinus>
     </InputContainer>
   );
 };
 
-PlainInput.propTypes = {
+NumberInput.propTypes = {
   content: PropTypes.string.isRequired,
-  inputValue: PropTypes.PropTypes.number.isRequired,
+  inputValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setInputValue: PropTypes.func.isRequired,
 };
 
-export default PlainInput;
+export default NumberInput;

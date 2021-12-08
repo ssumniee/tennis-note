@@ -17,6 +17,15 @@ const tableApi = {
       console.error(err);
     }
   },
+  addUserInfo: async (clubId, newInfo) => {
+    try {
+      const { user, days } = newInfo;
+      const res = await api.post(`/table/${clubId}`, { user, days });
+      if (res.status === 200) return res;
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };
 
 export default tableApi;

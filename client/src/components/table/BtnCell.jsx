@@ -24,7 +24,6 @@ const CellContainer = styled.th`
     align-items: center;
     :disabled {
       opacity: 0.4;
-      cursor: not-allowed;
     }
   }
   .clear {

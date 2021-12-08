@@ -8,6 +8,7 @@ import NumberInput from "./input/NumberInput";
 import SelectInput from "./input/SelectInput";
 import MultiSelectInput from "./input/MultiSelectInput";
 import DatePickerInput from "./input/DatePickerInput";
+import { MdCancel } from "react-icons/md";
 
 const rates = { num: 1, name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, count: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
@@ -44,6 +45,7 @@ const CellContainer = styled.th`
         `}
       `;
   }}
+  position: relative;
   .content {
     display: flex;
     ${(props) => {
@@ -71,31 +73,74 @@ const Content = styled.div`
   `}
 `;
 
+const ClearBtn = styled.button`
+  display: flex;
+  color: var(--color-lightgray);
+  :hover {
+    color: var(--color-gray);
+  }
+  position: absolute;
+  ${(props) => {
+    switch (props.content) {
+      case "start_date":
+        return css`
+          right: 2.25rem;
+        `;
+      case "days":
+        return css`
+          right: 2rem;
+        `;
+      case "teacher_id":
+        return css`
+          right: 2rem;
+        `;
+      case "count":
+        return css`
+          display: none;
+        `;
+      default:
+        return css`
+          right: 0.75rem;
+        `;
+    }
+  }};
+`;
+
 const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children }) => {
   const { teachers: teacherList, days: dayList } = useSelector(({ tableReducer }) => tableReducer);
   const [displayed, setDisplayed] = useState(null);
 
+  const handleInputClear = () => {
+    switch (content) {
+      case "days":
+        setUserInfo((prevState) => ({ ...prevState, [content]: [] }));
+        break;
+      case "start_date":
+        setUserInfo((prevState) => ({ ...prevState, [content]: null }));
+        break;
+      default:
+        setUserInfo((prevState) => ({ ...prevState, [content]: "" }));
+        break;
+    }
+  };
+
   useEffect(() => {
     if (!isOnHead) {
       switch (content) {
-        case "name":
-          setDisplayed(userInfo[content] || "-");
-          break;
-        case "tel":
-          setDisplayed(userInfo[content] || "-");
-          break;
-        case "start_date":
-          setDisplayed(userInfo[content] || "-");
-          break;
         case "teacher_id":
           setDisplayed(
-            teacherList.find((teacher) => teacher.id === userInfo.teacher_id)?.name || "-"
+            userInfo.teacher_id
+              ? teacherList.find((teacher) => teacher.id === userInfo.teacher_id)?.name
+              : "-"
           );
           break;
         case "days":
           setDisplayed(
-            userInfo.days.map((dayId) => dayList.find((day) => day.id === dayId).name).join(", ") ||
-              "-"
+            userInfo.days
+              ? userInfo.days
+                  .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
+                  .join(", ")
+              : "-"
           );
           break;
         case "count":
@@ -157,6 +202,21 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
           )}
         </>
       )}
+      {!isOnHead &&
+        isEditing &&
+        content !== "num" &&
+        content !== "duration" &&
+        (content === "days"
+          ? userInfo[content].length > 0 && (
+              <ClearBtn onClick={handleInputClear} content={content}>
+                <MdCancel />
+              </ClearBtn>
+            )
+          : !!userInfo[content] && (
+              <ClearBtn onClick={handleInputClear} content={content}>
+                <MdCancel />
+              </ClearBtn>
+            ))}
     </CellContainer>
   );
 };

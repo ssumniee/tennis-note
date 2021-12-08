@@ -49,6 +49,9 @@ const GlobalStyle = createGlobalStyle`
     :focus {
       outline: none;
     }
+    :disabled {
+      cursor: not-allowed;
+    }
   }
 
   a {

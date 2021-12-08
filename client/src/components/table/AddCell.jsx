@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
 import TextInput from "./input/TextInput";
+import NumberInput from "./input/NumberInput";
 import SelectInput from "./input/SelectInput";
 import MultiSelectInput from "./input/MultiSelectInput";
 import DatePickerInput from "./input/DatePickerInput";
@@ -68,38 +69,12 @@ const Label = styled.label`
   transform: translateY(-100%);
   position: absolute;
   padding: 0 0.25rem;
+  display: flex;
+  .required {
+    margin: 0 0.125rem;
+    color: var(--color-blue);
+  }
 `;
-
-const durationList = [
-  {
-    id: 1,
-    name: "1주일",
-  },
-  {
-    id: 2,
-    name: "2주일",
-  },
-  {
-    id: 4,
-    name: "1개월",
-  },
-  {
-    id: 8,
-    name: "2개월",
-  },
-  {
-    id: 12,
-    name: "3개월",
-  },
-  {
-    id: 24,
-    name: "6개월",
-  },
-  {
-    id: 48,
-    name: "1년",
-  },
-];
 
 const ClearBtn = styled.button`
   display: flex;
@@ -108,10 +83,33 @@ const ClearBtn = styled.button`
     color: var(--color-gray);
   }
   position: absolute;
-  right: ${(props) => (props.content === "start_date" ? "2.25rem" : "2rem")};
+  ${(props) => {
+    switch (props.content) {
+      case "start_date":
+        return css`
+          right: 2.25rem;
+        `;
+      case "days":
+        return css`
+          right: 2rem;
+        `;
+      case "teacher_id":
+        return css`
+          right: 2rem;
+        `;
+      case "duration":
+        return css`
+          display: none;
+        `;
+      default:
+        return css`
+          right: 0.75rem;
+        `;
+    }
+  }};
 `;
 
-const AddInput = ({ content, newUserInfo, setNewUserInfo, label }) => {
+const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
   const { teachers: teacherList, days: dayList } = useSelector(({ tableReducer }) => tableReducer);
 
   const handleInputClear = () => {
@@ -132,7 +130,10 @@ const AddInput = ({ content, newUserInfo, setNewUserInfo, label }) => {
 
   return (
     <InputContainer content={content}>
-      <Label>{label}</Label>
+      <Label>
+        {label}
+        {content === "name" && <div className="required">*</div>}
+      </Label>
       {(content === "name" || content === "tel") && (
         <TextInput
           className="content"
@@ -168,23 +169,23 @@ const AddInput = ({ content, newUserInfo, setNewUserInfo, label }) => {
         />
       )}
       {content === "duration" && (
-        <SelectInput
+        <NumberInput
           className="content"
           content={content}
           inputValue={newUserInfo.duration}
           setInputValue={setNewUserInfo}
-          list={durationList}
         />
       )}
       {content === "num" && <div className="content">{newUserInfo.num}</div>}
       {content !== "num" &&
+        content !== "duration" &&
         (content === "days"
           ? newUserInfo[content].length > 0 && (
               <ClearBtn onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             )
-          : newUserInfo[content] && (
+          : !!newUserInfo[content] && (
               <ClearBtn onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
@@ -193,7 +194,7 @@ const AddInput = ({ content, newUserInfo, setNewUserInfo, label }) => {
   );
 };
 
-AddInput.propTypes = {
+AddCell.propTypes = {
   content: PropTypes.string.isRequired,
   newUserInfo: PropTypes.exact({
     num: PropTypes.string,
@@ -208,4 +209,4 @@ AddInput.propTypes = {
   label: PropTypes.string,
 };
 
-export default AddInput;
+export default AddCell;

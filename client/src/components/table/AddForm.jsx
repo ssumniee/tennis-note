@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import AddCell from "./AddCell";
 import BtnCell from "./BtnCell";
 import { HiPlusSm } from "react-icons/hi";
+import tableApi from "../../api/table";
+import { getAllUserInfoAction } from "../../store/actions";
 
 const AddContainer = styled.form`
   width: 100%;
@@ -33,10 +35,11 @@ const heads = {
   start_date: "시작일",
   teacher_id: "선생님",
   days: "요일",
-  duration: "등록 기간",
+  duration: "등록 횟수",
 };
 
-const Add = () => {
+const AddForm = () => {
+  const dispatch = useDispatch();
   const { id: clubId } = useSelector(({ authReducer }) => authReducer);
   const [newUserInfo, setNewUserInfo] = useState({
     num: "+",
@@ -45,7 +48,7 @@ const Add = () => {
     start_date: null,
     teacher_id: "",
     days: [],
-    duration: "",
+    duration: 0,
   });
 
   const handleSubmit = async (event) => {
@@ -53,17 +56,31 @@ const Add = () => {
     try {
       const { name, tel, start_date: start, teacher_id: teacher, days, duration } = newUserInfo;
       const toAdd = {
-        club_id: clubId,
-        name,
-        tel,
-        start_date: start,
-        teacher_id: teacher || null,
+        user: {
+          club_id: clubId,
+          name,
+          tel: tel || null,
+          start_date: start,
+          teacher_id: teacher || null,
+          count: duration || 0,
+        },
         days,
-        count: duration * days.length,
       };
-      console.log(toAdd);
-      // TODO: toAdd 정보로 새로운 유저 추가
-      // TODO: 유저 목록 업데이트
+      // 새로운 유저 정보를 userInfo로 DB에 추가
+      const res = await tableApi.addUserInfo(clubId, toAdd);
+      console.log("response", res);
+      // 리덕스 스토어 업데이트
+      dispatch(getAllUserInfoAction(res.data));
+      // 유저 정보 state 초기화
+      setNewUserInfo({
+        num: "+",
+        name: "",
+        tel: "",
+        start_date: null,
+        teacher_id: "",
+        days: [],
+        duration: 0,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -95,4 +112,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default AddForm;

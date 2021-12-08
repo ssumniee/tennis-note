@@ -26,10 +26,6 @@ const InputInner = styled.input`
 
 const TextInput = ({ content, inputValue, setInputValue }) => {
   const handleInputChange = (event) => {
-    setInputValue((prevState) => ({ ...prevState, [content]: event.target.value }));
-  };
-
-  const handleInputFormat = (event) => {
     switch (content) {
       case "tel":
         setInputValue((prevState) => ({
@@ -41,18 +37,14 @@ const TextInput = ({ content, inputValue, setInputValue }) => {
         }));
         break;
       default:
+        setInputValue((prevState) => ({ ...prevState, [content]: event.target.value }));
         break;
     }
   };
 
   return (
     <InputContainer>
-      <InputInner
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyUp={handleInputFormat}
-      />
+      <InputInner type="text" value={inputValue} onChange={handleInputChange} />
     </InputContainer>
   );
 };
