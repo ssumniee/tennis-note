@@ -51,7 +51,11 @@ module.exports = {
       // 유저 정보 삭제
       const { id: user_id } = req.body;
       await destroyUserInfo(user_id);
-      return res.status(200).json({ message: "user deleted", data: { user_id } });
+      const { id: club_id } = req.params;
+      const updatedAllUserInfo = await findAllUserInfo(club_id);
+      return res
+        .status(200)
+        .json({ message: "user deleted", deleted: { user_id }, users: updatedAllUserInfo });
     } catch (err) {
       DBERROR(res, err);
     }
