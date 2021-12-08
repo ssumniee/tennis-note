@@ -8,6 +8,7 @@ const config = require("./config");
 const {
   cors: { allowedOrigin },
 } = require("./config");
+const cron = require("node-cron");
 
 const authRouter = require("./router/auth");
 const tableRouter = require("./router/table");
@@ -35,4 +36,26 @@ app.listen(config.port, async () => {
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
+});
+
+// 스케쥴러 설정: 각 요일의 자정마다, 그 전날에 수업이 있었던 수강생의 수업 횟수 1회씩 차감
+const { minusUserCounts } = require("./controllers/functions/sequelize");
+const days = [
+  { id: 1, name: "Mon", toMinus: 7 },
+  { id: 2, name: "Tue", toMinus: 1 },
+  { id: 3, name: "Wed", toMinus: 2 },
+  { id: 4, name: "Thu", toMinus: 3 },
+  { id: 5, name: "Fri", toMinus: 4 },
+  { id: 6, name: "Sat", toMinus: 5 },
+  { id: 7, name: "Sun", toMinus: 6 },
+];
+days.forEach((day) => {
+  cron.schedule(`0 0 0 * * ${day.name}`, async () => {
+    try {
+      const updated = await minusUserCounts(day.toMinus);
+      console.log({ message: "counts updated", updated });
+    } catch (err) {
+      console.error(err);
+    }
+  });
 });
