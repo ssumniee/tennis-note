@@ -3,6 +3,7 @@ const {
   updateUserInfo,
   findAllDayInfo,
   findAllTeacherInfo,
+  createUserInfo,
 } = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 
@@ -27,6 +28,19 @@ module.exports = {
       await updateUserInfo(updated);
       const { id: club_id } = req.params;
       const updatedAllUserInfo = await findAllUserInfo(club_id);
+      return res.status(200).json({ users: updatedAllUserInfo });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
+  addUserInfo: async (req, res) => {
+    try {
+      // 유저 정보 생성
+      const { user, days } = req.body;
+      await createUserInfo({ user, days });
+      const { id: club_id } = req.params;
+      const updatedAllUserInfo = await findAllUserInfo(club_id);
+      console.log("all updated", updatedAllUserInfo);
       return res.status(200).json({ users: updatedAllUserInfo });
     } catch (err) {
       DBERROR(res, err);
