@@ -93,4 +93,26 @@ module.exports = {
     });
     return daysData.map((data) => data.dataValues);
   },
+  minusUserCounts: async (day_id) => {
+    // 요일 아이디로 해당 요일에 수업이 있는 유저들 정보 구하기
+    const usersData = await user_day.findAll({
+      where: { day_id },
+      attributes: [],
+      include: [{ model: user, attributes: ["id", "count"] }],
+      raw: true,
+    });
+    // 정보들에서 수업 횟수를 1 차감하여 업데이트하기 (0인 경우는 그대로 두기)
+    const updated = usersData.map((data) => ({
+      id: data["user.id"],
+      count: data["user.count"] >= 1 ? data["user.count"] - 1 : 0,
+    }));
+    // updated 정보로 유저 정보 갱신
+    await Promise.all(
+      updated.map(async ({ id, count }) => {
+        const targetUser = await user.findOne({ where: { id } });
+        await targetUser.update({ count });
+      })
+    );
+    return updated;
+  },
 };
