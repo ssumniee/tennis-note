@@ -1,13 +1,16 @@
-import { EXAMPLE_TYPE } from "./actionTypes";
+import { LOG_IN, LOG_OUT, GET_ALL_USER_INFO } from "./actionTypes";
 
-// action
-export const exampleAction = {
-  type: EXAMPLE_TYPE,
-  payload: "Example payload",
+// Auth
+export const loginAction = (data) => ({
+  type: LOG_IN,
+  payload: { ...data },
+});
+export const logoutAction = {
+  type: LOG_OUT,
 };
 
-// action creator
-export const exampleActionCreator = (payload) => ({
-  type: EXAMPLE_TYPE,
-  payload,
+// Table
+export const getAllUserInfoAction = (data) => ({
+  type: GET_ALL_USER_INFO,
+  payload: { ...data },
 });

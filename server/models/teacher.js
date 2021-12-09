@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: { name: "club_id", allowNull: true },
         targetKey: "id",
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
       models.teacher.hasMany(models.user, {
         foreignKey: "teacher_id",

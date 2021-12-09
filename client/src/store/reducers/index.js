@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import exampleReducer from "./exampleReducer";
+import authReducer from "./authReducer";
+import tableReducer from "./tableReducer";
 
 const rootReducer = combineReducers({
-  exampleReducer,
+  authReducer,
+  tableReducer,
   // ...
 });
 
