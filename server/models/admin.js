@@ -8,8 +8,15 @@ module.exports = (sequelize, DataTypes) => {
   }
   admin.init(
     {
-      name: { allowNull: false, type: DataTypes.STRING, unique: true },
-      password: { allowNull: false, type: DataTypes.STRING },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        unique: true,
+      },
+      password: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,

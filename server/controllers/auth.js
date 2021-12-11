@@ -3,7 +3,7 @@
 // const {
 //   bcrypt: { saltRounds },
 // } = require("../config");
-const { findOneClub } = require("./functions/sequelize");
+const { findOneAdmin, findOneClub } = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 const { clearCookie, generateAccessToken, setCookie } = require("./functions/token");
 
@@ -11,14 +11,23 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { name, password } = req.body;
-      const clubAccount = await findOneClub({ name, password });
-      if (!clubAccount) {
-        return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
+      // admin 사용자인지 검사
+      const adminAccount = await findOneAdmin({ name, password });
+      if (adminAccount) {
+        const { id } = adminAccount.dataValues;
+        const token = generateAccessToken(id);
+        setCookie(res, token);
+        return res.status(200).json({ is_admin: true, id, name });
       }
-      const { id, tel } = clubAccount.dataValues;
-      const token = generateAccessToken(id);
-      setCookie(res, token);
-      return res.status(200).json({ id, name, tel });
+      // club 사용자인지 검사
+      const clubAccount = await findOneClub({ name, password });
+      if (clubAccount) {
+        const { id, tel } = clubAccount.dataValues;
+        const token = generateAccessToken(id);
+        setCookie(res, token);
+        return res.status(200).json({ is_admin: false, id, name, tel });
+      }
+      return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
     } catch (err) {
       DBERROR(res, err);
     }
