@@ -98,11 +98,14 @@ module.exports = {
     const usersData = await user_day.findAll({
       where: { day_id },
       attributes: [],
-      include: [{ model: user, attributes: ["id", "count"] }],
+      include: [{ model: user, attributes: ["id", "count", "start_date"] }],
       raw: true,
     });
-    // 정보들에서 수업 횟수를 1 차감하여 업데이트하기 (0인 경우는 그대로 두기)
-    const updated = usersData.map((data) => ({
+    // 수업 시작 날짜가 오늘 날짜보다 빠른 유저 정보만 필터링하기
+    const today = new Date();
+    const toUpdateData = usersData.filter((data) => new Date(data["user.start_date"]) < today);
+    // 필터링된 유저 정보에서 수업 횟수를 1 차감하여 업데이트하기 (0인 경우는 그대로 두기)
+    const updated = toUpdateData.map((data) => ({
       id: data["user.id"],
       count: data["user.count"] >= 1 ? data["user.count"] - 1 : 0,
     }));
