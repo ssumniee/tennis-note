@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       tel: {
         type: DataTypes.STRING,
       },
+      temp: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
     {
       sequelize,
