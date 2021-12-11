@@ -1,10 +1,12 @@
-const { club } = require("../../models");
-const { user } = require("../../models");
-const { teacher } = require("../../models");
-const { user_day } = require("../../models");
-const { day } = require("../../models");
+const { admin, club, user, teacher, day, user_day } = require("../../models");
 
 module.exports = {
+  findOneAdmin: async (queries, excludes = []) => {
+    return await admin.findOne({
+      where: { ...queries },
+      attributes: { exclude: [...excludes] },
+    });
+  },
   findOneClub: async (queries, excludes = []) => {
     return await club.findOne({
       where: { ...queries },
