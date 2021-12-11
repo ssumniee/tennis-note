@@ -1,6 +1,7 @@
 import { LOG_IN, LOG_OUT } from "../actions/actionTypes";
 
 const initialState = {
+  isAdmin: false,
   isLogin: false,
   id: null,
   name: "",
@@ -13,8 +14,11 @@ const authReducer = (prevState = initialState, action) => {
     case LOG_IN:
       state = {
         ...prevState,
+        isAdmin: action.payload.is_admin,
         isLogin: true,
-        ...action.payload,
+        id: action.payload.id,
+        name: action.payload.name,
+        tel: action.payload.tel || "",
       };
       break;
     case LOG_OUT:
