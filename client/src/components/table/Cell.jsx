@@ -101,20 +101,20 @@ const ClearBtn = styled.button`
   }};
 `;
 
-const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children }) => {
-  const { teachers: teacherList, days: dayList } = useSelector(({ tableReducer }) => tableReducer);
+const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, children }) => {
+  const { teachers: teacherList, days: dayList } = useSelector(({ authReducer }) => authReducer);
   const [displayed, setDisplayed] = useState(null);
 
   const handleInputClear = () => {
     switch (content) {
       case "days":
-        setUserInfo((prevState) => ({ ...prevState, [content]: [] }));
+        setStudentInfo((prevState) => ({ ...prevState, [content]: [] }));
         break;
       case "start_date":
-        setUserInfo((prevState) => ({ ...prevState, [content]: null }));
+        setStudentInfo((prevState) => ({ ...prevState, [content]: null }));
         break;
       default:
-        setUserInfo((prevState) => ({ ...prevState, [content]: "" }));
+        setStudentInfo((prevState) => ({ ...prevState, [content]: "" }));
         break;
     }
   };
@@ -124,31 +124,31 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
       switch (content) {
         case "teacher_id":
           setDisplayed(
-            userInfo.teacher_id
-              ? teacherList.find((teacher) => teacher.id === userInfo.teacher_id)?.name
+            studentInfo.teacher_id
+              ? teacherList.find((teacher) => teacher.id === studentInfo.teacher_id)?.name
               : "-"
           );
           break;
         case "days":
           setDisplayed(
-            userInfo.days
-              ? userInfo.days
+            studentInfo.days
+              ? studentInfo.days
                   .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
                   .join(", ")
               : "-"
           );
           break;
         case "count":
-          setDisplayed(userInfo[content] || 0);
+          setDisplayed(studentInfo[content] || 0);
           break;
         case "edit":
           break;
         default:
-          setDisplayed(userInfo[content] || "-");
+          setDisplayed(studentInfo[content] || "-");
           break;
       }
     }
-  }, [userInfo]);
+  }, [studentInfo]);
 
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
@@ -161,29 +161,29 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
           {(content === "name" || content === "tel") && (
             <TextInput
               content={content}
-              inputValue={userInfo[content] || ""}
-              setInputValue={setUserInfo}
+              inputValue={studentInfo[content] || ""}
+              setInputValue={setStudentInfo}
             />
           )}
           {content === "count" && (
             <NumberInput
               content={content}
-              inputValue={userInfo.count}
-              setInputValue={setUserInfo}
+              inputValue={studentInfo.count}
+              setInputValue={setStudentInfo}
             />
           )}
           {content === "start_date" && (
             <DatePickerInput
               content={content}
-              inputValue={userInfo.start_date}
-              setInputValue={setUserInfo}
+              inputValue={studentInfo.start_date}
+              setInputValue={setStudentInfo}
             />
           )}
           {content === "teacher_id" && (
             <SelectInput
               content={content}
-              inputValue={userInfo.teacher_id || ""}
-              setInputValue={setUserInfo}
+              inputValue={studentInfo.teacher_id || ""}
+              setInputValue={setStudentInfo}
               list={teacherList}
             />
           )}
@@ -191,8 +191,8 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
             <MultiSelectInput
               content={content}
               list={dayList}
-              inputValue={userInfo.days}
-              setInputValue={setUserInfo}
+              inputValue={studentInfo.days}
+              setInputValue={setStudentInfo}
             />
           )}
         </>
@@ -201,12 +201,12 @@ const Cell = ({ content, isOnHead, isEditing, userInfo, setUserInfo, children })
         isEditing &&
         content !== "duration" &&
         (content === "days"
-          ? userInfo[content].length > 0 && (
+          ? studentInfo[content].length > 0 && (
               <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             )
-          : !!userInfo[content] && (
+          : !!studentInfo[content] && (
               <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
@@ -223,7 +223,7 @@ Cell.propTypes = {
   content: PropTypes.string.isRequired,
   isOnHead: PropTypes.bool,
   isEditing: PropTypes.bool,
-  userInfo: PropTypes.exact({
+  studentInfo: PropTypes.exact({
     id: PropTypes.number,
     name: PropTypes.string,
     club_id: PropTypes.number,
@@ -234,7 +234,7 @@ Cell.propTypes = {
     days: PropTypes.arrayOf(PropTypes.number),
     num: PropTypes.number,
   }),
-  setUserInfo: PropTypes.func,
+  setStudentInfo: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
 };
 

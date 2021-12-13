@@ -1,15 +1,13 @@
-import { GET_ALL_USER_INFO } from "../actions/actionTypes";
+import { GET_ALL_STUDENT_INFO } from "../actions/actionTypes";
 
 const initialState = {
-  days: [],
-  teachers: [],
-  users: [],
+  students: [],
 };
 
-const tableReducer = (prevState = initialState, action) => {
+const studentReducer = (prevState = initialState, action) => {
   let state;
   switch (action.type) {
-    case GET_ALL_USER_INFO:
+    case GET_ALL_STUDENT_INFO:
       state = {
         ...prevState,
         ...action.payload,
@@ -22,4 +20,4 @@ const tableReducer = (prevState = initialState, action) => {
   return state;
 };
 
-export default tableReducer;
+export default studentReducer;

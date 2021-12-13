@@ -103,19 +103,19 @@ const ClearBtn = styled.button`
   }};
 `;
 
-const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
-  const { teachers: teacherList, days: dayList } = useSelector(({ tableReducer }) => tableReducer);
+const AddCell = ({ content, newStudentInfo, setNewStudentInfo, label }) => {
+  const { teachers: teacherList, days: dayList } = useSelector(({ authReducer }) => authReducer);
 
   const handleInputClear = () => {
     switch (content) {
       case "days":
-        setNewUserInfo((prevState) => ({ ...prevState, [content]: [] }));
+        setNewStudentInfo((prevState) => ({ ...prevState, [content]: [] }));
         break;
       case "start_date":
-        setNewUserInfo((prevState) => ({ ...prevState, [content]: null }));
+        setNewStudentInfo((prevState) => ({ ...prevState, [content]: null }));
         break;
       default:
-        setNewUserInfo((prevState) => ({ ...prevState, [content]: "" }));
+        setNewStudentInfo((prevState) => ({ ...prevState, [content]: "" }));
         break;
     }
   };
@@ -130,24 +130,24 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
         <TextInput
           className="content"
           content={content}
-          inputValue={newUserInfo[content] || ""}
-          setInputValue={setNewUserInfo}
+          inputValue={newStudentInfo[content] || ""}
+          setInputValue={setNewStudentInfo}
         />
       )}
       {content === "start_date" && (
         <DatePickerInput
           className="content"
           content={content}
-          inputValue={newUserInfo.start_date}
-          setInputValue={setNewUserInfo}
+          inputValue={newStudentInfo.start_date}
+          setInputValue={setNewStudentInfo}
         />
       )}
       {content === "teacher_id" && (
         <SelectInput
           className="content"
           content={content}
-          inputValue={newUserInfo.teacher_id || ""}
-          setInputValue={setNewUserInfo}
+          inputValue={newStudentInfo.teacher_id || ""}
+          setInputValue={setNewStudentInfo}
           list={teacherList}
         />
       )}
@@ -156,26 +156,26 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
           className="content"
           content={content}
           list={dayList}
-          inputValue={newUserInfo.days}
-          setInputValue={setNewUserInfo}
+          inputValue={newStudentInfo.days}
+          setInputValue={setNewStudentInfo}
         />
       )}
       {content === "duration" && (
         <NumberInput
           className="content"
           content={content}
-          inputValue={newUserInfo.duration}
-          setInputValue={setNewUserInfo}
+          inputValue={newStudentInfo.duration}
+          setInputValue={setNewStudentInfo}
         />
       )}
       {content !== "duration" &&
         (content === "days"
-          ? newUserInfo[content].length > 0 && (
+          ? newStudentInfo[content].length > 0 && (
               <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
             )
-          : !!newUserInfo[content] && (
+          : !!newStudentInfo[content] && (
               <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
@@ -186,7 +186,7 @@ const AddCell = ({ content, newUserInfo, setNewUserInfo, label }) => {
 
 AddCell.propTypes = {
   content: PropTypes.string.isRequired,
-  newUserInfo: PropTypes.exact({
+  newStudentInfo: PropTypes.exact({
     num: PropTypes.string,
     name: PropTypes.string,
     teacher_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -195,7 +195,7 @@ AddCell.propTypes = {
     days: PropTypes.arrayOf(PropTypes.number),
     duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
-  setNewUserInfo: PropTypes.func,
+  setNewStudentInfo: PropTypes.func,
   label: PropTypes.string,
 };
 

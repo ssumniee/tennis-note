@@ -6,8 +6,8 @@ import AddCell from "./AddCell";
 import BtnCell from "./BtnCell";
 import NumCell from "./NumCell";
 import { HiPlusSm } from "react-icons/hi";
-import tableApi from "../../api/table";
-import { getAllUserInfoAction } from "../../store/actions";
+import studentApi from "../../api/student";
+import { getAllStudentInfoAction } from "../../store/actions";
 
 const AddContainer = styled.form`
   width: 100%;
@@ -48,7 +48,7 @@ const heads = {
 const AddForm = () => {
   const dispatch = useDispatch();
   const { id: clubId } = useSelector(({ authReducer }) => authReducer);
-  const [newUserInfo, setNewUserInfo] = useState({
+  const [newStudentInfo, setNewStudentInfo] = useState({
     name: "",
     tel: "",
     start_date: null,
@@ -60,9 +60,9 @@ const AddForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { name, tel, start_date: start, teacher_id: teacher, days, duration } = newUserInfo;
+      const { name, tel, start_date: start, teacher_id: teacher, days, duration } = newStudentInfo;
       const toAdd = {
-        user: {
+        student: {
           club_id: clubId,
           name,
           tel: tel || null,
@@ -72,12 +72,12 @@ const AddForm = () => {
         },
         days,
       };
-      // 새로운 유저 정보를 userInfo로 DB에 추가
-      const res = await tableApi.addUserInfo(clubId, toAdd);
+      // 새로운 정보를 studentInfo로 DB에 추가
+      const res = await studentApi.addStudentInfo(clubId, toAdd);
       // 리덕스 스토어 업데이트
-      dispatch(getAllUserInfoAction(res.data));
+      dispatch(getAllStudentInfoAction(res.data));
       // 유저 정보 state 초기화
-      setNewUserInfo({
+      setNewStudentInfo({
         name: "",
         tel: "",
         start_date: null,
@@ -102,13 +102,13 @@ const AddForm = () => {
               <AddCell
                 key={idx}
                 content={id}
-                newUserInfo={newUserInfo}
-                setNewUserInfo={setNewUserInfo}
+                newStudentInfo={newStudentInfo}
+                setNewStudentInfo={setNewStudentInfo}
                 label={heads[id]}
               />
             ))}
             <BtnCell>
-              <button className="submit button" type="submit" disabled={!newUserInfo.name}>
+              <button className="submit button" type="submit" disabled={!newStudentInfo.name}>
                 <HiPlusSm />
               </button>
             </BtnCell>

@@ -3,7 +3,7 @@
 // const {
 //   bcrypt: { saltRounds },
 // } = require("../config");
-const { findOneAdmin, findOneClub } = require("./functions/sequelize");
+const { findOneClub, findAllTeacherInfo, findAllDayInfo } = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 const { clearCookie, generateAccessToken, setCookie } = require("./functions/token");
 
@@ -11,23 +11,19 @@ module.exports = {
   login: async (req, res) => {
     try {
       const { name, password } = req.body;
-      // admin 사용자인지 검사
-      const adminAccount = await findOneAdmin({ name, password });
-      if (adminAccount) {
-        const { id } = adminAccount.dataValues;
-        const token = generateAccessToken(id);
-        setCookie(res, token);
-        return res.status(200).json({ is_admin: true, id, name });
-      }
-      // club 사용자인지 검사
       const clubAccount = await findOneClub({ name, password });
-      if (clubAccount) {
-        const { id, tel } = clubAccount.dataValues;
-        const token = generateAccessToken(id);
-        setCookie(res, token);
-        return res.status(200).json({ is_admin: false, id, name, tel });
+      if (!clubAccount) {
+        return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
       }
-      return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
+      const { is_admin, id, tel = null } = clubAccount.dataValues;
+      const info = { id, name, tel };
+      if (!is_admin) {
+        info.days = await findAllDayInfo();
+        info.teachers = await findAllTeacherInfo(id);
+      }
+      const token = generateAccessToken(id);
+      setCookie(res, token);
+      return res.status(200).json({ is_admin, info });
     } catch (err) {
       DBERROR(res, err);
     }
@@ -44,8 +40,13 @@ module.exports = {
     try {
       const { club_id } = res.locals;
       const clubInfo = await findOneClub({ id: club_id });
-      const { id, name, tel } = clubInfo;
-      return res.status(200).json({ id, name, tel });
+      const { is_admin, id, name, tel } = clubInfo.dataValues;
+      const info = { id, name, tel };
+      if (!is_admin) {
+        info.days = await findAllDayInfo();
+        info.teachers = await findAllTeacherInfo(id);
+      }
+      return res.status(200).json({ is_admin, info });
     } catch (err) {
       DBERROR(res, err);
     }

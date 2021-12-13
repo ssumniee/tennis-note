@@ -7,8 +7,8 @@ import BtnCell from "./BtnCell";
 import NumCell from "./NumCell";
 import { FaPencilAlt } from "react-icons/fa";
 import { HiX, HiCheck, HiMinus } from "react-icons/hi";
-import tableApi from "../../api/table";
-import { getAllUserInfoAction } from "../../store/actions";
+import studentApi from "../../api/student";
+import { getAllStudentInfoAction } from "../../store/actions";
 
 const RowContainer = styled.tr`
   ${(props) =>
@@ -60,14 +60,14 @@ const heads = {
 const Row = ({ isOnHead, info }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState({ ...info });
+  const [studentInfo, setStudentInfo] = useState({ ...info });
 
   const handleUpdateInfo = async () => {
     try {
-      // 바뀐 정보 userInfo로 DB 업데이트
-      const res = await tableApi.modifyUserInfo(userInfo.club_id, userInfo);
+      // 바뀐 정보 studentInfo로 DB 업데이트
+      const res = await studentApi.modifyStudentInfo(studentInfo.club_id, studentInfo);
       // 리덕스 스토어 업데이트
-      dispatch(getAllUserInfoAction(res.data));
+      dispatch(getAllStudentInfoAction(res.data));
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -75,16 +75,16 @@ const Row = ({ isOnHead, info }) => {
   };
 
   const handleQuitUpdate = () => {
-    setUserInfo({ ...info });
+    setStudentInfo({ ...info });
     setIsEditing(false);
   };
 
   const handleDeleteInfo = async () => {
     try {
-      // userInfo 삭제하도록 DB 업데이트
-      const res = await tableApi.deleteUserInfo(userInfo.club_id, userInfo.id);
+      // studentInfo 삭제하도록 DB 업데이트
+      const res = await studentApi.deleteStudentInfo(studentInfo.club_id, studentInfo.id);
       // 리덕스 스토어 업데이트
-      dispatch(getAllUserInfoAction(res.data));
+      dispatch(getAllStudentInfoAction(res.data));
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -122,10 +122,10 @@ const Row = ({ isOnHead, info }) => {
                 key={idx}
                 content={el}
                 isEditing={isEditing}
-                userInfo={userInfo}
-                setUserInfo={setUserInfo}
+                studentInfo={studentInfo}
+                setStudentInfo={setStudentInfo}
               >
-                {userInfo[el]}
+                {studentInfo[el]}
               </Cell>
             ))}
       </>
