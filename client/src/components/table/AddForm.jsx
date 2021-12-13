@@ -42,7 +42,7 @@ const heads = {
   start_date: "시작일",
   teacher_id: "선생님",
   days: "요일",
-  duration: "등록 횟수",
+  paid: "등록 횟수",
 };
 
 const AddForm = () => {
@@ -54,13 +54,13 @@ const AddForm = () => {
     start_date: null,
     teacher_id: "",
     days: [],
-    duration: 0,
+    paid: 0,
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { name, tel, start_date: start, teacher_id: teacher, days, duration } = newStudentInfo;
+      const { name, tel, start_date: start, teacher_id: teacher, days, paid } = newStudentInfo;
       const toAdd = {
         student: {
           club_id: clubId,
@@ -68,7 +68,7 @@ const AddForm = () => {
           tel: tel || null,
           start_date: start,
           teacher_id: teacher || null,
-          count: duration || 0,
+          count: paid || 0,
         },
         days,
       };
@@ -83,7 +83,7 @@ const AddForm = () => {
         start_date: null,
         teacher_id: "",
         days: [],
-        duration: 0,
+        paid: 0,
       });
     } catch (err) {
       console.error(err);

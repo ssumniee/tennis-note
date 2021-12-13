@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
@@ -103,7 +103,6 @@ const ClearBtn = styled.button`
 
 const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, children }) => {
   const { teachers: teacherList, days: dayList } = useSelector(({ authReducer }) => authReducer);
-  const [displayed, setDisplayed] = useState(null);
 
   const handleInputClear = () => {
     switch (content) {
@@ -119,43 +118,25 @@ const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, child
     }
   };
 
-  useEffect(() => {
-    if (!isOnHead) {
-      switch (content) {
-        case "teacher_id":
-          setDisplayed(
-            studentInfo.teacher_id
-              ? teacherList.find((teacher) => teacher.id === studentInfo.teacher_id)?.name
-              : "-"
-          );
-          break;
-        case "days":
-          setDisplayed(
-            studentInfo.days
-              ? studentInfo.days
-                  .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
-                  .join(", ")
-              : "-"
-          );
-          break;
-        case "count":
-          setDisplayed(studentInfo[content] || 0);
-          break;
-        case "edit":
-          break;
-        default:
-          setDisplayed(studentInfo[content] || "-");
-          break;
-      }
-    }
-  }, [studentInfo]);
-
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
       {isOnHead ? (
         <Content className="content">{children}</Content>
       ) : !isEditing ? (
-        <Content className="content">{displayed}</Content>
+        <Content className="content">
+          {content === "teacher_id" || content === "days" ? (
+            <>
+              {content === "teacher_id" &&
+                teacherList.find((teacher) => teacher.id === studentInfo.teacher_id)?.name}
+              {content === "days" &&
+                studentInfo.days
+                  .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
+                  .join(", ")}
+            </>
+          ) : (
+            studentInfo[content]
+          )}
+        </Content>
       ) : (
         <>
           {(content === "name" || content === "tel") && (

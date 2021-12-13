@@ -10,7 +10,7 @@ import MultiSelectInput from "./input/MultiSelectInput";
 import DatePickerInput from "./input/DatePickerInput";
 import { MdCancel } from "react-icons/md";
 
-const rates = { name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, duration: 3 };
+const rates = { name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, paid: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
 const onlyPCSum = sum - rates.teacher_id;
 
@@ -44,7 +44,7 @@ const InputContainer = styled.th`
   .content {
     display: flex;
     ${(props) => {
-      if (props.content === "duration")
+      if (props.content === "paid")
         return css`
           justify-content: space-around;
         `;
@@ -91,7 +91,7 @@ const ClearBtn = styled.button`
         return css`
           right: 2rem;
         `;
-      case "duration":
+      case "paid":
         return css`
           display: none;
         `;
@@ -160,15 +160,15 @@ const AddCell = ({ content, newStudentInfo, setNewStudentInfo, label }) => {
           setInputValue={setNewStudentInfo}
         />
       )}
-      {content === "duration" && (
+      {content === "paid" && (
         <NumberInput
           className="content"
           content={content}
-          inputValue={newStudentInfo.duration}
+          inputValue={newStudentInfo.paid}
           setInputValue={setNewStudentInfo}
         />
       )}
-      {content !== "duration" &&
+      {content !== "paid" &&
         (content === "days"
           ? newStudentInfo[content].length > 0 && (
               <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
@@ -193,7 +193,7 @@ AddCell.propTypes = {
     tel: PropTypes.string,
     start_date: PropTypes.string,
     days: PropTypes.arrayOf(PropTypes.number),
-    duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    paid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   setNewStudentInfo: PropTypes.func,
   label: PropTypes.string,
