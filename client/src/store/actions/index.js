@@ -1,4 +1,4 @@
-import { LOG_IN, LOG_OUT, GET_ALL_USER_INFO } from "./actionTypes";
+import { LOG_IN, LOG_OUT, GET_ALL_STUDENT_INFO } from "./actionTypes";
 
 // Auth
 export const loginAction = (data) => ({
@@ -9,8 +9,8 @@ export const logoutAction = {
   type: LOG_OUT,
 };
 
-// Table
-export const getAllUserInfoAction = (data) => ({
-  type: GET_ALL_USER_INFO,
+// Student
+export const getAllStudentInfoAction = (data) => ({
+  type: GET_ALL_STUDENT_INFO,
   payload: { ...data },
 });

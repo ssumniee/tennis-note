@@ -1,27 +1,27 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
+  class student extends Model {
     static associate(models) {
-      models.user.belongsTo(models.club, {
+      models.student.belongsTo(models.club, {
         foreignKey: { name: "club_id", allowNull: true },
         targetKey: "id",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      models.user.belongsTo(models.teacher, {
+      models.student.belongsTo(models.teacher, {
         foreignKey: { name: "teacher_id", allowNull: true },
         targetKey: "id",
         onDelete: "SET NULL",
         onUpdate: "CASCADE",
       });
-      models.user.hasMany(models.user_day, {
-        foreignKey: "user_id",
+      models.student.hasMany(models.student_day, {
+        foreignKey: "student_id",
         targetKey: "id",
       });
     }
   }
-  user.init(
+  student.init(
     {
       name: {
         allowNull: false,
@@ -46,13 +46,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "user",
-      tableName: "users",
+      modelName: "student",
+      tableName: "students",
       timestamps: true,
       underscored: false,
       charset: "utf8",
       collate: "utf8_general_ci",
     }
   );
-  return user;
+  return student;
 };

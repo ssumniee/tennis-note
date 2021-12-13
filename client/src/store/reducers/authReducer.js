@@ -4,8 +4,10 @@ const initialState = {
   isAdmin: false,
   isLogin: false,
   id: null,
-  name: "",
-  tel: "",
+  name: null,
+  tel: null,
+  days: [],
+  teachers: [],
 };
 
 const authReducer = (prevState = initialState, action) => {
@@ -16,9 +18,7 @@ const authReducer = (prevState = initialState, action) => {
         ...prevState,
         isAdmin: action.payload.is_admin,
         isLogin: true,
-        id: action.payload.id,
-        name: action.payload.name,
-        tel: action.payload.tel || "",
+        ...action.payload.info,
       };
       break;
     case LOG_OUT:

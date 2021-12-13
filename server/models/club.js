@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class club extends Model {
     static associate(models) {
-      models.club.hasMany(models.user, {
+      models.club.hasMany(models.student, {
         foreignKey: "club_id",
         targetKey: "id",
       });
@@ -28,8 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       temp: {
+        allowNull: false,
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+      },
+      is_admin: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
       },
     },
     {

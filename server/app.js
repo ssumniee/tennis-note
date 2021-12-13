@@ -11,7 +11,7 @@ const {
 const cron = require("node-cron");
 
 const authRouter = require("./router/auth");
-const tableRouter = require("./router/table");
+const studentRouter = require("./router/student");
 const app = express();
 
 const corsOption = { origin: allowedOrigin, optionsSuccessStatus: 200, credentials: true };
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.send("Tennis Note!");
 });
 app.use("/auth", authRouter);
-app.use("/table", tableRouter);
+app.use("/student", studentRouter);
 
 app.listen(config.port, async () => {
   console.log(`🚀 Listening on PORT: ${config.port}`);

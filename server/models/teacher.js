@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      models.teacher.hasMany(models.user, {
+      models.teacher.hasMany(models.student, {
         foreignKey: "teacher_id",
         targetKey: "id",
       });

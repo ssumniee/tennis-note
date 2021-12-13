@@ -2,5 +2,5 @@
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 
-// Table
-export const GET_ALL_USER_INFO = "GET_ALL_USER_INFO";
+// Student
+export const GET_ALL_STUDENT_INFO = "GET_ALL_STUDENT_INFO";

@@ -21,14 +21,14 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const Table = ({ users }) => {
+const Table = ({ students }) => {
   return (
     <TableContainer>
       <TableHead>
         <Row isOnHead></Row>
       </TableHead>
       <TableBody>
-        {users.map((info, idx) => (
+        {students.map((info, idx) => (
           <Row key={idx} info={{ ...info, num: idx + 1 }}></Row>
         ))}
       </TableBody>
@@ -37,7 +37,7 @@ const Table = ({ users }) => {
 };
 
 Table.propTypes = {
-  users: PropTypes.arrayOf(
+  students: PropTypes.arrayOf(
     PropTypes.exact({
       id: PropTypes.number,
       name: PropTypes.string,

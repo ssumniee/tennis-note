@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
-import tableReducer from "./tableReducer";
+import studentReducer from "./studentReducer";
 
 const rootReducer = combineReducers({
   authReducer,
-  tableReducer,
+  studentReducer,
   // ...
 });
 

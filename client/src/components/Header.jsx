@@ -1,6 +1,6 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
@@ -22,10 +22,12 @@ const HeaderContainer = styled.header`
 `;
 
 const Logo = styled.div`
+  flex: 0 0 1;
   font-size: 1.5rem;
 `;
 
 const LogoutButton = styled.button`
+  flex: 0 0 1;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   background-color: var(--color-blue);
@@ -33,9 +35,49 @@ const LogoutButton = styled.button`
   text-align: center;
 `;
 
+const NavContainer = styled.div`
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin: 0 2rem;
+  position: relative;
+`;
+
+const Nav = styled(NavLink)`
+  width: 3.5rem;
+  height: 100%;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+  :last-of-type {
+    margin-right: 0;
+  }
+  .underline {
+    display: none;
+    position: absolute;
+    bottom: -1rem;
+    width: 3.5rem;
+    height: 0.125rem;
+    background-color: var(--color-blue);
+  }
+  :hover {
+    color: var(--color-blue);
+  }
+  &.active {
+    color: var(--color-blue);
+    .underline {
+      display: block;
+    }
+  }
+`;
+
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isAdmin } = useSelector(({ authReducer }) => authReducer);
 
   const handleLogout = async () => {
     const res = await authApi.logout();
@@ -48,6 +90,22 @@ const Header = () => {
   return (
     <HeaderContainer>
       <Logo>테니스노트</Logo>
+      {!isAdmin && (
+        <NavContainer>
+          <Nav to={"/student"}>
+            회원
+            <div className="underline"></div>
+          </Nav>
+          <Nav to={"/schedule"}>
+            시간표
+            <div className="underline"></div>
+          </Nav>
+          <Nav to={"/sales"}>
+            수강료
+            <div className="underline"></div>
+          </Nav>
+        </NavContainer>
+      )}
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
     </HeaderContainer>
   );
