@@ -110,7 +110,8 @@ const Signing = () => {
       const res = await authApi.login({ ...inputValue });
       if (res.status === 200) {
         dispatch(loginAction(res.data));
-        navigate("/student", { replace: true });
+        const { is_admin: isAdmin } = res.data;
+        navigate(isAdmin ? "/admin" : "/student", { replace: true });
       }
     } catch (err) {
       setIsAlert(true);
@@ -124,7 +125,8 @@ const Signing = () => {
         const res = await authApi.me();
         if (res.status === 200) {
           dispatch(loginAction(res.data));
-          navigate("/student", { replace: true });
+          const { is_admin: isAdmin } = res.data;
+          navigate(isAdmin ? "/admin" : "/student", { replace: true });
         }
       } catch (error) {
         // 토큰 만료의 경우 error.response.status가 403인 경우를 조건으로 -> 로그아웃 후 Signing으로 리디렉션

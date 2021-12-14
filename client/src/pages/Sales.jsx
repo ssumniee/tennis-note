@@ -1,11 +1,10 @@
-import React from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
-// import authApi from "../api/auth";
-// import studentApi from "../api/student";
-// import { getAllStudentInfoAction, loginAction, logoutAction } from "../store/actions";
+import authApi from "../api/auth";
+import { loginAction, logoutAction } from "../store/actions";
 
 const SalesContainer = styled.div`
   width: 100vw;
@@ -17,6 +16,26 @@ const SalesContainer = styled.div`
 `;
 
 const Sales = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkValidUser = async () => {
+      try {
+        const res = await authApi.me();
+        if (res.status === 200) {
+          dispatch(loginAction(res.data));
+        }
+      } catch (error) {
+        // 토큰 만료의 경우 error.response.status가 403인 경우를 조건으로 -> 로그아웃 후 Signing으로 리디렉션
+        // 다만, res.data가 제대로 넘어오지 않은 경우 등의 예외적인 에러에 대해서도 로그아웃 후 리디렉션 시키기 위해 조건문 생략
+        dispatch(logoutAction);
+        navigate("/", { replace: true });
+      }
+    };
+    checkValidUser();
+  }, []);
+
   return <SalesContainer></SalesContainer>;
 };
 

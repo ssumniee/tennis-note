@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import Row from "./Row";
+import Row from "./StudentRow";
 
 const TableContainer = styled.table`
   width: 100%;
@@ -9,6 +9,10 @@ const TableContainer = styled.table`
   border: 1px solid var(--color-gray);
   display: flex;
   flex-direction: column;
+  margin-top: 2rem;
+  :first-child {
+    margin-top: 0;
+  }
 `;
 const TableHead = styled.thead`
   font-size: 0.875rem;
@@ -21,24 +25,33 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const Table = ({ students }) => {
+const Table = ({ isAdding, infoList = [] }) => {
   return (
     <TableContainer>
-      <TableHead>
-        <Row isOnHead></Row>
-      </TableHead>
+      {!isAdding && (
+        <TableHead>
+          <Row isOnHead />
+        </TableHead>
+      )}
       <TableBody>
-        {students.map((info, idx) => (
-          <Row key={idx} info={{ ...info, num: idx + 1 }}></Row>
-        ))}
+        {isAdding ? (
+          <Row isOnAdd />
+        ) : (
+          infoList.map((info, idx) => <Row key={idx} info={{ ...info, num: idx + 1 }}></Row>)
+        )}
       </TableBody>
     </TableContainer>
   );
 };
 
+Table.defalutProps = {
+  isAdding: false,
+};
+
 Table.propTypes = {
-  students: PropTypes.arrayOf(
-    PropTypes.exact({
+  isAdding: PropTypes.bool,
+  infoList: PropTypes.arrayOf(
+    PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
       club_id: PropTypes.number,
@@ -48,7 +61,7 @@ Table.propTypes = {
       count: PropTypes.number,
       days: PropTypes.arrayOf(PropTypes.number),
     })
-  ).isRequired,
+  ),
 };
 
 export default Table;
