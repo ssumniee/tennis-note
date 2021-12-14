@@ -25,7 +25,7 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const Table = ({ isAdding, infoList = [] }) => {
+const StudentTable = ({ isAdding, infoList = [] }) => {
   return (
     <TableContainer>
       {!isAdding && (
@@ -44,11 +44,11 @@ const Table = ({ isAdding, infoList = [] }) => {
   );
 };
 
-Table.defalutProps = {
+StudentTable.defalutProps = {
   isAdding: false,
 };
 
-Table.propTypes = {
+StudentTable.propTypes = {
   isAdding: PropTypes.bool,
   infoList: PropTypes.arrayOf(
     PropTypes.shape({
@@ -64,4 +64,4 @@ Table.propTypes = {
   ),
 };
 
-export default Table;
+export default StudentTable;

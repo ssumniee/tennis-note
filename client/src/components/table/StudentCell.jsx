@@ -114,7 +114,7 @@ const Label = styled.label`
   }
 `;
 
-const Cell = ({
+const StudentCell = ({
   content,
   isOnHead,
   isOnAdd,
@@ -224,12 +224,12 @@ const Cell = ({
   );
 };
 
-Cell.defalutProps = {
+StudentCell.defalutProps = {
   isOnHead: false,
   isOnAdd: false,
 };
 
-Cell.propTypes = {
+StudentCell.propTypes = {
   content: PropTypes.string.isRequired,
   isOnHead: PropTypes.bool,
   isOnAdd: PropTypes.bool,
@@ -250,4 +250,4 @@ Cell.propTypes = {
   children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
 };
 
-export default Cell;
+export default StudentCell;
