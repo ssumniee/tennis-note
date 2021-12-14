@@ -113,7 +113,7 @@ const heads = {
   count: "등록 횟수",
 };
 
-const Row = ({ isOnHead, isOnAdd, info }) => {
+const StudentRow = ({ isOnHead, isOnAdd, info }) => {
   const dispatch = useDispatch();
   const { id: clubId } = useSelector(({ authReducer }) => authReducer);
   const [isEditing, setIsEditing] = useState(false);
@@ -254,12 +254,12 @@ const Row = ({ isOnHead, isOnAdd, info }) => {
   );
 };
 
-Row.defalutProps = {
+StudentRow.defalutProps = {
   isOnHead: false,
   isOnAdd: false,
 };
 
-Row.propTypes = {
+StudentRow.propTypes = {
   isOnHead: PropTypes.bool,
   isOnAdd: PropTypes.bool,
   info: PropTypes.exact({
@@ -275,4 +275,4 @@ Row.propTypes = {
   }),
 };
 
-export default Row;
+export default StudentRow;
