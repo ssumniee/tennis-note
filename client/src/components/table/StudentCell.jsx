@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
-import TextInput from "./input/TextInput";
-import NumberInput from "./input/NumberInput";
-import SelectInput from "./input/SelectInput";
-import MultiSelectInput from "./input/MultiSelectInput";
-import DatePickerInput from "./input/DatePickerInput";
+import TextInput from "../input/TextInput";
+import NumberInput from "../input/NumberInput";
+import SelectInput from "../input/SelectInput";
+import MultiSelectInput from "../input/MultiSelectInput";
+import DatePickerInput from "../input/DatePickerInput";
 import { MdCancel } from "react-icons/md";
 
 const rates = { name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, count: 3 };
