@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Signing";
+import Admin from "./pages/Admin";
 import Student from "./pages/Student";
 import Schedule from "./pages/Schedule";
 import Sales from "./pages/Sales";
@@ -15,6 +16,15 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route
+            path="/admin"
+            element={
+              <>
+                <Header />
+                <Admin />
+              </>
+            }
+          />
           <Route
             path="/student"
             element={

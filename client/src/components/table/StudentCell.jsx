@@ -101,7 +101,29 @@ const ClearBtn = styled.button`
   }};
 `;
 
-const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, children }) => {
+const Label = styled.label`
+  font-size: 0.75rem;
+  top: -0.5rem;
+  transform: translateY(-100%);
+  position: absolute;
+  padding: 0 0.25rem;
+  display: flex;
+  .required {
+    margin: 0 0.125rem;
+    color: var(--color-blue);
+  }
+`;
+
+const Cell = ({
+  content,
+  isOnHead,
+  isOnAdd,
+  isEditing,
+  studentInfo,
+  setStudentInfo,
+  label,
+  children,
+}) => {
   const { teachers: teacherList, days: dayList } = useSelector(({ authReducer }) => authReducer);
 
   const handleInputClear = () => {
@@ -120,9 +142,15 @@ const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, child
 
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
+      {isOnAdd && (
+        <Label>
+          {label}
+          {content === "name" && <div className="required">*</div>}
+        </Label>
+      )}
       {isOnHead ? (
         <Content className="content">{children}</Content>
-      ) : !isEditing ? (
+      ) : !isEditing && !isOnAdd ? (
         <Content className="content">
           {content === "teacher_id" || content === "days" ? (
             <>
@@ -179,10 +207,10 @@ const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, child
         </>
       )}
       {!isOnHead &&
-        isEditing &&
+        (isEditing || isOnAdd) &&
         content !== "duration" &&
         (content === "days"
-          ? studentInfo[content].length > 0 && (
+          ? studentInfo.days.length > 0 && (
               <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
                 <MdCancel />
               </ClearBtn>
@@ -198,24 +226,27 @@ const Cell = ({ content, isOnHead, isEditing, studentInfo, setStudentInfo, child
 
 Cell.defalutProps = {
   isOnHead: false,
+  isOnAdd: false,
 };
 
 Cell.propTypes = {
   content: PropTypes.string.isRequired,
   isOnHead: PropTypes.bool,
+  isOnAdd: PropTypes.bool,
   isEditing: PropTypes.bool,
-  studentInfo: PropTypes.exact({
+  studentInfo: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string,
     club_id: PropTypes.number,
+    num: PropTypes.number,
+    name: PropTypes.string,
     teacher_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     tel: PropTypes.string,
     start_date: PropTypes.string,
-    count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     days: PropTypes.arrayOf(PropTypes.number),
-    num: PropTypes.number,
+    count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   setStudentInfo: PropTypes.func,
+  label: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
 };
 

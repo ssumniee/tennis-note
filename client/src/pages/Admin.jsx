@@ -5,8 +5,9 @@ import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import { loginAction, logoutAction } from "../store/actions";
+import Table from "../components/table/StudentTable";
 
-const ScheduleContainer = styled.div`
+const AdminContainer = styled.div`
   width: 100vw;
   height: 100%;
   padding: 2rem;
@@ -15,7 +16,7 @@ const ScheduleContainer = styled.div`
   `}
 `;
 
-const Schedule = () => {
+const Admin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,7 +37,11 @@ const Schedule = () => {
     checkValidUser();
   }, []);
 
-  return <ScheduleContainer></ScheduleContainer>;
+  return (
+    <AdminContainer>
+      <Table />
+    </AdminContainer>
+  );
 };
 
-export default Schedule;
+export default Admin;

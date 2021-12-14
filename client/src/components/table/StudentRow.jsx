@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import Cell from "./Cell";
-import BtnCell from "./BtnCell";
-import NumCell from "./NumCell";
+import media from "styled-media-query";
+import Cell from "./StudentCell";
 import { FaPencilAlt } from "react-icons/fa";
-import { HiX, HiCheck, HiMinus } from "react-icons/hi";
+import { HiX, HiCheck, HiMinus, HiPlusSm } from "react-icons/hi";
 import studentApi from "../../api/student";
 import { getAllStudentInfoAction } from "../../store/actions";
 
@@ -46,6 +45,63 @@ const RowContainer = styled.tr`
       }
     }
   }
+  .clear {
+    color: var(--color-gray);
+    border: 1px solid var(--color-gray);
+    background-color: var(--color-palegray);
+    :hover {
+      background-color: var(--color-lightgray);
+      &:disabled {
+        background-color: var(--color-palegray);
+      }
+    }
+  }
+  .apply {
+    color: var(--color-green);
+    border: 1px solid var(--color-green);
+    background-color: var(--color-palegreen);
+    :hover {
+      background-color: var(--color-lightgreen);
+      &:disabled {
+        background-color: var(--color-palegreen);
+      }
+    }
+  }
+  .edit,
+  .submit {
+    color: var(--color-blue);
+    border: 1px solid var(--color-blue);
+    background-color: var(--color-paleblue);
+    :hover {
+      background-color: var(--color-lightblue);
+      &:disabled {
+        background-color: var(--color-paleblue);
+      }
+    }
+  }
+  .submit {
+    font-size: 1.25rem;
+  }
+`;
+
+const FixedCell = styled.th`
+  min-height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.25rem;
+  ${media.lessThan("medium")`
+    display: none;
+  `}
+`;
+
+const NumCell = styled(FixedCell)`
+  flex: 0 0 2.5rem;
+  border-right: 1px solid var(--color-lightgray);
+`;
+
+const BtnCell = styled(FixedCell)`
+  flex: 0 0 4.5rem;
 `;
 
 const heads = {
@@ -54,13 +110,20 @@ const heads = {
   start_date: "시작일",
   teacher_id: "선생님",
   days: "요일",
-  count: "횟수",
+  count: "등록 횟수",
 };
 
-const Row = ({ isOnHead, info }) => {
+const Row = ({ isOnHead, isOnAdd, info }) => {
   const dispatch = useDispatch();
+  const { id: clubId } = useSelector(({ authReducer }) => authReducer);
   const [isEditing, setIsEditing] = useState(false);
-  const [studentInfo, setStudentInfo] = useState({ ...info });
+  const [studentInfo, setStudentInfo] = useState(
+    isOnHead
+      ? {}
+      : isOnAdd
+      ? { name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 }
+      : { ...info }
+  );
 
   const handleUpdateInfo = async () => {
     try {
@@ -91,6 +154,38 @@ const Row = ({ isOnHead, info }) => {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      const { name, tel, start_date: start, teacher_id: teacher, days, count } = studentInfo;
+      const toAdd = {
+        student: {
+          club_id: clubId,
+          name,
+          tel: tel || null,
+          start_date: start,
+          teacher_id: teacher || null,
+          count: count || 0,
+        },
+        days,
+      };
+      // 새로운 정보를 studentInfo로 DB에 추가
+      const res = await studentApi.addStudentInfo(clubId, toAdd);
+      // 리덕스 스토어 업데이트
+      dispatch(getAllStudentInfoAction(res.data));
+      // 유저 정보 state 초기화
+      setStudentInfo({
+        name: "",
+        tel: "",
+        start_date: null,
+        teacher_id: "",
+        days: [],
+        count: 0,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     return () => {
       setIsEditing(false);
@@ -102,6 +197,8 @@ const Row = ({ isOnHead, info }) => {
       <NumCell>
         {isOnHead ? (
           ""
+        ) : isOnAdd ? (
+          <HiPlusSm className="plus text" />
         ) : isEditing ? (
           <button className="delete button" onClick={handleDeleteInfo}>
             <HiMinus />
@@ -110,28 +207,30 @@ const Row = ({ isOnHead, info }) => {
           info.num
         )}
       </NumCell>
-      <>
-        {isOnHead
-          ? Object.keys(heads).map((el, idx) => (
-              <Cell key={idx} content={el} isOnHead>
-                {heads[el]}
-              </Cell>
-            ))
-          : Object.keys(heads).map((el, idx) => (
-              <Cell
-                key={idx}
-                content={el}
-                isEditing={isEditing}
-                studentInfo={studentInfo}
-                setStudentInfo={setStudentInfo}
-              >
-                {studentInfo[el]}
-              </Cell>
-            ))}
-      </>
+      {isOnHead
+        ? Object.keys(heads).map((el, idx) => (
+            <Cell key={idx} content={el} isOnHead>
+              {heads[el]}
+            </Cell>
+          ))
+        : Object.keys(heads).map((el, idx) => (
+            <Cell
+              key={idx}
+              content={el}
+              isEditing={!isOnAdd && isEditing}
+              studentInfo={studentInfo}
+              setStudentInfo={setStudentInfo}
+              label={heads[el]}
+              isOnAdd={isOnAdd}
+            />
+          ))}
       <BtnCell>
         {!isOnHead &&
-          (isEditing ? (
+          (isOnAdd ? (
+            <button className="submit button" onClick={handleSubmit} disabled={!studentInfo.name}>
+              <HiPlusSm />
+            </button>
+          ) : isEditing ? (
             <>
               <button className="apply button" onClick={handleUpdateInfo}>
                 <HiCheck />
@@ -157,10 +256,12 @@ const Row = ({ isOnHead, info }) => {
 
 Row.defalutProps = {
   isOnHead: false,
+  isOnAdd: false,
 };
 
 Row.propTypes = {
   isOnHead: PropTypes.bool,
+  isOnAdd: PropTypes.bool,
   info: PropTypes.exact({
     id: PropTypes.number,
     name: PropTypes.string,
