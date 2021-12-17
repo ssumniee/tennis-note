@@ -7,6 +7,50 @@ module.exports = {
       attributes: { exclude: [...excludes] },
     });
   },
+  findAllClubInfo: async () => {
+    const adminsData = await club.findAll({
+      where: { is_admin: true },
+      order: ["createdAt"],
+    });
+    const tempsData = await club.findAll({
+      where: { temp: true },
+      order: ["createdAt"],
+    });
+    const clubsData = await club.findAll({
+      where: { is_admin: false, temp: false },
+      attributes: { exclude: ["password"] },
+      order: ["createdAt"],
+    });
+    return {
+      admins: adminsData.map((admin) => admin.dataValues),
+      temps: tempsData.map((temp) => temp.dataValues),
+      clubs: clubsData.map((club) => club.dataValues),
+    };
+  },
+  updateClubInfo: async (updated) => {
+    // 변경된 클럽 정보
+    const { id: club_id, name, tel } = updated;
+    // 클럽 정보 갱신
+    await club.update(
+      { name, tel },
+      {
+        where: {
+          id: club_id,
+        },
+      }
+    );
+    return { ...updated };
+  },
+  createClubInfo: async (club_info) => {
+    // 클럽 정보 생성
+    const created = await club.create({ ...club_info });
+    return { ...created.dataValues };
+  },
+  destroyClubInfo: async (club_id) => {
+    // 클럽 정보 삭제
+    await club.destroy({ where: { id: club_id } });
+    return { club_id };
+  },
   findAllStudentInfo: async (club_id) => {
     // club_id로 필요한 유저 정보 가져오기
     const raw = await student.findAll({
@@ -78,19 +122,6 @@ module.exports = {
     await student.destroy({ where: { id: student_id } });
     return { student_id };
   },
-  findAllTeacherInfo: async (club_id) => {
-    const teachersData = await teacher.findAll({
-      where: { club_id },
-      attributes: ["id", "name"],
-    });
-    return teachersData.map((data) => data.dataValues);
-  },
-  findAllDayInfo: async () => {
-    const daysData = await day.findAll({
-      attributes: ["id", "name"],
-    });
-    return daysData.map((data) => data.dataValues);
-  },
   minusStudentCounts: async (day_id) => {
     // 요일 아이디로 해당 요일에 수업이 있는 유저들 정보 구하기
     const studentsData = await student_day.findAll({
@@ -117,5 +148,18 @@ module.exports = {
       })
     );
     return updated;
+  },
+  findAllTeacherInfo: async (club_id) => {
+    const teachersData = await teacher.findAll({
+      where: { club_id },
+      attributes: ["id", "name"],
+    });
+    return teachersData.map((data) => data.dataValues);
+  },
+  findAllDayInfo: async () => {
+    const daysData = await day.findAll({
+      attributes: ["id", "name"],
+    });
+    return daysData.map((data) => data.dataValues);
   },
 };
