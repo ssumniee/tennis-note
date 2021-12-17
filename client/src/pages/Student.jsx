@@ -55,8 +55,8 @@ const Student = () => {
 
   return (
     <StudentContainer>
-      <Table subject="student" infoList={studentList} />
-      <Table subject="student" isAdding />
+      <Table fullWidth subject="student" infoList={studentList} />
+      <Table fullWidth subject="student" isAdding />
     </StudentContainer>
   );
 };

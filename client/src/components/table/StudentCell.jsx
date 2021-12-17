@@ -20,9 +20,6 @@ const CellContainer = styled.th`
   min-height: 2.5rem;
   padding: 0.25rem;
   border-right: 1px solid var(--color-lightgray);
-  :last-child {
-    border: none;
-  }
   ${(props) => css`
     flex: ${rates[props.content] / sum} ${rates[props.content] / sum} 0;
     min-width: calc(${rates[props.content] / sum} * (100% - 2.5rem - 4.5rem));
@@ -42,18 +39,18 @@ const CellContainer = styled.th`
   position: relative;
   .content {
     display: flex;
-    ${(props) => {
-      if (props.content === "count")
-        return css`
+  }
+  ${(props) => {
+    if (props.content === "count")
+      return css`
+        .content {
           justify-content: space-around;
-        `;
-    }}
-  }
-  .clear-input {
-    ${media.lessThan("medium")`
-      display: none;
-    `}
-  }
+        }
+        ${media.lessThan("medium")`
+          border: none;
+        `}
+      `;
+  }}
 `;
 
 const Content = styled.div`

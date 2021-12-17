@@ -16,13 +16,19 @@ import { loginAction, getAllStudentInfoAction, getAllClubInfoAction } from "../.
 
 const RowContainer = styled.tr`
   ${(props) =>
-    !props.isOnHead &&
-    css`
-      border-bottom: 1px solid var(--color-lightgray);
-      :last-child {
-        border: none;
-      }
-    `}
+    props.isOnHead
+      ? css`
+          font-size: 0.75rem;
+          > th {
+            min-height: 2rem;
+          }
+        `
+      : css`
+          border-bottom: 1px solid var(--color-lightgray);
+          :last-child {
+            border: none;
+          }
+        `}
   display: flex;
   justify-content: space-between;
   .button {
@@ -95,9 +101,6 @@ const FixedCell = styled.th`
   justify-content: center;
   align-items: center;
   padding: 0 0.25rem;
-  ${media.lessThan("medium")`
-    display: none;
-  `}
 `;
 
 const NumCell = styled(FixedCell)`
@@ -107,6 +110,9 @@ const NumCell = styled(FixedCell)`
 
 const BtnCell = styled(FixedCell)`
   flex: 0 0 4.5rem;
+  ${media.lessThan("medium")`
+    display: none;
+  `}
 `;
 
 const heads = {

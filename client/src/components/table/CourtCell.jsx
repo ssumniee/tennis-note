@@ -26,23 +26,18 @@ const CellContainer = styled.th`
       min-width: calc(${rates[props.content] / onlyPCSum} * (100% - 2.5rem - 4.5rem));
     `}
   `}
-  ${(props) => {
-    if (props.content === "onlyPC")
-      return css`
-        ${media.lessThan("small")`
-          display: none;
-        `}
-      `;
-  }}
   position: relative;
   .content {
     display: flex;
   }
-  .clear-input {
-    ${media.lessThan("medium")`
-      display: none;
-    `}
-  }
+  ${(props) => {
+    if (props.content === "name")
+      return css`
+        ${media.lessThan("medium")`
+          border: none;
+        `}
+      `;
+  }}
 `;
 
 const Content = styled.div`
