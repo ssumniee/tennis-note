@@ -78,9 +78,12 @@ const Admin = () => {
   const handleCreateClub = async () => {
     try {
       // 클럽 계정 생성
-      const res = await clubApi.addClubInfo({ ...clubInfo });
+      await clubApi.addClubInfo({ ...clubInfo });
       // 리덕스 스토어 업데이트
-      dispatch(getAllClubInfoAction(res.data));
+      const res = await clubApi.getAllClubInfo();
+      if (res.status === 200) {
+        dispatch(getAllClubInfoAction(res.data));
+      }
       // 클럽 정보 input state 초기화
       setClubInfo({ name: "", is_admin: false });
     } catch (err) {

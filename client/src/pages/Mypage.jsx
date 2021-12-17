@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
+import clubApi from "../api/club";
 import { loginAction, logoutAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
@@ -100,7 +101,7 @@ const Mypage = () => {
     name,
     tel,
     days: dayList,
-    teachers: teacherList,
+    // teachers: teacherList,
   } = useSelector(({ authReducer }) => authReducer);
   const [isEditing, setIsEditing] = useState(false);
   const [clubInfo, setClubInfo] = useState({
@@ -108,11 +109,16 @@ const Mypage = () => {
     name,
     tel,
     dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
-    teachers: teacherList.map((teacher) => teacher.id),
   });
 
   const handleApplyUpdate = async () => {
-    // TODO: 클럽 정보 업데이트
+    // 바뀐 정보 clubInfo로 DB 업데이트
+    await clubApi.modifyClubInfo(clubInfo);
+    // 리덕스 스토어 업데이트
+    const res = await authApi.me();
+    if (res.status === 200) {
+      dispatch(loginAction(res.data));
+    }
     setIsEditing(false);
   };
 
@@ -122,7 +128,6 @@ const Mypage = () => {
       name,
       tel,
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
-      teachers: teacherList.map((teacher) => teacher.id),
     });
     setIsEditing(false);
   };
@@ -150,9 +155,8 @@ const Mypage = () => {
       name,
       tel,
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
-      teachers: teacherList.map((teacher) => teacher.id),
     });
-  }, [clubId, name, tel, dayList, teacherList]);
+  }, [clubId, name, tel, dayList]);
 
   return (
     <MypageContainer>
@@ -164,7 +168,7 @@ const Mypage = () => {
             {isEditing ? (
               <TextInput content="name" inputValue={clubInfo.name} setInputValue={setClubInfo} />
             ) : (
-              name
+              clubInfo.name
             )}
           </div>
         </Info>
@@ -174,12 +178,12 @@ const Mypage = () => {
             {isEditing ? (
               <TextInput content="tel" inputValue={clubInfo.tel} setInputValue={setClubInfo} />
             ) : (
-              tel
+              clubInfo.tel
             )}
           </div>
         </Info>
         <Info>
-          <div className="index">휴무</div>
+          <div className="index">휴무일</div>
           <div className="content">
             {isEditing ? (
               <MultiSelectInput

@@ -128,9 +128,12 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
   const handleUpdateInfo = async () => {
     try {
       // 바뀐 정보 studentInfo로 DB 업데이트
-      const res = await studentApi.modifyStudentInfo(studentInfo);
+      await studentApi.modifyStudentInfo(studentInfo);
       // 리덕스 스토어 업데이트
-      dispatch(getAllStudentInfoAction(res.data));
+      const res = await studentApi.getAllStudentInfo();
+      if (res.status === 200) {
+        dispatch(getAllStudentInfoAction(res.data));
+      }
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -145,9 +148,12 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
   const handleDeleteInfo = async () => {
     try {
       // studentInfo 삭제하도록 DB 업데이트
-      const res = await studentApi.deleteStudentInfo(studentInfo.id);
+      await studentApi.deleteStudentInfo(studentInfo.id);
       // 리덕스 스토어 업데이트
-      dispatch(getAllStudentInfoAction(res.data));
+      const res = await studentApi.getAllStudentInfo();
+      if (res.status === 200) {
+        dispatch(getAllStudentInfoAction(res.data));
+      }
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -169,9 +175,12 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
         days,
       };
       // 새로운 정보를 studentInfo로 DB에 추가
-      const res = await studentApi.addStudentInfo(toAdd);
+      await studentApi.addStudentInfo(toAdd);
       // 리덕스 스토어 업데이트
-      dispatch(getAllStudentInfoAction(res.data));
+      const res = await studentApi.getAllStudentInfo();
+      if (res.status === 200) {
+        dispatch(getAllStudentInfoAction(res.data));
+      }
       // 유저 정보 state 초기화
       setStudentInfo({
         name: "",
