@@ -14,7 +14,6 @@ const authReducer = (prevState = initialState, action) => {
   let state;
   switch (action.type) {
     case LOG_IN:
-      console.log("updated: ", action.payload);
       state = {
         ...prevState,
         isAdmin: action.payload.is_admin,
