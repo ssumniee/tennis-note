@@ -24,11 +24,13 @@ const HeaderContainer = styled.header`
 
 const Logo = styled.div`
   flex: 0 0 1;
+  width: max-content;
   font-size: 1.5rem;
 `;
 
 const LogoutButton = styled.button`
   flex: 0 0 1;
+  width: max-content;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   background-color: var(--color-blue);
@@ -39,32 +41,22 @@ const LogoutButton = styled.button`
 const NavContainer = styled.div`
   flex: 1 1 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   height: 100%;
   margin: 0 2rem;
   position: relative;
-  .left,
-  .right {
-    display: flex;
-  }
-  .left > #to-student,
-  #to-schedule,
-  #to-sales {
-    width: 3.5rem;
-  }
-  .right > #to-mypage {
-    width: 5rem;
-  }
 `;
 
 const Nav = styled(NavLink)`
+  overflow: auto visible;
+  padding: 0 0.75rem;
+  width: max-content;
   height: 100%;
   border-radius: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
   :last-of-type {
     margin-right: 0;
   }
@@ -90,7 +82,7 @@ const Nav = styled(NavLink)`
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAdmin } = useSelector(({ authReducer }) => authReducer);
+  const { isAdmin, isTemp } = useSelector(({ authReducer }) => authReducer);
 
   const handleLogout = async () => {
     const res = await authApi.logout();
@@ -105,26 +97,26 @@ const Header = () => {
       <Logo>테니스노트</Logo>
       {!isAdmin && (
         <NavContainer>
-          <div className="left">
-            <Nav id="to-student" to={"/student"}>
-              회원
-              <div className="underline"></div>
-            </Nav>
-            <Nav id="to-schedule" to={"/schedule"}>
-              시간표
-              <div className="underline"></div>
-            </Nav>
-            <Nav id="to-sales" to={"/sales"}>
-              수강료
-              <div className="underline"></div>
-            </Nav>
-          </div>
-          <div className="right">
-            <Nav id="to-mypage" to={"/mypage"}>
-              마이페이지
-              <div className="underline"></div>
-            </Nav>
-          </div>
+          {!isTemp && (
+            <>
+              <Nav to={"/student"}>
+                회원
+                <div className="underline"></div>
+              </Nav>
+              <Nav to={"/schedule"}>
+                시간표
+                <div className="underline"></div>
+              </Nav>
+              <Nav to={"/sales"}>
+                수강료
+                <div className="underline"></div>
+              </Nav>
+            </>
+          )}
+          <Nav to={"/mypage"}>
+            마이페이지
+            <div className="underline"></div>
+          </Nav>
         </NavContainer>
       )}
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
