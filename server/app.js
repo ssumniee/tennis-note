@@ -12,6 +12,8 @@ const cron = require("node-cron");
 
 const authRouter = require("./router/auth");
 const studentRouter = require("./router/student");
+const clubRouter = require("./router/club");
+const utilRouter = require("./router/util");
 const app = express();
 
 const corsOption = { origin: allowedOrigin, optionsSuccessStatus: 200, credentials: true };
@@ -27,6 +29,8 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", authRouter);
 app.use("/student", studentRouter);
+app.use("/club", clubRouter);
+app.use("/util", utilRouter);
 
 app.listen(config.port, async () => {
   console.log(`🚀 Listening on PORT: ${config.port}`);

@@ -24,15 +24,15 @@ module.exports = {
   },
   setCookie: (res, token) => {
     res.cookie("jwt", token, {
-      secure: true,
-      sameSite: "none",
+      // secure: true,
+      // sameSite: "none",
       httpOnly: true,
     });
   },
   clearCookie: (res) => {
     res.clearCookie("jwt", {
-      secure: true,
-      sameSite: "none",
+      // secure: true,
+      // sameSite: "none",
       httpOnly: true,
     });
   },
