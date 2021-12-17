@@ -18,7 +18,7 @@ module.exports = {
   },
   modifyStudentInfo: async (req, res) => {
     try {
-      // 유저 정보 수정
+      // 학생 정보 수정
       const { updated } = req.body;
       const updatedInfo = await updateStudentInfo(updated);
       return res
@@ -30,19 +30,19 @@ module.exports = {
   },
   addStudentInfo: async (req, res) => {
     try {
-      // 유저 정보 생성
+      // 학생 정보 생성
       const { student, days } = req.body;
       const createdInfo = await createStudentInfo({ student, days });
       return res
         .status(200)
-        .json({ message: "student created", updated: { student_id: createdInfo.id } });
+        .json({ message: "student created", created: { student_id: createdInfo.id } });
     } catch (err) {
       DBERROR(res, err);
     }
   },
   deleteStudentInfo: async (req, res) => {
     try {
-      // 유저 정보 삭제
+      // 학생 정보 삭제
       const { id: student_id } = req.body;
       await destroyStudentInfo(student_id);
       return res.status(200).json({ message: "student deleted", deleted: { student_id } });
