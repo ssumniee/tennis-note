@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
-import Cell from "./MypageCell";
+import StudentCell from "./StudentCell";
+import ClubCell from "./ClubCell";
+import TeacherCell from "./TeacherCell";
+import CourtCell from "./CourtCell";
 import { FaPencilAlt } from "react-icons/fa";
 import { HiX, HiCheck, HiMinus, HiPlusSm } from "react-icons/hi";
-import clubApi from "../../api/club";
 import authApi from "../../api/auth";
-import { loginAction } from "../../store/actions";
+import studentApi from "../../api/student";
+import clubApi from "../../api/club";
+import { loginAction, getAllStudentInfoAction, getAllClubInfoAction } from "../../store/actions";
 
 const RowContainer = styled.tr`
   ${(props) =>
@@ -106,13 +110,17 @@ const BtnCell = styled(FixedCell)`
 `;
 
 const heads = {
-  teacher: {
+  student: {
     name: "이름",
-    court_id: "코트",
+    tel: "전화번호",
+    start_date: "시작일",
+    teacher_id: "선생님",
+    days: "요일",
+    count: "등록 횟수",
   },
-  court: {
-    name: "이름",
-  },
+  club: { name: "이름", password: "비밀번호", createdAt: "가입일" },
+  teacher: { name: "이름", court_id: "코트" },
+  court: { name: "이름" },
 };
 
 const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
@@ -125,6 +133,12 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
     try {
       // tableInfo 정보 DB 업데이트
       switch (subject) {
+        case "student":
+          await studentApi.modifyStudentInfo(tableInfo);
+          break;
+        case "club":
+          await clubApi.modifyClubInfo(tableInfo);
+          break;
         case "teacher":
           await clubApi.modifyTeacherInfo(tableInfo);
           break;
@@ -134,9 +148,21 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
         default:
       }
       // 리덕스 스토어 업데이트
-      const res = await authApi.me();
-      if (res.status === 200) {
-        dispatch(loginAction(res.data));
+      if (subject === "student") {
+        const res = await studentApi.getAllStudentInfo();
+        if (res.status === 200) {
+          dispatch(getAllStudentInfoAction(res.data));
+        }
+      } else if (subject === "club") {
+        const res = await clubApi.getAllClubInfo();
+        if (res.status === 200) {
+          dispatch(getAllClubInfoAction(res.data));
+        }
+      } else {
+        const res = await authApi.me();
+        if (res.status === 200) {
+          dispatch(loginAction(res.data));
+        }
       }
       setIsEditing(false);
     } catch (err) {
@@ -146,6 +172,16 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
 
   const handleQuitUpdate = () => {
     switch (subject) {
+      case "student":
+        setTableInfo(
+          isOnAdd
+            ? { name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 }
+            : { ...info }
+        );
+        break;
+      case "club":
+        setTableInfo({ ...info });
+        break;
       case "teacher":
         setTableInfo(isOnAdd ? { name: "", court_id: "" } : { ...info });
         break;
@@ -161,6 +197,12 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
     try {
       // tableInfo 삭제하도록 DB 업데이트
       switch (subject) {
+        case "student":
+          await studentApi.deleteStudentInfo(tableInfo.id);
+          break;
+        case "club":
+          await clubApi.deleteClubInfo(tableInfo.id);
+          break;
         case "teacher":
           await clubApi.deleteTeacherInfo(tableInfo.id);
           break;
@@ -170,9 +212,21 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
         default:
       }
       // 리덕스 스토어 업데이트
-      const res = await authApi.me();
-      if (res.status === 200) {
-        dispatch(loginAction(res.data));
+      if (subject === "student") {
+        const res = await studentApi.getAllStudentInfo();
+        if (res.status === 200) {
+          dispatch(getAllStudentInfoAction(res.data));
+        }
+      } else if (subject === "club") {
+        const res = await clubApi.getAllClubInfo();
+        if (res.status === 200) {
+          dispatch(getAllClubInfoAction(res.data));
+        }
+      } else {
+        const res = await authApi.me();
+        if (res.status === 200) {
+          dispatch(loginAction(res.data));
+        }
       }
       setIsEditing(false);
     } catch (err) {
@@ -182,9 +236,30 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
 
   const handleCreateInfo = async () => {
     try {
-      const { name, court_id: court = null } = tableInfo;
+      const {
+        name,
+        tel,
+        start_date: start,
+        teacher_id: teacher,
+        days,
+        count,
+        court_id: court,
+      } = tableInfo;
       // tableInfo 정보 DB에 추가
       switch (subject) {
+        case "student":
+          await studentApi.addStudentInfo({
+            student: {
+              club_id: clubId,
+              name,
+              tel: tel || null,
+              start_date: start,
+              teacher_id: teacher || null,
+              count: count || 0,
+            },
+            days,
+          });
+          break;
         case "teacher":
           await clubApi.addTeacherInfo({ name, club_id: clubId, court_id: court || null });
           break;
@@ -194,12 +269,22 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
         default:
       }
       // 리덕스 스토어 업데이트
-      const res = await authApi.me();
-      if (res.status === 200) {
-        dispatch(loginAction(res.data));
+      if (subject === "student") {
+        const res = await studentApi.getAllStudentInfo();
+        if (res.status === 200) {
+          dispatch(getAllStudentInfoAction(res.data));
+        }
+      } else {
+        const res = await authApi.me();
+        if (res.status === 200) {
+          dispatch(loginAction(res.data));
+        }
       }
       // tableInfo 초기화
       switch (subject) {
+        case "student":
+          setTableInfo({ name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 });
+          break;
         case "teacher":
           setTableInfo({ name: "", court_id: "" });
           break;
@@ -216,6 +301,16 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
   useEffect(() => {
     if (isOnHead) return;
     switch (subject) {
+      case "student":
+        setTableInfo(
+          isOnAdd
+            ? { name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 }
+            : { ...info }
+        );
+        break;
+      case "club":
+        setTableInfo({ ...info });
+        break;
       case "teacher":
         setTableInfo(isOnAdd ? { name: "", court_id: "" } : { ...info });
         break;
@@ -232,6 +327,16 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
   useEffect(() => {
     if (isOnHead) return;
     switch (subject) {
+      case "student":
+        setTableInfo(
+          isOnAdd
+            ? { name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 }
+            : { ...info }
+        );
+        break;
+      case "club":
+        setTableInfo({ ...info });
+        break;
       case "teacher":
         setTableInfo(isOnAdd ? { name: "", court_id: "" } : { ...info });
         break;
@@ -258,22 +363,90 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
         )}
       </NumCell>
       {isOnHead
-        ? Object.keys(heads[subject]).map((el, idx) => (
-            <Cell key={idx} content={el} isOnHead>
-              {heads[subject][el]}
-            </Cell>
-          ))
-        : Object.keys(heads[subject]).map((el, idx) => (
-            <Cell
-              key={idx}
-              content={el}
-              isEditing={isEditing}
-              tableInfo={tableInfo}
-              setTableInfo={setTableInfo}
-              label={heads[subject][el]}
-              isOnAdd={isOnAdd}
-            />
-          ))}
+        ? Object.keys(heads[subject]).map((el, idx) => {
+            switch (subject) {
+              case "student":
+                return (
+                  <StudentCell key={idx} content={el} isOnHead>
+                    {heads[subject][el]}
+                  </StudentCell>
+                );
+              case "club":
+                return (
+                  <ClubCell key={idx} content={el} isOnHead>
+                    {heads[subject][el]}
+                  </ClubCell>
+                );
+              case "teacher":
+                return (
+                  <TeacherCell key={idx} content={el} isOnHead>
+                    {heads[subject][el]}
+                  </TeacherCell>
+                );
+              case "court":
+                return (
+                  <CourtCell key={idx} content={el} isOnHead>
+                    {heads[subject][el]}
+                  </CourtCell>
+                );
+              default:
+                return <></>;
+            }
+          })
+        : Object.keys(heads[subject]).map((el, idx) => {
+            switch (subject) {
+              case "student":
+                return (
+                  <StudentCell
+                    key={idx}
+                    content={el}
+                    isEditing={isEditing}
+                    tableInfo={tableInfo}
+                    setTableInfo={setTableInfo}
+                    label={heads[subject][el]}
+                    isOnAdd={isOnAdd}
+                  />
+                );
+              case "club":
+                return (
+                  <ClubCell
+                    key={idx}
+                    content={el}
+                    isEditing={isEditing}
+                    tableInfo={tableInfo}
+                    setTableInfo={setTableInfo}
+                    label={heads[subject][el]}
+                    isOnAdd={isOnAdd}
+                  />
+                );
+              case "teacher":
+                return (
+                  <TeacherCell
+                    key={idx}
+                    content={el}
+                    isEditing={isEditing}
+                    tableInfo={tableInfo}
+                    setTableInfo={setTableInfo}
+                    label={heads[subject][el]}
+                    isOnAdd={isOnAdd}
+                  />
+                );
+              case "court":
+                return (
+                  <CourtCell
+                    key={idx}
+                    content={el}
+                    isEditing={isEditing}
+                    tableInfo={tableInfo}
+                    setTableInfo={setTableInfo}
+                    label={heads[subject][el]}
+                    isOnAdd={isOnAdd}
+                  />
+                );
+              default:
+                return <></>;
+            }
+          })}
       <BtnCell>
         {!isOnHead &&
           (isOnAdd ? (
@@ -318,17 +491,15 @@ MypageRow.propTypes = {
     num: PropTypes.number,
     name: PropTypes.string,
     club_id: PropTypes.number,
+    teacher_id: PropTypes.number,
+    tel: PropTypes.string,
+    start_date: PropTypes.string,
+    count: PropTypes.number,
+    days: PropTypes.arrayOf(PropTypes.number),
+    password: PropTypes.string,
+    createdAt: PropTypes.date,
     court_id: PropTypes.number,
   }),
 };
 
 export default MypageRow;
-
-// {
-//   teacherList.map((teacher, idx) => (
-//     <div key={teacher.id}>
-//       <span>{idx + 1}</span> <span>이름: {teacher.name}</span>{" "}
-//       <span>코트: {courtList.find((court) => court.id === teacher.court_id)?.name || "미정"}</span>
-//     </div>
-//   ));
-// }

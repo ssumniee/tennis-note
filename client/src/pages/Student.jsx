@@ -6,7 +6,7 @@ import media from "styled-media-query";
 import authApi from "../api/auth";
 import studentApi from "../api/student";
 import { loginAction, logoutAction, getAllStudentInfoAction } from "../store/actions";
-import Table from "../components/table/StudentTable";
+import Table from "../components/table/Table";
 
 const StudentContainer = styled.div`
   width: 100vw;
@@ -55,8 +55,8 @@ const Student = () => {
 
   return (
     <StudentContainer>
-      <Table infoList={studentList} />
-      <Table isAdding />
+      <Table subject="student" infoList={studentList} />
+      <Table subject="student" isAdding />
     </StudentContainer>
   );
 };

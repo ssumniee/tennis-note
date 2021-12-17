@@ -8,7 +8,7 @@ import clubApi from "../api/club";
 import { loginAction, logoutAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
-import Table from "../components/table/MypageTable";
+import Table from "../components/table/Table";
 
 const MypageContainer = styled.div`
   width: 100vw;

@@ -6,7 +6,7 @@ import media from "styled-media-query";
 import authApi from "../api/auth";
 import clubApi from "../api/club";
 import { loginAction, logoutAction, getAllClubInfoAction } from "../store/actions";
-import Table from "../components/table/AdminTable";
+import Table from "../components/table/Table";
 import TextInput from "../components/input/TextInput";
 import CheckboxInput from "../components/input/CheckboxInput";
 
@@ -148,11 +148,11 @@ const Admin = () => {
         </Button>
       </InputArea>
       <Title>관리자 계정</Title>
-      <Table infoList={adminList} />
+      <Table subject="club" infoList={adminList} />
       <Title>임시 계정</Title>
-      <Table infoList={tempList} />
+      <Table subject="club" infoList={tempList} />
       <Title>클럽 계정</Title>
-      <Table infoList={clubList} />
+      <Table subject="club" infoList={clubList} />
     </AdminContainer>
   );
 };

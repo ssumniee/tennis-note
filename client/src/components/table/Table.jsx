@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import Row from "./StudentRow";
+import Row from "./Row";
 
 const TableContainer = styled.table`
   width: 100%;
@@ -25,43 +25,42 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const StudentTable = ({ isAdding, infoList = [] }) => {
+const MypageTable = ({ subject, isAdding, infoList = [] }) => {
   return (
     <TableContainer>
       {!isAdding && (
         <TableHead>
-          <Row isOnHead />
+          <Row subject={subject} isOnHead />
         </TableHead>
       )}
       <TableBody>
         {isAdding ? (
-          <Row isOnAdd />
+          <Row subject={subject} isOnAdd />
         ) : (
-          infoList.map((info, idx) => <Row key={idx} info={{ ...info, num: idx + 1 }}></Row>)
+          infoList.map((info, idx) => (
+            <Row key={idx} subject={subject} info={{ ...info, num: idx + 1 }}></Row>
+          ))
         )}
       </TableBody>
     </TableContainer>
   );
 };
 
-StudentTable.defalutProps = {
+MypageTable.defaultProps = {
   isAdding: false,
 };
 
-StudentTable.propTypes = {
+MypageTable.propTypes = {
+  subject: PropTypes.string,
   isAdding: PropTypes.bool,
   infoList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
       club_id: PropTypes.number,
-      teacher_id: PropTypes.number,
-      tel: PropTypes.string,
-      start_date: PropTypes.string,
-      count: PropTypes.number,
-      days: PropTypes.arrayOf(PropTypes.number),
+      court_id: PropTypes.number,
     })
   ),
 };
 
-export default StudentTable;
+export default MypageTable;
