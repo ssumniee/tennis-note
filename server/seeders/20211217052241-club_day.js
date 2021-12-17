@@ -7,12 +7,12 @@ module.exports = {
       [
         {
           id: 1,
-          club_id: 1,
+          club_id: 2,
           dayoff_id: 7,
         },
         {
           id: 2,
-          club_id: 2,
+          club_id: 3,
           dayoff_id: 2,
         },
       ],
