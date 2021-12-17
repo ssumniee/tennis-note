@@ -4,13 +4,13 @@ module.exports = (sequelize, DataTypes) => {
   class student_day extends Model {
     static associate(models) {
       models.student_day.belongsTo(models.student, {
-        foreignKey: { name: "student_id", allowNull: true },
+        foreignKey: { name: "student_id", allowNull: false },
         targetKey: "id",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
       models.student_day.belongsTo(models.day, {
-        foreignKey: { name: "day_id", allowNull: true },
+        foreignKey: { name: "day_id", allowNull: false },
         targetKey: "id",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
