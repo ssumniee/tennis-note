@@ -20,7 +20,7 @@ module.exports = {
       if (!clubAccount) {
         return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
       }
-      const { is_admin, id, tel = null } = clubAccount.dataValues;
+      const { is_admin, temp, id, tel = null } = clubAccount.dataValues;
       const info = { id, name, tel };
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
@@ -29,7 +29,7 @@ module.exports = {
       }
       const token = generateAccessToken(id);
       setCookie(res, token);
-      return res.status(200).json({ is_admin, info });
+      return res.status(200).json({ is_admin, temp, info });
     } catch (err) {
       DBERROR(res, err);
     }
@@ -46,14 +46,14 @@ module.exports = {
     try {
       const { club_id } = res.locals;
       const clubInfo = await findOneClub({ id: club_id });
-      const { is_admin, id, name, tel } = clubInfo.dataValues;
+      const { is_admin, temp, id, name, tel } = clubInfo.dataValues;
       const info = { id, name, tel };
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);
         info.courts = await findAllCourtInfo(id);
       }
-      return res.status(200).json({ is_admin, info });
+      return res.status(200).json({ is_admin, temp, info });
     } catch (err) {
       DBERROR(res, err);
     }
