@@ -75,7 +75,7 @@ const RefreshBtn = styled.button`
   }
 `;
 
-const PasswordInput = ({ content, inputValue, setInputValue, fontSize, isAdmin }) => {
+const PasswordInput = ({ content, inputValue, setInputValue, fontSize, editable, blurred }) => {
   useEffect(() => {
     setInputValue((prevState) => ({ ...prevState, [content]: inputValue || "" }));
   }, []);
@@ -96,12 +96,12 @@ const PasswordInput = ({ content, inputValue, setInputValue, fontSize, isAdmin }
   return (
     <InputContainer fontSize={fontSize}>
       <InputInner
-        type="text"
+        type={blurred ? "password" : "text"}
         value={inputValue}
-        onChange={isAdmin ? handleInputChange : undefined}
-        readOnly={!isAdmin}
+        onChange={editable ? handleInputChange : undefined}
+        readOnly={!editable}
       />
-      {isAdmin ? (
+      {editable ? (
         !!inputValue && (
           <ClearBtn className="clear" onClick={handleInputClear}>
             <IoCloseCircle />
@@ -117,7 +117,8 @@ const PasswordInput = ({ content, inputValue, setInputValue, fontSize, isAdmin }
 };
 
 PasswordInput.defaultProps = {
-  isAdmin: false,
+  editable: false,
+  blurred: false,
 };
 
 PasswordInput.propTypes = {
@@ -125,7 +126,8 @@ PasswordInput.propTypes = {
   inputValue: PropTypes.string.isRequired,
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
-  isAdmin: PropTypes.bool,
+  editable: PropTypes.bool,
+  blurred: PropTypes.bool,
 };
 
 export default PasswordInput;
