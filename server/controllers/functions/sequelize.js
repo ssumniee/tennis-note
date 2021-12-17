@@ -1,4 +1,4 @@
-const { club, student, teacher, day, student_day, club_day } = require("../../models");
+const { club, student, teacher, day, student_day, club_day, court } = require("../../models");
 
 module.exports = {
   findOneClub: async (queries, excludes = []) => {
@@ -173,21 +173,80 @@ module.exports = {
   findAllTeacherInfo: async (club_id) => {
     const teachersData = await teacher.findAll({
       where: { club_id },
-      attributes: ["id", "name"],
+      attributes: { exclude: ["createdAt", "updatedAt"] },
     });
     return teachersData.map((data) => data.dataValues);
   },
+  updateTeacherInfo: async (updated) => {
+    // 변경된 강사 정보
+    const { id: teacher_id, name, club_id, court_id } = updated;
+    // 강사 정보 갱신
+    await teacher.update(
+      { name, court_id },
+      {
+        where: {
+          id: teacher_id,
+          club_id,
+        },
+      }
+    );
+    return { ...updated };
+  },
+  createTeacherInfo: async (teacher_info) => {
+    // 강사 정보 생성
+    const created = await teacher.create({ ...teacher_info });
+    return { ...created.dataValues };
+  },
+  destroyTeacherInfo: async (teacher_id) => {
+    // 강사 정보 삭제
+    await teacher.destroy({ where: { id: teacher_id } });
+    return { teacher_id };
+  },
+  findAllCourtInfo: async (club_id) => {
+    const courtsData = await court.findAll({
+      where: { club_id },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      order: ["name"],
+    });
+    return courtsData.map((data) => data.dataValues);
+  },
+  updateCourtInfo: async (updated) => {
+    // 변경된 코트 정보
+    const { id: court_id, name } = updated;
+    // 코트 정보 갱신
+    await court.update(
+      { name },
+      {
+        where: {
+          id: court_id,
+        },
+      }
+    );
+    return { ...updated };
+  },
+  createCourtInfo: async (court_info) => {
+    // 코트 정보 생성
+    const created = await court.create({ ...court_info });
+    return { ...created.dataValues };
+  },
+  destroyCourtInfo: async (court_id) => {
+    // 코트 정보 삭제
+    await court.destroy({ where: { id: court_id } });
+    return { court_id };
+  },
   findAllDayInfo: async (club_id) => {
-    const allDaysData = await day.findAll({
-      attributes: ["id", "name"],
+    const daysData = await day.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      order: ["id"],
     });
     const offDaysData = await club_day.findAll({
       where: { club_id },
       attributes: ["dayoff_id"],
+      order: ["dayoff_id"],
     });
-    const allDays = allDaysData.map((data) => data.dataValues);
+    const days = daysData.map((data) => data.dataValues);
     const dayoffIds = offDaysData.map((data) => data.dataValues.dayoff_id);
-    return allDays.map((day) => {
+    return days.map((day) => {
       if (dayoffIds.includes(day.id)) return { ...day, off: true };
       else return { ...day, off: false };
     });

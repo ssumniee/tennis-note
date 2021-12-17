@@ -3,7 +3,12 @@
 // const {
 //   bcrypt: { saltRounds },
 // } = require("../config");
-const { findOneClub, findAllTeacherInfo, findAllDayInfo } = require("./functions/sequelize");
+const {
+  findOneClub,
+  findAllTeacherInfo,
+  findAllDayInfo,
+  findAllCourtInfo,
+} = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 const { clearCookie, generateAccessToken, setCookie } = require("./functions/token");
 
@@ -20,6 +25,7 @@ module.exports = {
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);
+        info.courts = await findAllCourtInfo(id);
       }
       const token = generateAccessToken(id);
       setCookie(res, token);
@@ -45,6 +51,7 @@ module.exports = {
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);
+        info.courts = await findAllCourtInfo(id);
       }
       return res.status(200).json({ is_admin, info });
     } catch (err) {
