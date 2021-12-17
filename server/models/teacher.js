@@ -4,7 +4,13 @@ module.exports = (sequelize, DataTypes) => {
   class teacher extends Model {
     static associate(models) {
       models.teacher.belongsTo(models.club, {
-        foreignKey: { name: "club_id", allowNull: true },
+        foreignKey: { name: "club_id", allowNull: false },
+        targetKey: "id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      models.teacher.belongsTo(models.court, {
+        foreignKey: { name: "court_id" },
         targetKey: "id",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
@@ -23,6 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       club_id: {
         allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      court_id: {
         type: DataTypes.INTEGER,
       },
     },

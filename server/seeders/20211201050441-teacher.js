@@ -9,11 +9,13 @@ module.exports = {
           id: 1,
           name: "김철수",
           club_id: 2,
+          court_id: 1,
         },
         {
           id: 2,
           name: "홍길동",
           club_id: 3,
+          court_id: 4,
         },
       ],
       {}

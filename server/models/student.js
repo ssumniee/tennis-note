@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class student extends Model {
     static associate(models) {
       models.student.belongsTo(models.club, {
-        foreignKey: { name: "club_id", allowNull: true },
+        foreignKey: { name: "club_id", allowNull: false },
         targetKey: "id",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
