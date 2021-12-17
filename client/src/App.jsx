@@ -5,6 +5,7 @@ import Admin from "./pages/Admin";
 import Student from "./pages/Student";
 import Schedule from "./pages/Schedule";
 import Sales from "./pages/Sales";
+import Mypage from "./pages/Mypage";
 import Header from "./components/Header";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -49,6 +50,15 @@ const App = () => {
               <>
                 <Header />
                 <Sales />
+              </>
+            }
+          />
+          <Route
+            path="/mypage"
+            element={
+              <>
+                <Header />
+                <Mypage />
               </>
             }
           />

@@ -38,14 +38,26 @@ const LogoutButton = styled.button`
 const NavContainer = styled.div`
   flex: 1 1 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   height: 100%;
   margin: 0 2rem;
   position: relative;
+  .left,
+  .right {
+    display: flex;
+  }
+  .left > #to-student,
+  #to-schedule,
+  #to-sales {
+    width: 3.5rem;
+  }
+  .right > #to-mypage {
+    width: 5rem;
+  }
 `;
 
 const Nav = styled(NavLink)`
-  width: 3.5rem;
   height: 100%;
   border-radius: 0.5rem;
   display: flex;
@@ -59,7 +71,7 @@ const Nav = styled(NavLink)`
     display: none;
     position: absolute;
     bottom: -1rem;
-    width: 3.5rem;
+    width: 2.5rem;
     height: 0.125rem;
     background-color: var(--color-blue);
   }
@@ -92,18 +104,26 @@ const Header = () => {
       <Logo>테니스노트</Logo>
       {!isAdmin && (
         <NavContainer>
-          <Nav to={"/student"}>
-            회원
-            <div className="underline"></div>
-          </Nav>
-          <Nav to={"/schedule"}>
-            시간표
-            <div className="underline"></div>
-          </Nav>
-          <Nav to={"/sales"}>
-            수강료
-            <div className="underline"></div>
-          </Nav>
+          <div className="left">
+            <Nav id="to-student" to={"/student"}>
+              회원
+              <div className="underline"></div>
+            </Nav>
+            <Nav id="to-schedule" to={"/schedule"}>
+              시간표
+              <div className="underline"></div>
+            </Nav>
+            <Nav id="to-sales" to={"/sales"}>
+              수강료
+              <div className="underline"></div>
+            </Nav>
+          </div>
+          <div className="right">
+            <Nav id="to-mypage" to={"/mypage"}>
+              마이페이지
+              <div className="underline"></div>
+            </Nav>
+          </div>
         </NavContainer>
       )}
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
