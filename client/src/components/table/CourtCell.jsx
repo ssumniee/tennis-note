@@ -1,8 +1,12 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
 import TextInput from "../input/TextInput";
+
+const rates = { name: 1 };
+const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
+const onlyPCSum = sum;
 
 const CellContainer = styled.th`
   display: flex;
@@ -14,7 +18,22 @@ const CellContainer = styled.th`
   :last-child {
     border: none;
   }
-  flex: 1 1 0;
+  ${(props) => css`
+    flex: ${rates[props.content] / sum} ${rates[props.content] / sum} 0;
+    min-width: calc(${rates[props.content] / sum} * (100% - 2.5rem - 4.5rem));
+    ${media.lessThan("small")`
+      flex: ${rates[props.content] / onlyPCSum} ${rates[props.content] / onlyPCSum} 0;
+      min-width: calc(${rates[props.content] / onlyPCSum} * (100% - 2.5rem - 4.5rem));
+    `}
+  `}
+  ${(props) => {
+    if (props.content === "onlyPC")
+      return css`
+        ${media.lessThan("small")`
+          display: none;
+        `}
+      `;
+  }}
   position: relative;
   .content {
     display: flex;
