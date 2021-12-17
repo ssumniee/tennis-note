@@ -22,6 +22,20 @@ const MypageContainer = styled.div`
   }
 `;
 
+const Alert = styled.div`
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-paleblue);
+  :first-of-type {
+    margin-top: 0;
+  }
+  font-family: Interop-Medium;
+  font-weight: normal;
+  font-size: 0.925rem;
+  color: var(--color-blue);
+`;
+
 const Title = styled.h1`
   margin: 2rem 0 1.5rem;
   :first-of-type {
@@ -101,6 +115,7 @@ const Mypage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
+    isTemp,
     id: clubId,
     name,
     tel,
@@ -165,15 +180,22 @@ const Mypage = () => {
 
   return (
     <MypageContainer>
+      {isTemp && (
+        <Alert>! 최초 발급된 비밀번호를 변경하셔야만 테니스노트를 사용하실 수 있습니다.</Alert>
+      )}
       <Title>프로필</Title>
       <InfoContainer>
         <Info>
           <div className="index">아이디</div>
           <div className="content">
             {isEditing ? (
-              <TextInput content="name" inputValue={clubInfo.name} setInputValue={setClubInfo} />
+              <TextInput
+                content="name"
+                inputValue={clubInfo.name || ""}
+                setInputValue={setClubInfo}
+              />
             ) : (
-              clubInfo.name
+              clubInfo.name && clubInfo.name
             )}
           </div>
         </Info>
@@ -181,9 +203,13 @@ const Mypage = () => {
           <div className="index">전화번호</div>
           <div className="content">
             {isEditing ? (
-              <TextInput content="tel" inputValue={clubInfo.tel} setInputValue={setClubInfo} />
+              <TextInput
+                content="tel"
+                inputValue={clubInfo.tel || ""}
+                setInputValue={setClubInfo}
+              />
             ) : (
-              clubInfo.tel
+              clubInfo.tel && clubInfo.tel
             )}
           </div>
         </Info>
@@ -194,10 +220,11 @@ const Mypage = () => {
               <MultiSelectInput
                 content="dayoffs"
                 list={dayList}
-                inputValue={clubInfo.dayoffs}
+                inputValue={clubInfo.dayoffs || ""}
                 setInputValue={setClubInfo}
               />
             ) : (
+              clubInfo.dayoffs &&
               clubInfo.dayoffs
                 .map((offId) => dayList.find((day) => day.id === offId).name + "요일")
                 .join(", ")
@@ -226,12 +253,16 @@ const Mypage = () => {
           </Button>
         )}
       </ButtonContainer>
-      <Title>강사</Title>
-      <Table subject="teacher" infoList={teacherList} />
-      <Table subject="teacher" isAdding />
-      <Title>코트</Title>
-      <Table subject="court" infoList={courtList} />
-      <Table subject="court" isAdding />
+      {!isTemp && (
+        <>
+          <Title>강사</Title>
+          <Table subject="teacher" infoList={teacherList} />
+          <Table subject="teacher" isAdding />
+          <Title>코트</Title>
+          <Table subject="court" infoList={courtList} />
+          <Table subject="court" isAdding />
+        </>
+      )}
     </MypageContainer>
   );
 };
