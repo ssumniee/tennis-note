@@ -4,3 +4,6 @@ export const LOG_OUT = "LOG_OUT";
 
 // Student
 export const GET_ALL_STUDENT_INFO = "GET_ALL_STUDENT_INFO";
+
+// Club
+export const GET_ALL_CLUB_INFO = "GET_ALL_CLUB_INFO";

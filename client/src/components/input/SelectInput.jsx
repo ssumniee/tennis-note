@@ -1,6 +1,8 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
+import media from "styled-media-query";
+import { IoCloseCircle } from "react-icons/io5";
 import { MenuItem, Select } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
@@ -17,15 +19,36 @@ const SelectContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  .clear {
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.5rem;
+    ${media.lessThan("medium")`
+      display: none;
+    `}
+  }
+  ${(props) =>
+    props.fontSize &&
+    css`
+      font-size: ${props.fontSize}rem;
+      .clear {
+        width: ${props.fontSize}rem;
+        height: ${props.fontSize}rem;
+      }
+    `}
   /* mui 스타일 커스텀 */
   .MuiOutlinedInput-root {
     border: none;
-    width: 100%;
+    flex: 1 1 0;
     height: 100%;
     * {
       font-family: Interop-Regular;
       font-size: 0.875rem;
+      ${(props) =>
+        props.fontSize &&
+        css`
+          font-size: ${props.fontSize}rem;
+        `}
       border: none;
       padding: 0;
     }
@@ -46,11 +69,29 @@ const SelectContainer = styled.div`
   }
 `;
 
-const SelectInput = ({ content, list, inputValue, setInputValue, placeholder }) => {
+const ClearBtn = styled.button`
+  font-size: 1.15em;
+  position: relative;
+  color: var(--color-lightgray);
+  :hover {
+    color: var(--color-gray);
+  }
+  > svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
+
+const SelectInput = ({ content, list, inputValue, setInputValue, placeholder, fontSize }) => {
+  const handleInputClear = () => {
+    setInputValue((prevState) => ({ ...prevState, [content]: "" }));
+  };
+
   return (
-    <SelectContainer>
+    <SelectContainer fontSize={fontSize}>
       <Select
-        fullWidth
         displayEmpty
         IconComponent={KeyboardArrowDownRoundedIcon}
         placeholder={placeholder}
@@ -69,6 +110,11 @@ const SelectInput = ({ content, list, inputValue, setInputValue, placeholder }) 
           </MenuItem>
         ))}
       </Select>
+      {!!inputValue && (
+        <ClearBtn className="clear" onClick={handleInputClear}>
+          <IoCloseCircle />
+        </ClearBtn>
+      )}
     </SelectContainer>
   );
 };
@@ -79,6 +125,7 @@ SelectInput.propTypes = {
   inputValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setInputValue: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  fontSize: PropTypes.number,
 };
 
 export default SelectInput;

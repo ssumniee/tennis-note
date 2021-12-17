@@ -1,7 +1,7 @@
 import api from "./index";
 
 const studentApi = {
-  getAllStudentInfo: async (clubId) => {
+  getAllStudentInfo: async () => {
     try {
       const res = await api.get("/student");
       if (res.status === 200) return res;
@@ -9,7 +9,7 @@ const studentApi = {
       console.error(err);
     }
   },
-  modifyStudentInfo: async (clubId, studentInfo) => {
+  modifyStudentInfo: async (studentInfo) => {
     try {
       const res = await api.put("/student", { updated: { ...studentInfo } });
       if (res.status === 200) return res;
@@ -17,7 +17,7 @@ const studentApi = {
       console.error(err);
     }
   },
-  addStudentInfo: async (clubId, newStudentInfo) => {
+  addStudentInfo: async (newStudentInfo) => {
     try {
       const { student, days } = newStudentInfo;
       const res = await api.post("/student", { student, days });
@@ -26,7 +26,7 @@ const studentApi = {
       console.error(err);
     }
   },
-  deleteStudentInfo: async (clubId, studentId) => {
+  deleteStudentInfo: async (studentId) => {
     try {
       const res = await api.delete("/student", {
         data: {

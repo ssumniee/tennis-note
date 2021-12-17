@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
 
@@ -14,10 +14,20 @@ const InputContainer = styled.div`
     padding: 0 0.25rem;
     text-align: center;
   }
+  .input,
+  input {
+    ${(props) =>
+      props.fontSize
+        ? css`
+            font-size: ${props.fontSize}rem;
+          `
+        : css`
+            font-size: 0.875rem;
+          `}
+  }
 `;
 
 const PlusMinus = styled.button`
-  font-size: 0.875rem;
   flex: 0 0 1;
   width: 1.5rem;
   height: 1.5rem;
@@ -30,7 +40,7 @@ const PlusMinus = styled.button`
   border-radius: 1rem;
 `;
 
-const NumberInput = ({ content, inputValue, setInputValue }) => {
+const NumberInput = ({ content, inputValue, setInputValue, fontSize }) => {
   const input = useRef(null);
   const plus = useRef(null);
   const minus = useRef(null);
@@ -49,7 +59,7 @@ const NumberInput = ({ content, inputValue, setInputValue }) => {
   }, [inputValue]);
 
   return (
-    <InputContainer>
+    <InputContainer fontSize={fontSize}>
       <PlusMinus type="button" onClick={handleInputMinus} disabled={inputValue <= 0} ref={minus}>
         <HiOutlineMinusSm />
       </PlusMinus>
@@ -85,6 +95,7 @@ NumberInput.propTypes = {
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setInputValue: PropTypes.func.isRequired,
+  fontSize: PropTypes.number,
 };
 
 export default NumberInput;
