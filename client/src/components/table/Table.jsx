@@ -1,18 +1,30 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
+import media from "styled-media-query";
 import Row from "./Row";
 
 const TableContainer = styled.table`
-  width: 100%;
+  ${(props) =>
+    props.fullWidth &&
+    css`
+      width: 100%;
+    `}
   border-radius: 0.5rem;
   border: 1px solid var(--color-gray);
   display: flex;
   flex-direction: column;
-  margin-top: 2rem;
+  margin-top: 2.25rem;
   :first-child {
     margin-top: 0;
   }
+  ${(props) =>
+    props.isAdding &&
+    css`
+      ${media.lessThan("medium")`
+          display: none;
+        `}
+    `}
 `;
 const TableHead = styled.thead`
   font-size: 0.875rem;
@@ -25,9 +37,9 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const MypageTable = ({ subject, isAdding, infoList = [] }) => {
+const MypageTable = ({ fullWidth, subject, isAdding, infoList = [] }) => {
   return (
-    <TableContainer>
+    <TableContainer isAdding={isAdding}>
       {!isAdding && (
         <TableHead>
           <Row subject={subject} isOnHead />
@@ -47,10 +59,12 @@ const MypageTable = ({ subject, isAdding, infoList = [] }) => {
 };
 
 MypageTable.defaultProps = {
+  fullWidth: false,
   isAdding: false,
 };
 
 MypageTable.propTypes = {
+  fullWidth: PropTypes.bool,
   subject: PropTypes.string,
   isAdding: PropTypes.bool,
   infoList: PropTypes.arrayOf(

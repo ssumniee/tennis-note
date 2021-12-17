@@ -17,6 +17,9 @@ const AdminContainer = styled.div`
   ${media.lessThan("medium")`
     padding: 1rem;
   `}
+  > table {
+    max-width: 40rem;
+  }
 `;
 
 const Title = styled.h1`
