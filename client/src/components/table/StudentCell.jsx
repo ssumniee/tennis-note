@@ -85,8 +85,8 @@ const StudentCell = ({
   isOnHead,
   isOnAdd,
   isEditing,
-  studentInfo,
-  setStudentInfo,
+  tableInfo,
+  setTableInfo,
   label,
   children,
 }) => {
@@ -103,48 +103,50 @@ const StudentCell = ({
       {isOnHead ? (
         <Content className="content">{children}</Content>
       ) : !isEditing && !isOnAdd ? (
-        <Content className="content">
-          {content === "teacher_id" || content === "days" ? (
-            <>
-              {content === "teacher_id" &&
-                teacherList.find((teacher) => teacher.id === studentInfo.teacher_id)?.name}
-              {content === "days" &&
-                studentInfo.days
-                  .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
-                  .join(", ")}
-            </>
-          ) : (
-            studentInfo[content]
-          )}
-        </Content>
+        tableInfo[content] && (
+          <Content className="content">
+            {content === "teacher_id" || content === "days" ? (
+              <>
+                {content === "teacher_id" &&
+                  teacherList.find((teacher) => teacher.id === tableInfo.teacher_id)?.name}
+                {content === "days" &&
+                  tableInfo.days
+                    .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
+                    .join(", ")}
+              </>
+            ) : (
+              tableInfo[content]
+            )}
+          </Content>
+        )
       ) : (
         <>
           {(content === "name" || content === "tel") && (
             <TextInput
               content={content}
-              inputValue={studentInfo[content] || ""}
-              setInputValue={setStudentInfo}
+              inputValue={tableInfo[content] || ""}
+              setInputValue={setTableInfo}
             />
           )}
           {content === "count" && (
             <NumberInput
               content={content}
-              inputValue={studentInfo.count}
-              setInputValue={setStudentInfo}
+              inputValue={tableInfo.count || 0}
+              setInputValue={setTableInfo}
             />
           )}
           {content === "start_date" && (
             <DatePickerInput
               content={content}
-              inputValue={studentInfo.start_date}
-              setInputValue={setStudentInfo}
+              inputValue={tableInfo.start_date}
+              setInputValue={setTableInfo}
             />
           )}
           {content === "teacher_id" && (
             <SelectInput
               content={content}
-              inputValue={studentInfo.teacher_id || ""}
-              setInputValue={setStudentInfo}
+              inputValue={tableInfo.teacher_id || ""}
+              setInputValue={setTableInfo}
               list={teacherList}
             />
           )}
@@ -152,8 +154,8 @@ const StudentCell = ({
             <MultiSelectInput
               content={content}
               list={dayList}
-              inputValue={studentInfo.days}
-              setInputValue={setStudentInfo}
+              inputValue={tableInfo.days || []}
+              setInputValue={setTableInfo}
             />
           )}
         </>
@@ -172,7 +174,7 @@ StudentCell.propTypes = {
   isOnHead: PropTypes.bool,
   isOnAdd: PropTypes.bool,
   isEditing: PropTypes.bool,
-  studentInfo: PropTypes.shape({
+  tableInfo: PropTypes.shape({
     id: PropTypes.number,
     club_id: PropTypes.number,
     num: PropTypes.number,
@@ -183,7 +185,7 @@ StudentCell.propTypes = {
     days: PropTypes.arrayOf(PropTypes.number),
     count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
-  setStudentInfo: PropTypes.func,
+  setTableInfo: PropTypes.func,
   label: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
 };

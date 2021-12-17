@@ -1,10 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
 import TextInput from "../input/TextInput";
-import SelectInput from "../input/SelectInput";
+import PasswordInput from "../input/PasswordInput";
 
 const CellContainer = styled.th`
   display: flex;
@@ -39,57 +38,36 @@ const Content = styled.div`
   `}
 `;
 
-const Label = styled.label`
-  font-size: 0.75rem;
-  top: -0.5rem;
-  transform: translateY(-100%);
-  position: absolute;
-  padding: 0 0.25rem;
-  display: flex;
-  .required {
-    margin: 0 0.125rem;
-    color: var(--color-blue);
-  }
-`;
-
-const MypageCell = ({
-  content,
-  isOnHead,
-  isOnAdd,
-  isEditing,
-  tableInfo,
-  setTableInfo,
-  label,
-  children,
-}) => {
-  const { courts: courtList } = useSelector(({ authReducer }) => authReducer);
+const ClubCell = ({ content, isOnHead, isEditing, tableInfo, setTableInfo, children }) => {
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
-      {isOnAdd && (
-        <Label>
-          {label}
-          {content === "name" && <div className="required">*</div>}
-        </Label>
-      )}
       {isOnHead ? (
         <Content className="content">{children}</Content>
-      ) : !isEditing && !isOnAdd ? (
-        <Content className="content">
-          {content === "court_id"
-            ? courtList.find((court) => court.id === tableInfo.court_id)?.name
-            : tableInfo[content]}
-        </Content>
+      ) : !isEditing || content === "createdAt" ? (
+        tableInfo[content] && (
+          <Content className="content">
+            {content === "createdAt"
+              ? `${tableInfo.createdAt.split("T")[0]} ${
+                  tableInfo.createdAt.split("T")[1].split(".")[0]
+                }`
+              : tableInfo[content]}
+          </Content>
+        )
       ) : (
         <>
           {content === "name" && (
-            <TextInput content={content} inputValue={tableInfo.name} setInputValue={setTableInfo} />
-          )}
-          {content === "court_id" && (
-            <SelectInput
+            <TextInput
               content={content}
-              inputValue={tableInfo.court_id}
+              inputValue={tableInfo.name || ""}
               setInputValue={setTableInfo}
-              list={courtList}
+            />
+          )}
+          {content === "password" && (tableInfo.is_admin || tableInfo.temp) && (
+            <PasswordInput
+              content={content}
+              inputValue={tableInfo.password || ""}
+              setInputValue={setTableInfo}
+              isAdmin={tableInfo.is_admin}
             />
           )}
         </>
@@ -98,26 +76,25 @@ const MypageCell = ({
   );
 };
 
-MypageCell.defalutProps = {
+ClubCell.defalutProps = {
   isOnHead: false,
-  isOnAdd: false,
 };
 
-MypageCell.propTypes = {
+ClubCell.propTypes = {
   content: PropTypes.string.isRequired,
   isOnHead: PropTypes.bool,
-  isOnAdd: PropTypes.bool,
   isEditing: PropTypes.bool,
   tableInfo: PropTypes.shape({
     id: PropTypes.number,
+    is_admin: PropTypes.bool,
+    temp: PropTypes.bool,
     num: PropTypes.number,
     name: PropTypes.string,
-    club_id: PropTypes.number,
-    court_id: PropTypes.number,
+    password: PropTypes.string,
+    createdAt: PropTypes.date,
   }),
   setTableInfo: PropTypes.func,
-  label: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
 };
 
-export default MypageCell;
+export default ClubCell;

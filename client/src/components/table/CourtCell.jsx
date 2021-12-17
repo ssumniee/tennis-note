@@ -3,7 +3,6 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
 import TextInput from "../input/TextInput";
-import PasswordInput from "../input/PasswordInput";
 
 const CellContainer = styled.th`
   display: flex;
@@ -38,28 +37,48 @@ const Content = styled.div`
   `}
 `;
 
-const AdminCell = ({ content, isOnHead, isEditing, clubInfo, setClubInfo, children }) => {
+const Label = styled.label`
+  font-size: 0.75rem;
+  top: -0.5rem;
+  transform: translateY(-100%);
+  position: absolute;
+  padding: 0 0.25rem;
+  display: flex;
+  .required {
+    margin: 0 0.125rem;
+    color: var(--color-blue);
+  }
+`;
+
+const CourtCell = ({
+  content,
+  isOnHead,
+  isOnAdd,
+  isEditing,
+  tableInfo,
+  setTableInfo,
+  label,
+  children,
+}) => {
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
+      {isOnAdd && (
+        <Label>
+          {label}
+          {content === "name" && <div className="required">*</div>}
+        </Label>
+      )}
       {isOnHead ? (
         <Content className="content">{children}</Content>
-      ) : !isEditing || content === "createdAt" ? (
-        <Content className="content">
-          {content === "createdAt"
-            ? `${clubInfo[content].split("T")[0]} ${clubInfo[content].split("T")[1].split(".")[0]}`
-            : clubInfo[content]}
-        </Content>
+      ) : !isEditing && !isOnAdd ? (
+        tableInfo[content] && <Content className="content">{tableInfo[content]}</Content>
       ) : (
         <>
           {content === "name" && (
-            <TextInput content={content} inputValue={clubInfo.name} setInputValue={setClubInfo} />
-          )}
-          {content === "password" && (clubInfo.is_admin || clubInfo.temp) && (
-            <PasswordInput
+            <TextInput
               content={content}
-              inputValue={clubInfo.password}
-              setInputValue={setClubInfo}
-              isAdmin={clubInfo.is_admin}
+              inputValue={tableInfo.name || ""}
+              setInputValue={setTableInfo}
             />
           )}
         </>
@@ -68,25 +87,25 @@ const AdminCell = ({ content, isOnHead, isEditing, clubInfo, setClubInfo, childr
   );
 };
 
-AdminCell.defalutProps = {
+CourtCell.defalutProps = {
   isOnHead: false,
+  isOnAdd: false,
 };
 
-AdminCell.propTypes = {
+CourtCell.propTypes = {
   content: PropTypes.string.isRequired,
   isOnHead: PropTypes.bool,
+  isOnAdd: PropTypes.bool,
   isEditing: PropTypes.bool,
-  clubInfo: PropTypes.shape({
+  tableInfo: PropTypes.shape({
     id: PropTypes.number,
-    is_admin: PropTypes.bool,
-    temp: PropTypes.bool,
     num: PropTypes.number,
     name: PropTypes.string,
-    password: PropTypes.string,
-    createdAt: PropTypes.date,
+    club_id: PropTypes.number,
   }),
-  setClubInfo: PropTypes.func,
+  setTableInfo: PropTypes.func,
+  label: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
 };
 
-export default AdminCell;
+export default CourtCell;
