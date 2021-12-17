@@ -15,6 +15,7 @@ const HeaderContainer = styled.header`
   ${media.lessThan("medium")`
     padding: 1rem;
   `}
+  background-color: var(--color-white);
   display: flex;
   justify-content: space-between;
   align-items: center;
