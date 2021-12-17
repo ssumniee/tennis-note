@@ -81,7 +81,7 @@ const ClubCell = ({ content, isOnHead, isEditing, tableInfo, setTableInfo, child
               content={content}
               inputValue={tableInfo.password || ""}
               setInputValue={setTableInfo}
-              isAdmin={tableInfo.is_admin}
+              editable={tableInfo.is_admin}
             />
           )}
         </>
