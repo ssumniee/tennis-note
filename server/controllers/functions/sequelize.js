@@ -29,7 +29,7 @@ module.exports = {
   },
   updateClubInfo: async (updated) => {
     // 변경된 클럽 정보
-    const { id: club_id, name, tel } = updated;
+    const { id: club_id, name, tel, dayoffs } = updated;
     // 클럽 정보 갱신
     await club.update(
       { name, tel },
@@ -38,6 +38,27 @@ module.exports = {
           id: club_id,
         },
       }
+    );
+    // 기존 휴무일 id값들
+    const prevDayoffsData = await club_day.findAll({
+      where: { club_id },
+      attributes: ["dayoff_id"],
+      order: ["dayoff_id"],
+    });
+    const prevDayoffs = prevDayoffsData.map((data) => data.dayoff_id);
+    // updated에 따른 휴무일 id값들 받아오기
+    const updatedDayoffs = [...dayoffs];
+    // 새로 추가된 휴무일 id값들
+    const toCreate = updatedDayoffs.filter((id) => !prevDayoffs.includes(id));
+    // 수업이 없어진 요일 id값들
+    const toDestroy = prevDayoffs.filter((id) => !updatedDayoffs.includes(id));
+    // 새로 추가된 휴무일 정보 club_day 테이블에 생성
+    await Promise.all(
+      toCreate.map(async (id) => await club_day.create({ club_id, dayoff_id: id }))
+    );
+    // 없어진 휴무일 정보 club_day 테이블에서 삭제
+    await Promise.all(
+      toDestroy.map(async (id) => await club_day.destroy({ where: { dayoff_id: id } }))
     );
     return { ...updated };
   },
@@ -115,7 +136,7 @@ module.exports = {
     const { id: student_id } = created.dataValues;
     // 수업 요일 id값들에 따라 수업 요일 정보 student_day 테이블에 생성
     await Promise.all(days.map(async (id) => await student_day.create({ student_id, day_id: id })));
-    return { student_id, ...student, days };
+    return { id: student_id, ...student, days };
   },
   destroyStudentInfo: async (student_id) => {
     // 학생 정보 삭제
