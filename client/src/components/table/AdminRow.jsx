@@ -114,9 +114,12 @@ const AdminRow = ({ isOnHead, info }) => {
   const handleUpdateInfo = async () => {
     try {
       // 바뀐 정보 clubInfo로 DB 업데이트
-      const res = await clubApi.modifyClubInfo(clubInfo);
+      await clubApi.modifyClubInfo(clubInfo);
       // 리덕스 스토어 업데이트
-      dispatch(getAllClubInfoAction(res.data));
+      const res = await clubApi.getAllClubInfo();
+      if (res.status === 200) {
+        dispatch(getAllClubInfoAction(res.data));
+      }
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -131,9 +134,12 @@ const AdminRow = ({ isOnHead, info }) => {
   const handleDeleteInfo = async () => {
     try {
       // clubInfo 삭제하도록 DB 업데이트
-      const res = await clubApi.deleteClubInfo(clubInfo.id);
+      await clubApi.deleteClubInfo(clubInfo.id);
       // 리덕스 스토어 업데이트
-      dispatch(getAllClubInfoAction(res.data));
+      const res = await clubApi.getAllClubInfo();
+      if (res.status === 200) {
+        dispatch(getAllClubInfoAction(res.data));
+      }
       setIsEditing(false);
     } catch (err) {
       console.error(err);
