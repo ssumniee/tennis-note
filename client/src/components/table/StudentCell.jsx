@@ -8,7 +8,6 @@ import NumberInput from "../input/NumberInput";
 import SelectInput from "../input/SelectInput";
 import MultiSelectInput from "../input/MultiSelectInput";
 import DatePickerInput from "../input/DatePickerInput";
-import { MdCancel } from "react-icons/md";
 
 const rates = { name: 2, tel: 4, teacher_id: 3, start_date: 4, days: 3, count: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
@@ -68,39 +67,6 @@ const Content = styled.div`
   `}
 `;
 
-const ClearBtn = styled.button`
-  display: flex;
-  color: var(--color-lightgray);
-  :hover {
-    color: var(--color-gray);
-  }
-  position: absolute;
-  ${(props) => {
-    switch (props.content) {
-      case "start_date":
-        return css`
-          right: 2.25rem;
-        `;
-      case "days":
-        return css`
-          right: 2rem;
-        `;
-      case "teacher_id":
-        return css`
-          right: 2rem;
-        `;
-      case "count":
-        return css`
-          display: none;
-        `;
-      default:
-        return css`
-          right: 0.75rem;
-        `;
-    }
-  }};
-`;
-
 const Label = styled.label`
   font-size: 0.75rem;
   top: -0.5rem;
@@ -125,20 +91,6 @@ const StudentCell = ({
   children,
 }) => {
   const { teachers: teacherList, days: dayList } = useSelector(({ authReducer }) => authReducer);
-
-  const handleInputClear = () => {
-    switch (content) {
-      case "days":
-        setStudentInfo((prevState) => ({ ...prevState, [content]: [] }));
-        break;
-      case "start_date":
-        setStudentInfo((prevState) => ({ ...prevState, [content]: null }));
-        break;
-      default:
-        setStudentInfo((prevState) => ({ ...prevState, [content]: "" }));
-        break;
-    }
-  };
 
   return (
     <CellContainer content={content} isOnHead={isOnHead}>
@@ -206,20 +158,6 @@ const StudentCell = ({
           )}
         </>
       )}
-      {!isOnHead &&
-        (isEditing || isOnAdd) &&
-        content !== "duration" &&
-        (content === "days"
-          ? studentInfo.days.length > 0 && (
-              <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
-                <MdCancel />
-              </ClearBtn>
-            )
-          : !!studentInfo[content] && (
-              <ClearBtn className="clear-input" onClick={handleInputClear} content={content}>
-                <MdCancel />
-              </ClearBtn>
-            ))}
     </CellContainer>
   );
 };

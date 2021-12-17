@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
+import media from "styled-media-query";
+import { IoCloseCircle } from "react-icons/io5";
 import { Stack, Box } from "@mui/material";
 import { DatePicker } from "@mui/lab";
 // import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
@@ -19,10 +21,47 @@ const DatePickerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 0.875rem;
+  .clear {
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.5rem;
+    ${media.lessThan("medium")`
+      display: none;
+    `}
+  }
+  ${(props) =>
+    props.fontSize &&
+    css`
+      font-size: ${props.fontSize}rem;
+      .clear {
+        width: ${props.fontSize}rem;
+        height: ${props.fontSize}rem;
+      }
+    `}
 `;
 
-const DatePickerInput = ({ content, inputValue, setInputValue }) => {
+const ClearBtn = styled.button`
+  font-size: 1.15em;
+  position: relative;
+  color: var(--color-lightgray);
+  :hover {
+    color: var(--color-gray);
+  }
+  > svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
+
+const DatePickerInput = ({ content, inputValue, setInputValue, fontSize }) => {
   const [selected, setSelected] = useState(null);
+
+  const handleInputClear = () => {
+    setInputValue((prevState) => ({ ...prevState, [content]: null }));
+  };
 
   useEffect(() => {
     setSelected(inputValue ? new Date(inputValue) : null);
@@ -44,8 +83,8 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
   }, [selected]);
 
   return (
-    <DatePickerContainer>
-      <Stack sx={{ width: "100%" }}>
+    <DatePickerContainer fontSize={fontSize}>
+      <Stack sx={{ flex: "1 1 0" }}>
         <DatePicker
           reduceAnimations={true}
           allowSameDateSelection
@@ -64,7 +103,7 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
                 justifyContent: "space-between",
                 padding: "0 0.25rem 0 0.5rem",
                 fontFamily: "Interop-Regular",
-                fontSize: "0.875rem",
+                fontSize: fontSize ? `${fontSize}rem` : "0.875rem",
                 input: {
                   width: "calc(100% - 2rem)",
                 },
@@ -96,6 +135,11 @@ const DatePickerInput = ({ content, inputValue, setInputValue }) => {
           inputFormat="yyyy. MM. dd"
         ></DatePicker>
       </Stack>
+      {!!inputValue && (
+        <ClearBtn className="clear" onClick={handleInputClear}>
+          <IoCloseCircle />
+        </ClearBtn>
+      )}
     </DatePickerContainer>
   );
 };
@@ -104,6 +148,7 @@ DatePickerInput.propTypes = {
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.string,
   setInputValue: PropTypes.func.isRequired,
+  fontSize: PropTypes.number,
 };
 
 export default DatePickerInput;

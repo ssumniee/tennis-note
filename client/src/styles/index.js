@@ -42,6 +42,12 @@ const GlobalStyle = createGlobalStyle`
     background-color: inherit;
   }
 
+  input, textarea {
+    font-family: var(--fontFamily);
+    color: var(--color-black);
+    font-size: unset;
+  }
+
   button {
     cursor: pointer;
     :active,

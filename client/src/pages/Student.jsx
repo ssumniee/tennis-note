@@ -5,7 +5,7 @@ import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import studentApi from "../api/student";
-import { getAllStudentInfoAction, loginAction, logoutAction } from "../store/actions";
+import { loginAction, logoutAction, getAllStudentInfoAction } from "../store/actions";
 import Table from "../components/table/StudentTable";
 
 const StudentContainer = styled.div`
@@ -20,7 +20,6 @@ const StudentContainer = styled.div`
 const Student = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAdmin, id } = useSelector(({ authReducer }) => authReducer);
   const { students: studentList } = useSelector(({ studentReducer }) => studentReducer);
 
   useEffect(() => {
@@ -41,45 +40,23 @@ const Student = () => {
   }, []);
 
   useEffect(() => {
-    if (isAdmin) {
-      const getAndSetAllClubInfo = async () => {
-        try {
-          // const adminId = id;
-          // const res = await studentApi.getAllStudentInfo(adminId);
-          // if (res.status === 200) {
-          //   dispatch(getAllStudentInfoAction(res.data));
-          // }
-        } catch (err) {
-          console.error(err);
+    const getAndSetAllStudentInfo = async () => {
+      try {
+        const res = await studentApi.getAllStudentInfo();
+        if (res.status === 200) {
+          dispatch(getAllStudentInfoAction(res.data));
         }
-      };
-      getAndSetAllClubInfo();
-    } else {
-      const getAndSetAllStudentInfo = async () => {
-        try {
-          const clubId = id;
-          const res = await studentApi.getAllStudentInfo(clubId);
-          if (res.status === 200) {
-            dispatch(getAllStudentInfoAction(res.data));
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      getAndSetAllStudentInfo();
-    }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getAndSetAllStudentInfo();
   }, []);
 
   return (
     <StudentContainer>
-      {isAdmin ? (
-        <></>
-      ) : (
-        <>
-          <Table infoList={studentList} />
-          <Table isAdding />
-        </>
-      )}
+      <Table infoList={studentList} />
+      <Table isAdding />
     </StudentContainer>
   );
 };

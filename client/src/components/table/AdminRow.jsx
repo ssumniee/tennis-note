@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
-import Cell from "./StudentCell";
+import Cell from "./AdminCell";
 import { FaPencilAlt } from "react-icons/fa";
-import { HiX, HiCheck, HiMinus, HiPlusSm } from "react-icons/hi";
-import studentApi from "../../api/student";
-import { getAllStudentInfoAction } from "../../store/actions";
+import { HiX, HiCheck, HiMinus } from "react-icons/hi";
+import clubApi from "../../api/club";
+import { getAllClubInfoAction } from "../../store/actions";
 
 const RowContainer = styled.tr`
   ${(props) =>
@@ -67,8 +67,7 @@ const RowContainer = styled.tr`
       }
     }
   }
-  .edit,
-  .submit {
+  .edit {
     color: var(--color-blue);
     border: 1px solid var(--color-blue);
     background-color: var(--color-paleblue);
@@ -78,9 +77,6 @@ const RowContainer = styled.tr`
         background-color: var(--color-paleblue);
       }
     }
-  }
-  .submit {
-    font-size: 1.25rem;
   }
 `;
 
@@ -106,31 +102,21 @@ const BtnCell = styled(FixedCell)`
 
 const heads = {
   name: "이름",
-  tel: "전화번호",
-  start_date: "시작일",
-  teacher_id: "선생님",
-  days: "요일",
-  count: "등록 횟수",
+  password: "비밀번호",
+  createdAt: "가입일",
 };
 
-const StudentRow = ({ isOnHead, isOnAdd, info }) => {
+const AdminRow = ({ isOnHead, info }) => {
   const dispatch = useDispatch();
-  const { id: clubId } = useSelector(({ authReducer }) => authReducer);
   const [isEditing, setIsEditing] = useState(false);
-  const [studentInfo, setStudentInfo] = useState(
-    isOnHead
-      ? {}
-      : isOnAdd
-      ? { name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 }
-      : { ...info }
-  );
+  const [clubInfo, setClubInfo] = useState({ ...info });
 
   const handleUpdateInfo = async () => {
     try {
-      // 바뀐 정보 studentInfo로 DB 업데이트
-      const res = await studentApi.modifyStudentInfo(studentInfo);
+      // 바뀐 정보 clubInfo로 DB 업데이트
+      const res = await clubApi.modifyClubInfo(clubInfo);
       // 리덕스 스토어 업데이트
-      dispatch(getAllStudentInfoAction(res.data));
+      dispatch(getAllClubInfoAction(res.data));
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -138,49 +124,17 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
   };
 
   const handleQuitUpdate = () => {
-    setStudentInfo({ ...info });
+    setClubInfo({ ...info });
     setIsEditing(false);
   };
 
   const handleDeleteInfo = async () => {
     try {
-      // studentInfo 삭제하도록 DB 업데이트
-      const res = await studentApi.deleteStudentInfo(studentInfo.id);
+      // clubInfo 삭제하도록 DB 업데이트
+      const res = await clubApi.deleteClubInfo(clubInfo.id);
       // 리덕스 스토어 업데이트
-      dispatch(getAllStudentInfoAction(res.data));
+      dispatch(getAllClubInfoAction(res.data));
       setIsEditing(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleCreateInfo = async () => {
-    try {
-      const { name, tel, start_date: start, teacher_id: teacher, days, count } = studentInfo;
-      const toAdd = {
-        student: {
-          club_id: clubId,
-          name,
-          tel: tel || null,
-          start_date: start,
-          teacher_id: teacher || null,
-          count: count || 0,
-        },
-        days,
-      };
-      // 새로운 정보를 studentInfo로 DB에 추가
-      const res = await studentApi.addStudentInfo(toAdd);
-      // 리덕스 스토어 업데이트
-      dispatch(getAllStudentInfoAction(res.data));
-      // 유저 정보 state 초기화
-      setStudentInfo({
-        name: "",
-        tel: "",
-        start_date: null,
-        teacher_id: "",
-        days: [],
-        count: 0,
-      });
     } catch (err) {
       console.error(err);
     }
@@ -193,13 +147,7 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
   }, []);
 
   useEffect(() => {
-    setStudentInfo(
-      isOnHead
-        ? {}
-        : isOnAdd
-        ? { name: "", tel: "", start_date: null, teacher_id: "", days: [], count: 0 }
-        : { ...info }
-    );
+    setClubInfo({ ...info });
   }, [info]);
 
   return (
@@ -207,8 +155,6 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
       <NumCell>
         {isOnHead ? (
           ""
-        ) : isOnAdd ? (
-          <HiPlusSm className="plus text" />
         ) : isEditing ? (
           <button className="delete button" onClick={handleDeleteInfo}>
             <HiMinus />
@@ -227,24 +173,15 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
             <Cell
               key={idx}
               content={el}
-              isEditing={!isOnAdd && isEditing}
-              studentInfo={studentInfo}
-              setStudentInfo={setStudentInfo}
+              isEditing={isEditing}
+              clubInfo={clubInfo}
+              setClubInfo={setClubInfo}
               label={heads[el]}
-              isOnAdd={isOnAdd}
             />
           ))}
       <BtnCell>
         {!isOnHead &&
-          (isOnAdd ? (
-            <button
-              className="submit button"
-              onClick={handleCreateInfo}
-              disabled={!studentInfo.name}
-            >
-              <HiPlusSm />
-            </button>
-          ) : isEditing ? (
+          (isEditing ? (
             <>
               <button className="apply button" onClick={handleUpdateInfo}>
                 <HiCheck />
@@ -268,25 +205,19 @@ const StudentRow = ({ isOnHead, isOnAdd, info }) => {
   );
 };
 
-StudentRow.defalutProps = {
+AdminRow.defalutProps = {
   isOnHead: false,
-  isOnAdd: false,
 };
 
-StudentRow.propTypes = {
+AdminRow.propTypes = {
   isOnHead: PropTypes.bool,
-  isOnAdd: PropTypes.bool,
-  info: PropTypes.exact({
+  info: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string,
-    club_id: PropTypes.number,
-    teacher_id: PropTypes.number,
-    tel: PropTypes.string,
-    start_date: PropTypes.string,
-    count: PropTypes.number,
-    days: PropTypes.arrayOf(PropTypes.number),
     num: PropTypes.number,
+    name: PropTypes.string,
+    password: PropTypes.string,
+    createdAt: PropTypes.date,
   }),
 };
 
-export default StudentRow;
+export default AdminRow;
