@@ -2,6 +2,7 @@ import { LOG_IN, LOG_OUT } from "../actions/actionTypes";
 
 const initialState = {
   isAdmin: false,
+  isTemp: false,
   isLogin: false,
   id: null,
   name: null,
@@ -18,6 +19,7 @@ const authReducer = (prevState = initialState, action) => {
       state = {
         ...prevState,
         isAdmin: action.payload.is_admin,
+        isTemp: action.payload.temp,
         isLogin: true,
         ...action.payload.info,
       };
