@@ -18,7 +18,7 @@ module.exports = {
       const { is_admin, id, tel = null } = clubAccount.dataValues;
       const info = { id, name, tel };
       if (!is_admin) {
-        info.days = await findAllDayInfo();
+        info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);
       }
       const token = generateAccessToken(id);
@@ -43,7 +43,7 @@ module.exports = {
       const { is_admin, id, name, tel } = clubInfo.dataValues;
       const info = { id, name, tel };
       if (!is_admin) {
-        info.days = await findAllDayInfo();
+        info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);
       }
       return res.status(200).json({ is_admin, info });
