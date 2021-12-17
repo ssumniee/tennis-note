@@ -8,6 +8,7 @@ import clubApi from "../api/club";
 import { loginAction, logoutAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
+import Table from "../components/table/MypageTable";
 
 const MypageContainer = styled.div`
   width: 100vw;
@@ -101,7 +102,8 @@ const Mypage = () => {
     name,
     tel,
     days: dayList,
-    // teachers: teacherList,
+    teachers: teacherList,
+    courts: courtList,
   } = useSelector(({ authReducer }) => authReducer);
   const [isEditing, setIsEditing] = useState(false);
   const [clubInfo, setClubInfo] = useState({
@@ -221,6 +223,12 @@ const Mypage = () => {
           </Button>
         )}
       </ButtonContainer>
+      <Title>강사</Title>
+      <Table subject="teacher" infoList={teacherList} />
+      <Table subject="teacher" isAdding />
+      <Title>코트</Title>
+      <Table subject="court" infoList={courtList} />
+      <Table subject="court" isAdding />
     </MypageContainer>
   );
 };

@@ -8,6 +8,7 @@ const initialState = {
   tel: null,
   days: [],
   teachers: [],
+  courts: [],
 };
 
 const authReducer = (prevState = initialState, action) => {
