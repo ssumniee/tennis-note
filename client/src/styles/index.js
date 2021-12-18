@@ -32,9 +32,11 @@ const GlobalStyle = createGlobalStyle`
       ::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera*/
       }
-      /* 아웃라인 스타일링 */
-      :focus {
-        outline: 2px solid var(--color-darkblue);
+      /* 아웃라인 제거 */
+      :focus,
+      :active,
+      :hover {
+        outline: none;
       }
     }
   }
@@ -43,10 +45,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     border: none;
     background-color: inherit;
-    :active,
-    :hover {
-      outline: none;
-    }
   }
   
   input, textarea {
@@ -54,9 +52,6 @@ const GlobalStyle = createGlobalStyle`
     color: var(--color-black);
     font-size: unset;
     outline: none;
-    :focus {
-      outline: none;
-    }
   }
 
   button {

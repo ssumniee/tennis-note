@@ -13,9 +13,9 @@ const DatePickerContainer = styled.div`
   border-radius: 0.25rem;
   width: 100%;
   height: 100%;
-  :focus,
   :hover,
-  :active {
+  :active,
+  :focus-within {
     border: 1px solid var(--color-blue);
   }
   display: flex;
@@ -134,13 +134,18 @@ const DatePickerInput = ({
                 },
               }}
             >
-              <input ref={inputRef} {...inputProps} readOnly placeholder={placeholder} />
+              <input
+                ref={inputRef}
+                {...inputProps}
+                readOnly
+                placeholder={placeholder}
+                tabIndex="-1"
+              />
               {InputProps?.endAdornment}
             </Box>
           )}
           mask="____. __. __"
           inputFormat="yyyy. MM. dd"
-          tabIndex="-1"
         ></DatePicker>
       </Stack>
       {!!inputValue && (
