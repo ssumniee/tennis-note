@@ -56,7 +56,14 @@ const ClearBtn = styled.button`
   }
 `;
 
-const DatePickerInput = ({ content, inputValue, setInputValue, fontSize }) => {
+const DatePickerInput = ({
+  className,
+  content,
+  inputValue,
+  setInputValue,
+  fontSize,
+  placeholder,
+}) => {
   const [selected, setSelected] = useState(null);
 
   const handleInputClear = () => {
@@ -83,7 +90,7 @@ const DatePickerInput = ({ content, inputValue, setInputValue, fontSize }) => {
   }, [selected]);
 
   return (
-    <DatePickerContainer fontSize={fontSize}>
+    <DatePickerContainer className={className} fontSize={fontSize}>
       <Stack sx={{ flex: "1 1 0" }}>
         <DatePicker
           reduceAnimations={true}
@@ -127,7 +134,7 @@ const DatePickerInput = ({ content, inputValue, setInputValue, fontSize }) => {
                 },
               }}
             >
-              <input ref={inputRef} {...inputProps} readOnly placeholder="" />
+              <input ref={inputRef} {...inputProps} readOnly placeholder={placeholder} />
               {InputProps?.endAdornment}
             </Box>
           )}
@@ -136,7 +143,7 @@ const DatePickerInput = ({ content, inputValue, setInputValue, fontSize }) => {
         ></DatePicker>
       </Stack>
       {!!inputValue && (
-        <ClearBtn className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
           <IoCloseCircle />
         </ClearBtn>
       )}
@@ -145,10 +152,12 @@ const DatePickerInput = ({ content, inputValue, setInputValue, fontSize }) => {
 };
 
 DatePickerInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.string,
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
+  placeholder: PropTypes.string,
 };
 
 export default DatePickerInput;

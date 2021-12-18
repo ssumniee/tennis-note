@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import authApi from "../api/auth";
 import { loginAction, logoutAction } from "../store/actions";
-import { MdCancel } from "react-icons/md";
+import TextInput from "../components/input/TextInput";
+import PasswordInput from "../components/input/PasswordInput";
 
 const SigningContainer = styled.div`
   width: 100vw;
@@ -13,13 +14,22 @@ const SigningContainer = styled.div`
   justify-content: center;
   align-items: center;
   .input {
+    ::placeholder {
+      color: var(--color-gray);
+    }
+    border-radius: 0.5rem;
+    :focus-within,
+    :active,
+    :hover {
+      border-color: var(--color-blue);
+    }
     ${(props) =>
       props.alert
         ? css`
             border-color: var(--color-red);
           `
         : css`
-            border-color: var(--color-lightgray);
+            border-color: var(--color-lightblue);
           `}
   }
 `;
@@ -39,31 +49,10 @@ const Form = styled.form`
 `;
 
 const InputContainer = styled.div`
-  border: 1px solid;
-  border-radius: 0.5rem;
   height: 2.5rem;
   margin: 0.25rem 0;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-`;
-
-const Input = styled.input`
-  padding: 0 0.5rem;
-  flex: 1 1 0;
-  font-size: 0.875rem;
-  color: var(--color-black);
-  ::placeholder {
-    color: var(--color-gray);
-  }
-`;
-
-const ClearButton = styled(MdCancel)`
-  flex: 0 0 1;
-  font-size: 0.75rem;
-  margin: 0.5rem;
-  color: var(--color-gray);
-  margin-left: 0.5rem;
 `;
 
 const LoginButton = styled.button`
@@ -94,15 +83,6 @@ const Signing = () => {
   const [btnDisabled, setBtnDisabled] = useState(true);
   // const [alert, setAlert] = useState("");
   const [isAlert, setIsAlert] = useState(false);
-
-  const handleInputChange = (event) => {
-    const { id, value } = event.target;
-    setInputValue((prevState) => ({ ...prevState, [id]: value }));
-  };
-
-  const handleInputClear = (id) => {
-    setInputValue((prevState) => ({ ...prevState, [id]: "" }));
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -152,36 +132,22 @@ const Signing = () => {
       <Form onSubmit={handleSubmit}>
         <Title>로그인</Title>
         <InputContainer className="input">
-          <Input
+          <TextInput
+            className="input"
+            content="name"
+            inputValue={inputValue.name}
+            setInputValue={setInputValue}
             placeholder="아이디"
-            type="text"
-            id="name"
-            value={inputValue.name}
-            onChange={handleInputChange}
           />
-          {inputValue.name && (
-            <ClearButton
-              onClick={() => {
-                handleInputClear("name");
-              }}
-            />
-          )}
         </InputContainer>
         <InputContainer className="input">
-          <Input
+          <PasswordInput
+            className="input"
+            content="password"
+            inputValue={inputValue.password}
+            setInputValue={setInputValue}
             placeholder="비밀번호"
-            type="password"
-            id="password"
-            value={inputValue.password}
-            onChange={handleInputChange}
           />
-          {inputValue.password && (
-            <ClearButton
-              onClick={() => {
-                handleInputClear("password");
-              }}
-            />
-          )}
         </InputContainer>
         {isAlert && <Alert>잘못된 아이디 또는 비밀번호입니다</Alert>}
         <LoginButton disabled={btnDisabled} type="submit">

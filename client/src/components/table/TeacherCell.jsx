@@ -102,6 +102,7 @@ const TeacherCell = ({
               content={content}
               inputValue={tableInfo.name || ""}
               setInputValue={setTableInfo}
+              placeholder="강사 이름"
             />
           )}
           {content === "court_id" && (
@@ -110,6 +111,7 @@ const TeacherCell = ({
               inputValue={tableInfo.court_id || ""}
               setInputValue={setTableInfo}
               list={courtList}
+              placeholder="사용 코트"
             />
           )}
         </>

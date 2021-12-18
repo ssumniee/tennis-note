@@ -74,7 +74,14 @@ const Description = styled.p`
   font-family: Interop-Regular;
 `;
 
-const CheckboxInput = ({ content, inputValue, setInputValue, description, fontSize }) => {
+const CheckboxInput = ({
+  className,
+  content,
+  inputValue,
+  setInputValue,
+  description,
+  fontSize,
+}) => {
   const handleInputChange = (event) => {
     switch (content) {
       default:
@@ -84,7 +91,7 @@ const CheckboxInput = ({ content, inputValue, setInputValue, description, fontSi
   };
 
   return (
-    <InputContainer checked={inputValue} fontSize={fontSize}>
+    <InputContainer checked={inputValue} className={className} fontSize={fontSize}>
       <Label className="checkbox" htmlFor="is_admin">
         {inputValue && <BsCheckLg />}
       </Label>
@@ -95,6 +102,7 @@ const CheckboxInput = ({ content, inputValue, setInputValue, description, fontSi
 };
 
 CheckboxInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.bool.isRequired,
   setInputValue: PropTypes.func.isRequired,

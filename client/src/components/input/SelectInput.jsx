@@ -84,13 +84,21 @@ const ClearBtn = styled.button`
   }
 `;
 
-const SelectInput = ({ content, list, inputValue, setInputValue, placeholder, fontSize }) => {
+const SelectInput = ({
+  className,
+  content,
+  list,
+  inputValue,
+  setInputValue,
+  fontSize,
+  placeholder,
+}) => {
   const handleInputClear = () => {
     setInputValue((prevState) => ({ ...prevState, [content]: "" }));
   };
 
   return (
-    <SelectContainer fontSize={fontSize}>
+    <SelectContainer className={className} fontSize={fontSize}>
       <Select
         displayEmpty
         IconComponent={KeyboardArrowDownRoundedIcon}
@@ -111,7 +119,7 @@ const SelectInput = ({ content, list, inputValue, setInputValue, placeholder, fo
         ))}
       </Select>
       {!!inputValue && (
-        <ClearBtn className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
           <IoCloseCircle />
         </ClearBtn>
       )}
@@ -120,12 +128,13 @@ const SelectInput = ({ content, list, inputValue, setInputValue, placeholder, fo
 };
 
 SelectInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   inputValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setInputValue: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
   fontSize: PropTypes.number,
+  placeholder: PropTypes.string,
 };
 
 export default SelectInput;

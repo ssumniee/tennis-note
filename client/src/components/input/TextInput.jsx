@@ -59,7 +59,7 @@ const ClearBtn = styled.button`
   }
 `;
 
-const TextInput = ({ content, inputValue, setInputValue, fontSize }) => {
+const TextInput = ({ className, content, inputValue, setInputValue, fontSize, placeholder }) => {
   useEffect(() => {
     setInputValue((prevState) => ({ ...prevState, [content]: inputValue || "" }));
   }, []);
@@ -86,10 +86,15 @@ const TextInput = ({ content, inputValue, setInputValue, fontSize }) => {
   };
 
   return (
-    <InputContainer fontSize={fontSize}>
-      <InputInner type="text" value={inputValue} onChange={handleInputChange} />
+    <InputContainer className={className} fontSize={fontSize}>
+      <InputInner
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder={placeholder}
+      />
       {!!inputValue && (
-        <ClearBtn className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
           <IoCloseCircle />
         </ClearBtn>
       )}
@@ -98,10 +103,12 @@ const TextInput = ({ content, inputValue, setInputValue, fontSize }) => {
 };
 
 TextInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
+  placeholder: PropTypes.string,
 };
 
 export default TextInput;
