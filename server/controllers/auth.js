@@ -1,8 +1,3 @@
-// TODO: 비밀번호 암호화하기
-// const bcrypt = require("bcrypt");
-// const {
-//   bcrypt: { saltRounds },
-// } = require("../config");
 const {
   findOneClub,
   findAllTeacherInfo,

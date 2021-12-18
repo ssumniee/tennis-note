@@ -1,4 +1,5 @@
 const {
+  findOneClub,
   findAllClubInfo,
   updateClubInfo,
   createClubInfo,
@@ -12,10 +13,21 @@ const {
 } = require("./functions/sequelize");
 const { createRandomString } = require("./functions/utility");
 const { DBERROR } = require("./functions/utility");
+const bcrypt = require("bcrypt");
+const {
+  bcrypt: { saltRounds },
+} = require("../config");
 
 module.exports = {
   getAllClubInfo: async (req, res) => {
     try {
+      // 관리자 계정인지 확인
+      const { club_id } = res.locals;
+      const clubAccount = await findOneClub({ id: club_id });
+      const { is_admin } = clubAccount.dataValues;
+      if (!is_admin) {
+        return res.status(403).json({ message: "not authorized" });
+      }
       const { admins, temps, clubs } = await findAllClubInfo();
       return res.status(200).json({ admins, temps, clubs });
     } catch (err) {
@@ -26,10 +38,14 @@ module.exports = {
     try {
       // 클럽 정보 수정
       const { updated } = req.body;
-      const updatedInfo = await updateClubInfo(updated);
-      return res
-        .status(200)
-        .json({ message: "club updated", updated: { club_id: updatedInfo.id } });
+      const { id, password, ...rest } = updated;
+      if (password) {
+        const hashed = await bcrypt.hash(password, saltRounds);
+        await updateClubInfo({ id, password: hashed, rest });
+      } else {
+        await updateClubInfo({ id, rest });
+      }
+      return res.status(200).json({ message: "club updated", updated: { club_id: id } });
     } catch (err) {
       DBERROR(res, err);
     }
