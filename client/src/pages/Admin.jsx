@@ -136,6 +136,7 @@ const Admin = () => {
             inputValue={clubInfo.name}
             setInputValue={setClubInfo}
             fontSize={1}
+            placeholder="아이디"
           />
         </InputContainer>
         <InputContainer>

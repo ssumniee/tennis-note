@@ -40,7 +40,7 @@ const PlusMinus = styled.button`
   border-radius: 1rem;
 `;
 
-const NumberInput = ({ content, inputValue, setInputValue, fontSize }) => {
+const NumberInput = ({ className, content, inputValue, setInputValue, fontSize }) => {
   const input = useRef(null);
   const plus = useRef(null);
   const minus = useRef(null);
@@ -59,7 +59,7 @@ const NumberInput = ({ content, inputValue, setInputValue, fontSize }) => {
   }, [inputValue]);
 
   return (
-    <InputContainer fontSize={fontSize}>
+    <InputContainer className={className} fontSize={fontSize}>
       <PlusMinus type="button" onClick={handleInputMinus} disabled={inputValue <= 0} ref={minus}>
         <HiOutlineMinusSm />
       </PlusMinus>
@@ -92,6 +92,7 @@ const NumberInput = ({ content, inputValue, setInputValue, fontSize }) => {
 };
 
 NumberInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setInputValue: PropTypes.func.isRequired,

@@ -93,6 +93,7 @@ const CourtCell = ({
               content={content}
               inputValue={tableInfo.name || ""}
               setInputValue={setTableInfo}
+              placeholder="코트 이름"
             />
           )}
         </>

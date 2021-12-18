@@ -84,13 +84,21 @@ const ClearBtn = styled.button`
   }
 `;
 
-const MultiSelectInput = ({ content, list, inputValue, setInputValue, placeholder, fontSize }) => {
+const MultiSelectInput = ({
+  className,
+  content,
+  list,
+  inputValue,
+  setInputValue,
+  fontSize,
+  placeholder,
+}) => {
   const handleInputClear = () => {
     setInputValue((prevState) => ({ ...prevState, [content]: [] }));
   };
 
   return (
-    <SelectContainer fontSize={fontSize}>
+    <SelectContainer className={className} fontSize={fontSize}>
       <Select
         multiple
         displayEmpty
@@ -114,7 +122,7 @@ const MultiSelectInput = ({ content, list, inputValue, setInputValue, placeholde
         ))}
       </Select>
       {!!inputValue.length && (
-        <ClearBtn className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
           <IoCloseCircle />
         </ClearBtn>
       )}
@@ -123,12 +131,13 @@ const MultiSelectInput = ({ content, list, inputValue, setInputValue, placeholde
 };
 
 MultiSelectInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   inputValue: PropTypes.arrayOf(PropTypes.number).isRequired,
   setInputValue: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
   fontSize: PropTypes.number,
+  placeholder: PropTypes.string,
 };
 
 export default MultiSelectInput;

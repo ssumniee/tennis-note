@@ -123,6 +123,7 @@ const StudentCell = ({
               content={content}
               inputValue={tableInfo[content] || ""}
               setInputValue={setTableInfo}
+              placeholder={(content === "name" && "아이디") || (content === "tel" && "전화번호")}
             />
           )}
           {content === "count" && (
@@ -137,6 +138,7 @@ const StudentCell = ({
               content={content}
               inputValue={tableInfo.start_date}
               setInputValue={setTableInfo}
+              placeholder="시작일"
             />
           )}
           {content === "teacher_id" && (
@@ -145,6 +147,7 @@ const StudentCell = ({
               inputValue={tableInfo.teacher_id || ""}
               setInputValue={setTableInfo}
               list={teacherList}
+              placeholder="강사"
             />
           )}
           {content === "days" && (
@@ -153,6 +156,7 @@ const StudentCell = ({
               list={dayList}
               inputValue={tableInfo.days || []}
               setInputValue={setTableInfo}
+              placeholder="수업 요일"
             />
           )}
         </>

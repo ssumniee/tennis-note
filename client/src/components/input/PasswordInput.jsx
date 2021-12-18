@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
 import { IoCloseCircle } from "react-icons/io5";
 import { FiRefreshCw } from "react-icons/fi";
+import { HiEyeOff, HiEye } from "react-icons/hi";
 import utilApi from "../../api/util";
 
 const InputContainer = styled.div`
@@ -75,7 +76,31 @@ const RefreshBtn = styled.button`
   }
 `;
 
-const PasswordInput = ({ content, inputValue, setInputValue, fontSize, editable, blurred }) => {
+const ShowBtn = styled.button`
+  font-size: 1.15em;
+  display: flex;
+  align-items: center;
+  justigy-content: center;
+  color: var(--color-lightblue);
+  border-radius: 0.125rem;
+  margin-right: 0.5rem;
+  :hover {
+    color: var(--color-blue);
+  }
+`;
+
+const PasswordInput = ({
+  className,
+  content,
+  inputValue,
+  setInputValue,
+  fontSize,
+  placeholder,
+  blurred,
+  random,
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+
   useEffect(() => {
     setInputValue((prevState) => ({ ...prevState, [content]: inputValue || "" }));
   }, []);
@@ -94,40 +119,62 @@ const PasswordInput = ({ content, inputValue, setInputValue, fontSize, editable,
   };
 
   return (
-    <InputContainer fontSize={fontSize}>
+    <InputContainer className={className} fontSize={fontSize}>
       <InputInner
-        type={blurred ? "password" : "text"}
+        type={!random && (blurred || !isVisible) ? "password" : "text"}
         value={inputValue}
-        onChange={editable ? handleInputChange : undefined}
-        readOnly={!editable}
+        onChange={!random ? handleInputChange : undefined}
+        readOnly={random}
+        placeholder={placeholder}
       />
-      {editable ? (
-        !!inputValue && (
-          <ClearBtn className="clear" onClick={handleInputClear}>
-            <IoCloseCircle />
-          </ClearBtn>
-        )
-      ) : (
-        <RefreshBtn onClick={handleInputRefresh}>
+      {random ? (
+        <RefreshBtn type="button" onClick={handleInputRefresh}>
           <FiRefreshCw />
         </RefreshBtn>
+      ) : (
+        !!inputValue && (
+          <>
+            <ClearBtn type="button" className="clear" onClick={handleInputClear}>
+              <IoCloseCircle />
+            </ClearBtn>
+            {!blurred && (
+              <ShowBtn type="button">
+                {isVisible ? (
+                  <HiEyeOff
+                    onClick={() => {
+                      setIsVisible(false);
+                    }}
+                  />
+                ) : (
+                  <HiEye
+                    onClick={() => {
+                      setIsVisible(true);
+                    }}
+                  />
+                )}
+              </ShowBtn>
+            )}
+          </>
+        )
       )}
     </InputContainer>
   );
 };
 
 PasswordInput.defaultProps = {
-  editable: false,
   blurred: false,
+  random: false,
 };
 
 PasswordInput.propTypes = {
+  className: PropTypes.string,
   content: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
-  editable: PropTypes.bool,
   blurred: PropTypes.bool,
+  random: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 export default PasswordInput;
