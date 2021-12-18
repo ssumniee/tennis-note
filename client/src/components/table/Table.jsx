@@ -5,11 +5,7 @@ import media from "styled-media-query";
 import Row from "./Row";
 
 const TableContainer = styled.table`
-  ${(props) =>
-    props.fullWidth &&
-    css`
-      width: 100%;
-    `}
+  width: 100%;
   border-radius: 0.5rem;
   border: 1px solid var(--color-gray);
   display: flex;
@@ -37,7 +33,7 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const MypageTable = ({ fullWidth, subject, isAdding, infoList = [] }) => {
+const MypageTable = ({ subject, isAdding, infoList = [] }) => {
   return (
     <TableContainer isAdding={isAdding}>
       {!isAdding && (
@@ -59,12 +55,10 @@ const MypageTable = ({ fullWidth, subject, isAdding, infoList = [] }) => {
 };
 
 MypageTable.defaultProps = {
-  fullWidth: false,
   isAdding: false,
 };
 
 MypageTable.propTypes = {
-  fullWidth: PropTypes.bool,
   subject: PropTypes.string,
   isAdding: PropTypes.bool,
   infoList: PropTypes.arrayOf(
