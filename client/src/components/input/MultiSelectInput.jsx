@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
@@ -11,9 +11,9 @@ const SelectContainer = styled.div`
   border-radius: 0.25rem;
   width: 100%;
   height: 100%;
-  :focus,
   :hover,
-  :active {
+  :active,
+  :focus-within {
     border: 1px solid var(--color-blue);
   }
   display: flex;
@@ -93,12 +93,21 @@ const MultiSelectInput = ({
   fontSize,
   placeholder,
 }) => {
+  const input = useRef(null);
+
   const handleInputClear = () => {
     setInputValue((prevState) => ({ ...prevState, [content]: [] }));
   };
 
   return (
-    <SelectContainer className={className} fontSize={fontSize} tabIndex="0">
+    <SelectContainer
+      className={className}
+      fontSize={fontSize}
+      tabIndex="0"
+      onFocus={() => {
+        input.current.focus();
+      }}
+    >
       <Select
         multiple
         displayEmpty
@@ -114,7 +123,7 @@ const MultiSelectInput = ({
         renderValue={(inputValue) =>
           inputValue.map((id) => list.find((item) => item.id === id)?.name)?.join(", ") || ""
         }
-        tabIndex="-1"
+        inputProps={{ tabIndex: "-1", ref: input }}
       >
         {list.map((item, idx) => (
           <MenuItem key={idx} value={item.id}>

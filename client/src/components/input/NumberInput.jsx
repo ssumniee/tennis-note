@@ -59,7 +59,14 @@ const NumberInput = ({ className, content, inputValue, setInputValue, fontSize }
   }, [inputValue]);
 
   return (
-    <InputContainer className={className} fontSize={fontSize} tabIndex="0">
+    <InputContainer
+      className={className}
+      fontSize={fontSize}
+      tabIndex="0"
+      onFocus={() => {
+        input.current.focus();
+      }}
+    >
       <PlusMinus
         type="button"
         onClick={handleInputMinus}

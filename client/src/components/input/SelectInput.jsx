@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
@@ -11,9 +11,9 @@ const SelectContainer = styled.div`
   border-radius: 0.25rem;
   width: 100%;
   height: 100%;
-  :focus,
   :hover,
-  :active {
+  :active,
+  :focus-within {
     border: 1px solid var(--color-blue);
   }
   display: flex;
@@ -60,12 +60,22 @@ const SelectContainer = styled.div`
   }
   .MuiSvgIcon-root {
     padding: 0 0.125rem;
-    margin: 0.25rem 0;
-    width: 1.5rem;
-    height: 1.5rem;
+    font-size: 1.5rem;
+    border-radius: 1.5rem;
     position: absolute;
-    top: 0;
+    top: calc((100% - 1.5rem) * 0.5);
     right: 0.25rem;
+    :focus {
+      background-color: var(--color-lightgray);
+    }
+  }
+  .arrow {
+    border-radius: 2rem;
+    /* top: 0; */
+    bottom: 0.25rem;
+    :focus {
+      background-color: var(--color-lightgray);
+    }
   }
 `;
 
@@ -93,12 +103,21 @@ const SelectInput = ({
   fontSize,
   placeholder,
 }) => {
+  const input = useRef(null);
+
   const handleInputClear = () => {
     setInputValue((prevState) => ({ ...prevState, [content]: "" }));
   };
 
   return (
-    <SelectContainer className={className} fontSize={fontSize} tabIndex="0">
+    <SelectContainer
+      className={className}
+      fontSize={fontSize}
+      tabIndex="0"
+      onFocus={() => {
+        input.current.focus();
+      }}
+    >
       <Select
         displayEmpty
         IconComponent={KeyboardArrowDownRoundedIcon}
@@ -111,7 +130,7 @@ const SelectInput = ({
           }));
         }}
         renderValue={(inputValue) => list.find((item) => item.id === inputValue)?.name || ""}
-        tabIndex="-1"
+        inputProps={{ tabIndex: "-1", ref: input }}
       >
         {list.map((item, idx) => (
           <MenuItem key={idx} value={item.id}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
@@ -99,6 +99,7 @@ const PasswordInput = ({
   blurred,
   random,
 }) => {
+  const input = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -119,7 +120,14 @@ const PasswordInput = ({
   };
 
   return (
-    <InputContainer className={className} fontSize={fontSize} tabIndex="0">
+    <InputContainer
+      className={className}
+      fontSize={fontSize}
+      tabIndex="0"
+      onFocus={() => {
+        input.current.focus();
+      }}
+    >
       <InputInner
         type={!random && (blurred || !isVisible) ? "password" : "text"}
         value={inputValue}
@@ -127,6 +135,7 @@ const PasswordInput = ({
         readOnly={random}
         placeholder={placeholder}
         tabIndex="-1"
+        ref={input}
       />
       {random ? (
         <RefreshBtn type="button" onClick={handleInputRefresh} tabIndex="-1">
@@ -135,9 +144,6 @@ const PasswordInput = ({
       ) : (
         !!inputValue && (
           <>
-            <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
-              <IoCloseCircle />
-            </ClearBtn>
             {!blurred && (
               <ShowBtn type="button" tabIndex="-1">
                 {isVisible ? (
@@ -155,6 +161,9 @@ const PasswordInput = ({
                 )}
               </ShowBtn>
             )}
+            <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
+              <IoCloseCircle />
+            </ClearBtn>
           </>
         )
       )}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
@@ -60,6 +60,8 @@ const ClearBtn = styled.button`
 `;
 
 const TextInput = ({ className, content, inputValue, setInputValue, fontSize, placeholder }) => {
+  const input = useRef(null);
+
   useEffect(() => {
     setInputValue((prevState) => ({ ...prevState, [content]: inputValue || "" }));
   }, []);
@@ -86,13 +88,21 @@ const TextInput = ({ className, content, inputValue, setInputValue, fontSize, pl
   };
 
   return (
-    <InputContainer className={className} fontSize={fontSize} tabIndex="0">
+    <InputContainer
+      className={className}
+      fontSize={fontSize}
+      tabIndex="0"
+      onFocus={() => {
+        input.current.focus();
+      }}
+    >
       <InputInner
         type="text"
         value={inputValue}
         onChange={handleInputChange}
         placeholder={placeholder}
         tabIndex="-1"
+        ref={input}
       />
       {!!inputValue && (
         <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
