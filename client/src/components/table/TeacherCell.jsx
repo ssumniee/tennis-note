@@ -90,8 +90,8 @@ const TeacherCell = ({
       ) : !isEditing && !isOnAdd ? (
         tableInfo[content] && (
           <Content className="content">
-            {content === "court_id"
-              ? courtList.find((court) => court.id === tableInfo.court_id)?.name
+            {content === "court_id" && courtList.length
+              ? courtList.find((court) => court.id === tableInfo.court_id).name
               : tableInfo[content]}
           </Content>
         )

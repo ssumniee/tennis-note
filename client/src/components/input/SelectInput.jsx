@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
@@ -103,21 +103,12 @@ const SelectInput = ({
   fontSize,
   placeholder,
 }) => {
-  const input = useRef(null);
-
   const handleInputClear = () => {
     setInputValue((prevState) => ({ ...prevState, [content]: "" }));
   };
 
   return (
-    <SelectContainer
-      className={className}
-      fontSize={fontSize}
-      tabIndex="0"
-      onFocus={() => {
-        input.current.focus();
-      }}
-    >
+    <SelectContainer className={className} fontSize={fontSize} tabIndex="0">
       <Select
         displayEmpty
         IconComponent={KeyboardArrowDownRoundedIcon}
@@ -129,8 +120,10 @@ const SelectInput = ({
             [content]: event.target.value,
           }));
         }}
-        renderValue={(inputValue) => list.find((item) => item.id === inputValue)?.name || ""}
-        inputProps={{ tabIndex: "-1", ref: input }}
+        renderValue={(inputValue) =>
+          inputValue ? list.find((item) => item.id === inputValue).name : ""
+        }
+        inputProps={{ tabIndex: "-1" }}
       >
         {list.map((item, idx) => (
           <MenuItem key={idx} value={item.id}>

@@ -270,19 +270,20 @@ const Mypage = () => {
         <Info>
           <div className="index">휴무일</div>
           <div className="content">
-            {isEditing ? (
-              <MultiSelectInput
-                content="dayoffs"
-                list={dayList}
-                inputValue={clubInfo.dayoffs || []}
-                setInputValue={setClubInfo}
-              />
-            ) : (
-              clubInfo.dayoffs &&
-              clubInfo.dayoffs
-                .map((offId) => dayList.find((day) => day.id === offId).name + "요일")
-                .join(", ")
-            )}
+            {dayList.length &&
+              (isEditing ? (
+                <MultiSelectInput
+                  content="dayoffs"
+                  list={dayList}
+                  inputValue={clubInfo.dayoffs || []}
+                  setInputValue={setClubInfo}
+                />
+              ) : (
+                clubInfo.dayoffs &&
+                clubInfo.dayoffs
+                  .map((offId) => dayList.find((day) => day.id === offId).name + "요일")
+                  .join(", ")
+              ))}
           </div>
         </Info>
       </InfoContainer>
