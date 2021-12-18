@@ -7,24 +7,25 @@ import authApi from "../api/auth";
 import clubApi from "../api/club";
 import { loginAction, logoutAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
+import PasswordInput from "../components/input/PasswordInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
 import Table from "../components/table/Table";
+import { IoAlertCircle } from "react-icons/io5";
 
 const MypageContainer = styled.div`
-  width: 100vw;
+  width: 100%;
+  max-width: 46rem;
   height: 100%;
+  margin: 0 auto;
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
   `}
-  > table {
-    max-width: 40rem;
-  }
 `;
 
 const Alert = styled.div`
   margin: 2rem 0;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-radius: 0.5rem;
   background-color: var(--color-paleblue);
   :first-of-type {
@@ -34,6 +35,21 @@ const Alert = styled.div`
   font-weight: normal;
   font-size: 0.925rem;
   color: var(--color-blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .text {
+    flex: 1 1 0;
+    margin-top: 0.15rem;
+  }
+  .icon {
+    flex: 0 0 1;
+    font-size: 1.125rem;
+    margin-right: 0.5rem;
+    :last-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 const Title = styled.h1`
@@ -41,6 +57,7 @@ const Title = styled.h1`
   :first-of-type {
     margin-top: 0;
   }
+  padding: 0 1.5rem;
   font-size: 1.25rem;
   font-family: Interop-Medium;
   font-weight: normal;
@@ -53,26 +70,27 @@ const InfoContainer = styled.div`
 
 const Info = styled.div`
   display: flex;
-  margin-bottom: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  border-top: 1px solid var(--color-palegray);
   :last-child {
-    margin-bottom: 0;
+    border-bottom: 1px solid var(--color-palegray);
   }
-  align-items: center;
   > div {
-    min-height: 2rem;
+    min-height: 2.25rem;
     display: flex;
     align-items: center;
   }
   .index {
     flex: 0 0 1;
+    font-size: 0.875rem;
     color: var(--color-gray);
     text-align: right;
-    margin-right: 2rem;
-    width: 5rem;
+    margin-right: 4rem;
+    width: 6rem;
   }
   .content {
     flex: 1 1 0;
-    max-width: 13rem;
+    max-width: 14rem;
     align-self: stretch;
   }
 `;
@@ -80,7 +98,7 @@ const Info = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   margin: 1.5rem 0;
-  width: 20rem;
+  width: 19.5rem;
   #edit,
   #cancel {
     border: 1px solid var(--color-blue);
@@ -130,7 +148,7 @@ const Mypage = () => {
     tel,
     dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
   });
-
+  const [passwords, setPasswords] = useState({ first: "", second: "" });
   const handleApplyUpdate = async () => {
     // 바뀐 정보 clubInfo로 DB 업데이트
     await clubApi.modifyClubInfo(clubInfo);
@@ -181,7 +199,12 @@ const Mypage = () => {
   return (
     <MypageContainer>
       {isTemp && (
-        <Alert>! 최초 발급된 비밀번호를 변경하셔야만 테니스노트를 사용하실 수 있습니다.</Alert>
+        <Alert>
+          <IoAlertCircle className="icon" />
+          <p className="text">
+            최초 발급된 비밀번호를 변경하셔야만 테니스노트를 사용하실 수 있습니다.
+          </p>
+        </Alert>
       )}
       <Title>프로필</Title>
       <InfoContainer>
@@ -199,6 +222,37 @@ const Mypage = () => {
             )}
           </div>
         </Info>
+        {isEditing && (
+          <>
+            <Info>
+              <div className="index">비밀번호</div>
+              <div className="content">
+                <PasswordInput
+                  content="first"
+                  inputValue={passwords.first}
+                  setInputValue={setPasswords}
+                  editable
+                  blurred
+                />
+              </div>
+            </Info>
+            <Info>
+              <div className="index">비밀번호 확인</div>
+              <div className="content">
+                <PasswordInput
+                  content="second"
+                  inputValue={passwords.second}
+                  setInputValue={setPasswords}
+                  editable
+                  blurred
+                />
+              </div>
+            </Info>
+            {passwords.first && passwords.second && passwords.first !== passwords.second && (
+              <div>비밀번호가 다릅니다.</div>
+            )}
+          </>
+        )}
         <Info>
           <div className="index">전화번호</div>
           <div className="content">
@@ -220,7 +274,7 @@ const Mypage = () => {
               <MultiSelectInput
                 content="dayoffs"
                 list={dayList}
-                inputValue={clubInfo.dayoffs || ""}
+                inputValue={clubInfo.dayoffs || []}
                 setInputValue={setClubInfo}
               />
             ) : (
