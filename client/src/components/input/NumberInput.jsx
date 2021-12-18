@@ -59,8 +59,14 @@ const NumberInput = ({ className, content, inputValue, setInputValue, fontSize }
   }, [inputValue]);
 
   return (
-    <InputContainer className={className} fontSize={fontSize}>
-      <PlusMinus type="button" onClick={handleInputMinus} disabled={inputValue <= 0} ref={minus}>
+    <InputContainer className={className} fontSize={fontSize} tabIndex="0">
+      <PlusMinus
+        type="button"
+        onClick={handleInputMinus}
+        disabled={inputValue <= 0}
+        ref={minus}
+        tabIndex="-1"
+      >
         <HiOutlineMinusSm />
       </PlusMinus>
       <input
@@ -83,8 +89,9 @@ const NumberInput = ({ className, content, inputValue, setInputValue, fontSize }
         onChange={(event) => {
           setDisplayed(event.target.value.replace(/[^0-9]/g, ""));
         }}
+        tabIndex="-1"
       />
-      <PlusMinus type="button" onClick={handleInputPlus} ref={plus}>
+      <PlusMinus type="button" onClick={handleInputPlus} ref={plus} tabIndex="-1">
         <HiOutlinePlusSm />
       </PlusMinus>
     </InputContainer>
