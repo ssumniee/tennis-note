@@ -86,15 +86,16 @@ const TextInput = ({ className, content, inputValue, setInputValue, fontSize, pl
   };
 
   return (
-    <InputContainer className={className} fontSize={fontSize}>
+    <InputContainer className={className} fontSize={fontSize} tabIndex="0">
       <InputInner
         type="text"
         value={inputValue}
         onChange={handleInputChange}
         placeholder={placeholder}
+        tabIndex="-1"
       />
       {!!inputValue && (
-        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
           <IoCloseCircle />
         </ClearBtn>
       )}

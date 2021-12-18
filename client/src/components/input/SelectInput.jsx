@@ -98,7 +98,7 @@ const SelectInput = ({
   };
 
   return (
-    <SelectContainer className={className} fontSize={fontSize}>
+    <SelectContainer className={className} fontSize={fontSize} tabIndex="0">
       <Select
         displayEmpty
         IconComponent={KeyboardArrowDownRoundedIcon}
@@ -111,6 +111,7 @@ const SelectInput = ({
           }));
         }}
         renderValue={(inputValue) => list.find((item) => item.id === inputValue)?.name || ""}
+        tabIndex="-1"
       >
         {list.map((item, idx) => (
           <MenuItem key={idx} value={item.id}>
@@ -119,7 +120,7 @@ const SelectInput = ({
         ))}
       </Select>
       {!!inputValue && (
-        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
           <IoCloseCircle />
         </ClearBtn>
       )}

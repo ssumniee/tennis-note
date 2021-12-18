@@ -119,26 +119,27 @@ const PasswordInput = ({
   };
 
   return (
-    <InputContainer className={className} fontSize={fontSize}>
+    <InputContainer className={className} fontSize={fontSize} tabIndex="0">
       <InputInner
         type={!random && (blurred || !isVisible) ? "password" : "text"}
         value={inputValue}
         onChange={!random ? handleInputChange : undefined}
         readOnly={random}
         placeholder={placeholder}
+        tabIndex="-1"
       />
       {random ? (
-        <RefreshBtn type="button" onClick={handleInputRefresh}>
+        <RefreshBtn type="button" onClick={handleInputRefresh} tabIndex="-1">
           <FiRefreshCw />
         </RefreshBtn>
       ) : (
         !!inputValue && (
           <>
-            <ClearBtn type="button" className="clear" onClick={handleInputClear}>
+            <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
               <IoCloseCircle />
             </ClearBtn>
             {!blurred && (
-              <ShowBtn type="button">
+              <ShowBtn type="button" tabIndex="-1">
                 {isVisible ? (
                   <HiEyeOff
                     onClick={() => {

@@ -98,7 +98,7 @@ const MultiSelectInput = ({
   };
 
   return (
-    <SelectContainer className={className} fontSize={fontSize}>
+    <SelectContainer className={className} fontSize={fontSize} tabIndex="0">
       <Select
         multiple
         displayEmpty
@@ -114,6 +114,7 @@ const MultiSelectInput = ({
         renderValue={(inputValue) =>
           inputValue.map((id) => list.find((item) => item.id === id)?.name)?.join(", ") || ""
         }
+        tabIndex="-1"
       >
         {list.map((item, idx) => (
           <MenuItem key={idx} value={item.id}>
@@ -122,7 +123,7 @@ const MultiSelectInput = ({
         ))}
       </Select>
       {!!inputValue.length && (
-        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
           <IoCloseCircle />
         </ClearBtn>
       )}

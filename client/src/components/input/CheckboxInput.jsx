@@ -91,12 +91,12 @@ const CheckboxInput = ({
   };
 
   return (
-    <InputContainer checked={inputValue} className={className} fontSize={fontSize}>
+    <InputContainer checked={inputValue} className={className} fontSize={fontSize} tabIndex="0">
       <Label className="checkbox" htmlFor="is_admin">
         {inputValue && <BsCheckLg />}
       </Label>
       <Description className="description">{description}</Description>
-      <input id="is_admin" type="checkbox" onChange={handleInputChange} />
+      <input id="is_admin" type="checkbox" onChange={handleInputChange} tabIndex="-1" />
     </InputContainer>
   );
 };

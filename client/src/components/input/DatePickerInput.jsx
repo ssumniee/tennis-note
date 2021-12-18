@@ -90,7 +90,7 @@ const DatePickerInput = ({
   }, [selected]);
 
   return (
-    <DatePickerContainer className={className} fontSize={fontSize}>
+    <DatePickerContainer className={className} fontSize={fontSize} tabIndex="0">
       <Stack sx={{ flex: "1 1 0" }}>
         <DatePicker
           reduceAnimations={true}
@@ -140,10 +140,11 @@ const DatePickerInput = ({
           )}
           mask="____. __. __"
           inputFormat="yyyy. MM. dd"
+          tabIndex="-1"
         ></DatePicker>
       </Stack>
       {!!inputValue && (
-        <ClearBtn type="button" className="clear" onClick={handleInputClear}>
+        <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
           <IoCloseCircle />
         </ClearBtn>
       )}
