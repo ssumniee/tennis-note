@@ -32,29 +32,32 @@ const GlobalStyle = createGlobalStyle`
       ::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera*/
       }
+      /* 아웃라인 스타일링 */
+      :focus {
+        outline: 2px solid var(--color-darkblue);
+      }
     }
   }
 
   button, input, textarea {
     padding: 0;
     border: none;
-    outline: none;
     background-color: inherit;
+    :active,
+    :hover{
+      outline: none;
+    }
   }
-
+  
   input, textarea {
     font-family: var(--fontFamily);
     color: var(--color-black);
     font-size: unset;
+    outline: none;
   }
 
   button {
     cursor: pointer;
-    :active,
-    :hover,
-    :focus {
-      outline: none;
-    }
     :disabled {
       cursor: not-allowed;
     }
@@ -127,6 +130,7 @@ const GlobalStyle = createGlobalStyle`
     --color-green: #40DAAC;
     --color-palegreen: #E0F7F3;
     --color-lightgreen: #C4F2E6;
+    --color-darkblue: #2E5EB8;
     --color-blue: #3E7DF6;
     --color-paleblue: #E0E9FE;
     --color-lightblue: #C3D6FC;
