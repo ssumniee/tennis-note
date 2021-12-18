@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
@@ -93,21 +93,12 @@ const MultiSelectInput = ({
   fontSize,
   placeholder,
 }) => {
-  const input = useRef(null);
-
   const handleInputClear = () => {
     setInputValue((prevState) => ({ ...prevState, [content]: [] }));
   };
 
   return (
-    <SelectContainer
-      className={className}
-      fontSize={fontSize}
-      tabIndex="0"
-      onFocus={() => {
-        input.current.focus();
-      }}
-    >
+    <SelectContainer className={className} fontSize={fontSize} tabIndex="0">
       <Select
         multiple
         displayEmpty
@@ -121,9 +112,11 @@ const MultiSelectInput = ({
           }));
         }}
         renderValue={(inputValue) =>
-          inputValue.map((id) => list.find((item) => item.id === id)?.name)?.join(", ") || ""
+          inputValue
+            ? inputValue.map((id) => list.find((item) => item.id === id).name).join(", ")
+            : ""
         }
-        inputProps={{ tabIndex: "-1", ref: input }}
+        inputProps={{ tabIndex: "-1" }}
       >
         {list.map((item, idx) => (
           <MenuItem key={idx} value={item.id}>

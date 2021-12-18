@@ -140,13 +140,17 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
       // tableInfo 정보 DB 업데이트
       switch (subject) {
         case "student":
-          await studentApi.modifyStudentInfo(tableInfo);
+          await studentApi.modifyStudentInfo({
+            ...tableInfo,
+            tel: tableInfo.tel || null,
+            teacher_id: tableInfo.teacher_id || null,
+          });
           break;
         case "club":
           await clubApi.modifyClubInfo(tableInfo);
           break;
         case "teacher":
-          await clubApi.modifyTeacherInfo(tableInfo);
+          await clubApi.modifyTeacherInfo({ ...tableInfo, court_id: tableInfo.court_id || null });
           break;
         case "court":
           await clubApi.modifyCourtInfo(tableInfo);

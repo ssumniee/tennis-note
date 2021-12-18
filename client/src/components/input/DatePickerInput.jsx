@@ -77,9 +77,9 @@ const DatePickerInput = ({
   useEffect(() => {
     if (selected !== null) {
       // 날짜 포맷 정제: yyyy-MM-dd
-      const year = selected?.getFullYear().toString();
-      const month = (selected?.getMonth() + 1).toString();
-      const date = selected?.getDate().toString();
+      const year = selected.getFullYear().toString();
+      const month = (selected.getMonth() + 1).toString();
+      const date = selected.getDate().toString();
       setInputValue((prevState) => ({
         ...prevState,
         [content]: `${year}-${month.length === 1 ? 0 + month : month}-${
@@ -141,7 +141,7 @@ const DatePickerInput = ({
                 placeholder={placeholder}
                 tabIndex="-1"
               />
-              {InputProps?.endAdornment}
+              {InputProps.endAdornment}
             </Box>
           )}
           mask="____. __. __"
