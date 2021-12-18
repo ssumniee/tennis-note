@@ -44,7 +44,7 @@ const GlobalStyle = createGlobalStyle`
     border: none;
     background-color: inherit;
     :active,
-    :hover{
+    :hover {
       outline: none;
     }
   }
@@ -54,6 +54,9 @@ const GlobalStyle = createGlobalStyle`
     color: var(--color-black);
     font-size: unset;
     outline: none;
+    :focus {
+      outline: none;
+    }
   }
 
   button {
