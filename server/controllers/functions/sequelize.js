@@ -29,37 +29,36 @@ module.exports = {
   },
   updateClubInfo: async (updated) => {
     // 변경된 클럽 정보
-    const { id: club_id, name, tel, dayoffs } = updated;
+    const { id: club_id, dayoffs, password, ...rest } = updated;
     // 클럽 정보 갱신
-    await club.update(
-      { name, tel },
-      {
-        where: {
-          id: club_id,
-        },
-      }
-    );
-    // 기존 휴무일 id값들
-    const prevDayoffsData = await club_day.findAll({
-      where: { club_id },
-      attributes: ["dayoff_id"],
-      order: ["dayoff_id"],
+    await club.update(password ? { password, temp: false, ...rest } : { ...rest }, {
+      where: {
+        id: club_id,
+      },
     });
-    const prevDayoffs = prevDayoffsData.map((data) => data.dayoff_id);
-    // updated에 따른 휴무일 id값들 받아오기
-    const updatedDayoffs = [...dayoffs];
-    // 새로 추가된 휴무일 id값들
-    const toCreate = updatedDayoffs.filter((id) => !prevDayoffs.includes(id));
-    // 수업이 없어진 요일 id값들
-    const toDestroy = prevDayoffs.filter((id) => !updatedDayoffs.includes(id));
-    // 새로 추가된 휴무일 정보 club_day 테이블에 생성
-    await Promise.all(
-      toCreate.map(async (id) => await club_day.create({ club_id, dayoff_id: id }))
-    );
-    // 없어진 휴무일 정보 club_day 테이블에서 삭제
-    await Promise.all(
-      toDestroy.map(async (id) => await club_day.destroy({ where: { dayoff_id: id } }))
-    );
+    if (dayoffs) {
+      // 기존 휴무일 id값들
+      const prevDayoffsData = await club_day.findAll({
+        where: { club_id },
+        attributes: ["dayoff_id"],
+        order: ["dayoff_id"],
+      });
+      const prevDayoffs = prevDayoffsData.map((data) => data.dayoff_id);
+      // updated에 따른 휴무일 id값들 받아오기
+      const updatedDayoffs = [...dayoffs];
+      // 새로 추가된 휴무일 id값들
+      const toCreate = updatedDayoffs.filter((id) => !prevDayoffs.includes(id));
+      // 수업이 없어진 요일 id값들
+      const toDestroy = prevDayoffs.filter((id) => !updatedDayoffs.includes(id));
+      // 새로 추가된 휴무일 정보 club_day 테이블에 생성
+      await Promise.all(
+        toCreate.map(async (id) => await club_day.create({ club_id, dayoff_id: id }))
+      );
+      // 없어진 휴무일 정보 club_day 테이블에서 삭제
+      await Promise.all(
+        toDestroy.map(async (id) => await club_day.destroy({ where: { dayoff_id: id } }))
+      );
+    }
     return { ...updated };
   },
   createClubInfo: async (club_info) => {
