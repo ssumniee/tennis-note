@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import clubApi from "../api/club";
@@ -28,7 +28,7 @@ const Alert = styled.div`
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
   background-color: var(--color-paleblue);
-  :first-of-type {
+  :new-of-type {
     margin-top: 0;
   }
   font-family: Interop-Medium;
@@ -54,7 +54,7 @@ const Alert = styled.div`
 
 const Title = styled.h1`
   margin: 2rem 0 1.5rem;
-  :first-of-type {
+  :new-of-type {
     margin-top: 0;
   }
   padding: 0 1.5rem;
@@ -75,24 +75,126 @@ const Info = styled.div`
   :last-child {
     border-bottom: 1px solid var(--color-palegray);
   }
-  > div {
-    min-height: 2.25rem;
+`;
+
+const InfoInner = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const InfoIndex = styled(InfoInner)`
+  min-height: 2rem;
+  align-self: flex-start;
+  flex: 0 0 1;
+  font-size: 0.875rem;
+  color: var(--color-gray);
+  text-align: right;
+  margin-right: 4rem;
+  width: 6rem;
+`;
+
+const InfoContent = styled(InfoInner)`
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-start;
+  ${(props) =>
+    props.direction &&
+    css`
+      flex-direction: ${props.direction};
+    `}
+`;
+
+const ContentContainer = styled.div`
+  .input {
+    width: 12rem;
+    max-width: 12rem;
+    min-height: 2rem;
+  }
+  display: flex;
+  > * {
+    margin-right: 0.75rem;
+    :last-child {
+      margin-right: 0;
+    }
+  }
+`;
+
+const PasswordContentContainer = styled(ContentContainer)`
+  flex-direction: column;
+  > * {
+    margin-right: 0;
+    margin-top: 0.5rem;
+    :first-child {
+      margin-top: 0;
+    }
+  }
+  > .btn {
+    margin-top: 0.75rem;
+  }
+  .current,
+  .new,
+  .btn {
     display: flex;
-    align-items: center;
+    > * {
+      margin-right: 0.75rem;
+      :last-child {
+        margin-right: 0;
+      }
+    }
   }
-  .index {
-    flex: 0 0 1;
-    font-size: 0.875rem;
+  .new {
+    ${(props) =>
+      props.warn &&
+      css`
+        .input {
+          border-color: var(--color-red);
+        }
+      `}
+  }
+  .input-label,
+  .warn-msg,
+  #find-pw {
+    padding: 0.125rem 0;
+    font-size: 0.75rem;
+  }
+  .input-label {
     color: var(--color-gray);
-    text-align: right;
-    margin-right: 4rem;
-    width: 6rem;
   }
-  .content {
-    flex: 1 1 0;
-    max-width: 14rem;
-    align-self: stretch;
+  .warn-msg {
+    color: var(--color-red);
   }
+  #find-pw {
+    align-self: center;
+    color: var(--color-blue);
+    :hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+const InputButton = styled.button`
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  padding: 0 0.75rem;
+  max-width: max-content;
+  height: 100%;
+  min-height: 2rem;
+  :hover {
+    opacity: 0.8;
+  }
+  :disabled {
+    opacity: 0.4;
+  }
+`;
+
+const UniqueCheckButton = styled(InputButton)`
+  color: var(--color-blue);
+  background-color: var(--color-lightblue);
+`;
+
+const ChangePasswordButton = styled(InputButton)`
+  color: var(--color-white);
+  background-color: var(--color-blue);
 `;
 
 const ButtonContainer = styled.div`
@@ -119,7 +221,7 @@ const ButtonContainer = styled.div`
 const Button = styled.button`
   flex: 1 1 0;
   font-size: 0.925rem;
-  line-height: 2.25rem;
+  line-height: 2rem;
   padding: 0 1rem;
   margin-right: 0.5rem;
   :last-child {
@@ -148,16 +250,22 @@ const Mypage = () => {
     tel,
     dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
   });
-  const [passwords, setPasswords] = useState({ first: "", second: "" });
+  const [passwords, setPasswords] = useState({ current: "", new: "", check: "" });
+  const [warns, setWarns] = useState({ name: false, password: false });
+
   const handleApplyUpdate = async () => {
-    // 바뀐 정보 clubInfo로 DB 업데이트
-    await clubApi.modifyClubInfo(clubInfo);
-    // 리덕스 스토어 업데이트
-    const res = await authApi.me();
-    if (res.status === 200) {
-      dispatch(loginAction(res.data));
+    try {
+      // 바뀐 정보 clubInfo로 DB 업데이트
+      await clubApi.modifyClubInfo(clubInfo);
+      // 리덕스 스토어 업데이트
+      const res = await authApi.me();
+      if (res.status === 200) {
+        dispatch(loginAction(res.data));
+      }
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
     }
-    setIsEditing(false);
   };
 
   const handleQuitUpdate = () => {
@@ -168,6 +276,23 @@ const Mypage = () => {
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
     });
     setIsEditing(false);
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      await clubApi.modifyClubPassword({
+        id: clubId,
+        password: { current: passwords.current, new: passwords.new },
+      });
+      setPasswords({ current: "", new: "", check: "" });
+      // 리덕스 스토어 업데이트
+      const res = await authApi.me();
+      if (res.status === 200) {
+        dispatch(loginAction(res.data));
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -188,6 +313,10 @@ const Mypage = () => {
   }, []);
 
   useEffect(() => {
+    setPasswords({ current: "", new: "", check: "" });
+  }, [isEditing]);
+
+  useEffect(() => {
     setClubInfo({
       id: clubId,
       name,
@@ -195,6 +324,13 @@ const Mypage = () => {
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
     });
   }, [clubId, name, tel, dayList]);
+
+  useEffect(() => {
+    setWarns((prevState) => ({
+      ...prevState,
+      password: passwords.new && passwords.check && passwords.new !== passwords.check,
+    }));
+  }, [passwords]);
 
   return (
     <MypageContainer>
@@ -209,82 +345,122 @@ const Mypage = () => {
       <Title>프로필</Title>
       <InfoContainer>
         <Info>
-          <div className="index">아이디</div>
-          <div className="content">
+          <InfoIndex>아이디</InfoIndex>
+          <InfoContent>
             {isEditing ? (
-              <TextInput
-                content="name"
-                inputValue={clubInfo.name || ""}
-                setInputValue={setClubInfo}
-              />
+              <ContentContainer>
+                <TextInput
+                  className="input"
+                  content="name"
+                  inputValue={clubInfo.name || ""}
+                  setInputValue={setClubInfo}
+                />
+                <UniqueCheckButton disabled={!clubInfo.name}>중복 확인</UniqueCheckButton>
+              </ContentContainer>
             ) : (
               clubInfo.name && clubInfo.name
             )}
-          </div>
+          </InfoContent>
         </Info>
         {isEditing && (
           <>
             <Info>
-              <div className="index">비밀번호</div>
-              <div className="content">
-                <PasswordInput
-                  content="first"
-                  inputValue={passwords.first}
-                  setInputValue={setPasswords}
-                  editable
-                  blurred
-                />
-              </div>
+              <InfoIndex>비밀번호</InfoIndex>
+              <PasswordContentContainer warn={warns.password}>
+                <div className="current">
+                  <InfoContent direction="column">
+                    <span className="input-label" id="current-pw">
+                      현재 비밀번호
+                    </span>
+                    <PasswordInput
+                      className="input"
+                      content="current"
+                      inputValue={passwords.current}
+                      setInputValue={setPasswords}
+                      editable
+                    />
+                  </InfoContent>
+                </div>
+                <div className="new">
+                  <InfoContent direction="column">
+                    <span className="input-label" id="new-pw">
+                      새 비밀번호
+                    </span>
+                    <PasswordInput
+                      className="input"
+                      content="new"
+                      inputValue={passwords.new}
+                      setInputValue={setPasswords}
+                      editable
+                    />
+                  </InfoContent>
+                  <InfoContent direction="column">
+                    <span className="input-label" id="check-pw">
+                      새 비밀번호 확인
+                    </span>
+                    <PasswordInput
+                      className="input"
+                      content="check"
+                      inputValue={passwords.check}
+                      setInputValue={setPasswords}
+                      editable
+                    />
+                  </InfoContent>
+                </div>
+                {warns.password && <span className="warn-msg">비밀번호가 일치하지 않습니다.</span>}
+                <div className="btn">
+                  <ChangePasswordButton
+                    disabled={
+                      !passwords.current || !passwords.new || !passwords.check || warns.password
+                    }
+                    onClick={handleChangePassword}
+                  >
+                    비밀번호 변경
+                  </ChangePasswordButton>
+                  <span id="find-pw">비밀번호를 잊어버리셨나요?</span>
+                </div>
+              </PasswordContentContainer>
             </Info>
-            <Info>
-              <div className="index">비밀번호 확인</div>
-              <div className="content">
-                <PasswordInput
-                  content="second"
-                  inputValue={passwords.second}
-                  setInputValue={setPasswords}
-                  editable
-                  blurred
-                />
-              </div>
-            </Info>
-            {passwords.first && passwords.second && passwords.first !== passwords.second && (
-              <div>비밀번호가 다릅니다.</div>
-            )}
           </>
         )}
         <Info>
-          <div className="index">전화번호</div>
-          <div className="content">
-            {isEditing ? (
-              <TextInput
-                content="tel"
-                inputValue={clubInfo.tel || ""}
-                setInputValue={setClubInfo}
-              />
-            ) : (
-              clubInfo.tel && clubInfo.tel
-            )}
-          </div>
-        </Info>
-        <Info>
-          <div className="index">휴무일</div>
-          <div className="content">
-            {dayList.length &&
-              (isEditing ? (
-                <MultiSelectInput
-                  content="dayoffs"
-                  list={dayList}
-                  inputValue={clubInfo.dayoffs || []}
+          <InfoIndex>전화번호</InfoIndex>
+          <ContentContainer>
+            <InfoContent>
+              {isEditing ? (
+                <TextInput
+                  className="input"
+                  content="tel"
+                  inputValue={clubInfo.tel || ""}
                   setInputValue={setClubInfo}
                 />
               ) : (
-                clubInfo.dayoffs &&
-                clubInfo.dayoffs
-                  .map((offId) => dayList.find((day) => day.id === offId).name + "요일")
-                  .join(", ")
-              ))}
-          </div>
+                clubInfo.tel && clubInfo.tel
+              )}
+            </InfoContent>
+          </ContentContainer>
+        </Info>
+        <Info>
+          <InfoIndex>휴무일</InfoIndex>
+          <ContentContainer>
+            <InfoContent>
+              {dayList.length &&
+                (isEditing ? (
+                  <MultiSelectInput
+                    className="input"
+                    content="dayoffs"
+                    list={dayList}
+                    inputValue={clubInfo.dayoffs || []}
+                    setInputValue={setClubInfo}
+                  />
+                ) : (
+                  clubInfo.dayoffs &&
+                  clubInfo.dayoffs
+                    .map((offId) => dayList.find((day) => day.id === offId).name + "요일")
+                    .join(", ")
+                ))}
+            </InfoContent>
+          </ContentContainer>
         </Info>
       </InfoContainer>
       <ButtonContainer>
