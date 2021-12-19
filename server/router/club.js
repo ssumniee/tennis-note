@@ -4,6 +4,7 @@ const { isAuth } = require("../middlewares");
 const {
   getAllClubInfo,
   modifyClubInfo,
+  modifyClubPassword,
   addClubInfo,
   deleteClubInfo,
   modifyTeacherInfo,
@@ -16,6 +17,7 @@ const {
 
 router.get("/", isAuth, getAllClubInfo);
 router.put("/", isAuth, modifyClubInfo);
+router.put("/password", isAuth, modifyClubPassword);
 router.post("/", isAuth, addClubInfo);
 router.delete("/", isAuth, deleteClubInfo);
 router.put("/teacher", isAuth, modifyTeacherInfo);
