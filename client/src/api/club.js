@@ -17,6 +17,14 @@ const clubApi = {
       console.error(err);
     }
   },
+  modifyClubPassword: async ({ id, password }) => {
+    try {
+      const res = await api.put("/club/password", { id, password });
+      if (res.status === 200) return res;
+    } catch (err) {
+      console.error(err);
+    }
+  },
   addClubInfo: async (newClubInfo) => {
     try {
       const res = await api.post("/club", { ...newClubInfo });
