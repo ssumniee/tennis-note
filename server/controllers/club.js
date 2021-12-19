@@ -38,14 +38,35 @@ module.exports = {
     try {
       // 클럽 정보 수정
       const { updated } = req.body;
-      const { id, password, ...rest } = updated;
-      if (password) {
-        const hashed = await bcrypt.hash(password, saltRounds);
-        await updateClubInfo({ id, password: hashed, rest });
-      } else {
-        await updateClubInfo({ id, rest });
-      }
+      const { id, ...rest } = updated;
+      await updateClubInfo({ id, ...rest });
       return res.status(200).json({ message: "club updated", updated: { club_id: id } });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
+  modifyClubPassword: async (req, res) => {
+    try {
+      // 클럽 비밀번호 확인
+      const { id, password } = req.body;
+      const clubAccount = await findOneClub({ id });
+      const { is_admin, temp } = clubAccount.dataValues;
+      if (temp || is_admin) {
+        if (password.current !== clubAccount.dataValues.password)
+          return res.status(401).json({ message: "유효하지 않은 비밀번호입니다" });
+      }
+      if (!temp && !is_admin) {
+        const passwordValid = await bcrypt.compare(
+          password.current,
+          clubAccount.dataValues.password
+        );
+        if (!passwordValid)
+          return res.status(401).json({ message: "유효하지 않은 비밀번호입니다" });
+      }
+      // 클럽 비밀번호 업데이트
+      const hashed = await bcrypt.hash(password.new, saltRounds);
+      await updateClubInfo({ id, password: hashed });
+      return res.status(200).json({ message: "password updated", updated: { club_id: id } });
     } catch (err) {
       DBERROR(res, err);
     }
