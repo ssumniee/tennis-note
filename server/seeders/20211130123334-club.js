@@ -15,7 +15,7 @@ module.exports = {
         {
           id: 2,
           name: "polygontennis",
-          password: "polygon123",
+          password: "$2b$12$I/DnGBHgDdkZWOulRkhaaeZr00p24Nr57FbL95IId6x.kTCwSxamO", // polygon123
           tel: "010-1234-5678",
           temp: false,
           is_admin: false,
@@ -23,7 +23,7 @@ module.exports = {
         {
           id: 3,
           name: "rocktennis",
-          password: "rock456",
+          password: "$2b$12$nDDvHH7eS8hxc0IvqpxmNeGf00JvFOrNDn.vA3jM6emlMFA7Fr7kC", // rock456
           tel: "010-5678-1234",
           temp: false,
           is_admin: false,
