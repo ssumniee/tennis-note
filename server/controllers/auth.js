@@ -6,16 +6,26 @@ const {
 } = require("./functions/sequelize");
 const { DBERROR } = require("./functions/utility");
 const { clearCookie, generateAccessToken, setCookie } = require("./functions/token");
+const bcrypt = require("bcrypt");
 
 module.exports = {
   login: async (req, res) => {
     try {
       const { name, password } = req.body;
-      const clubAccount = await findOneClub({ name, password });
+      const clubAccount = await findOneClub({ name });
       if (!clubAccount) {
         return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
       }
-      const { is_admin, temp, id, tel = null } = clubAccount.dataValues;
+      const { is_admin, temp, id, tel } = clubAccount.dataValues;
+      if (temp || is_admin) {
+        if (password !== clubAccount.dataValues.password)
+          return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
+      }
+      if (!temp && !is_admin) {
+        const passwordValid = await bcrypt.compare(password, clubAccount.dataValues.password);
+        if (!passwordValid)
+          return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
+      }
       const info = { id, name, tel };
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
