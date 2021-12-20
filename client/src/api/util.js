@@ -9,6 +9,14 @@ const utilApi = {
       console.error(err);
     }
   },
+  getVerificationCode: async (tel) => {
+    try {
+      const res = await api.post("/util/message/code", { tel });
+      if (res.status === 202) return res.data.verificationCode;
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };
 
 export default utilApi;
