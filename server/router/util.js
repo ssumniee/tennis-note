@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { getTempPassword } = require("../controllers/util");
+const { isAuth } = require("../middlewares");
+const { getTempPassword, sendVerificationSMS } = require("../controllers/util");
 
-router.get("/password", getTempPassword);
+router.get("/password", isAuth, getTempPassword);
+router.post("/message/code", isAuth, sendVerificationSMS);
 
 module.exports = router;
