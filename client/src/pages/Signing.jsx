@@ -6,6 +6,7 @@ import authApi from "../api/auth";
 import { loginAction, logoutAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
+import ResetPwBtn from "../components/ResetPwBtn";
 
 const SigningContainer = styled.div`
   width: 100vw;
@@ -31,6 +32,15 @@ const SigningContainer = styled.div`
         : css`
             border-color: var(--color-lightblue);
           `}
+  }
+  .reset-pw {
+    margin: 0.5rem 0;
+    font-size: 0.825rem;
+    text-align: center;
+    color: var(--color-blue);
+    :hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -153,6 +163,7 @@ const Signing = () => {
         <LoginButton disabled={btnDisabled} type="submit">
           로그인
         </LoginButton>
+        <ResetPwBtn className="reset-pw" />
       </Form>
     </SigningContainer>
   );
