@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import koLocale from "date-fns/locale/ko";
+import ResetPassword from "./popups/ResetPassword";
 
 const App = () => {
   return (
@@ -62,6 +63,7 @@ const App = () => {
               </>
             }
           />
+          <Route path="/popup/password-reset/:id" element={<ResetPassword />} />
         </Routes>
       </BrowserRouter>
     </LocalizationProvider>

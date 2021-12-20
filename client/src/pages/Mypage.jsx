@@ -11,6 +11,7 @@ import PasswordInput from "../components/input/PasswordInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
 import Table from "../components/table/Table";
 import { IoAlertCircle } from "react-icons/io5";
+import ResetPwBtn from "../components/ResetPwBtn";
 
 const MypageContainer = styled.div`
   width: 100%;
@@ -148,7 +149,7 @@ const ContentContainer = styled.div`
     `}
   .input-label,
   .warn-msg,
-  #find-pw,
+  .reset-pw,
   #check-name {
     padding: 0.125rem 0;
     font-size: 0.75rem;
@@ -161,7 +162,7 @@ const ContentContainer = styled.div`
   #check-name {
     color: var(--color-red);
   }
-  #find-pw {
+  .reset-pw {
     color: var(--color-blue);
     :hover {
       text-decoration: underline;
@@ -459,7 +460,7 @@ const Mypage = () => {
                   >
                     비밀번호 변경
                   </ChangePasswordButton>
-                  <span id="find-pw">비밀번호를 잊어버리셨나요?</span>
+                  <ResetPwBtn className="reset-pw" />
                 </div>
               </ContentContainer>
             </Info>
