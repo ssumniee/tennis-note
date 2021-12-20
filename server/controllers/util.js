@@ -62,7 +62,7 @@ module.exports = {
           messages: [{ to: `${user_phone_number}` }],
         },
       });
-      return res.status(202).json({ message: "SMS sent" });
+      return res.status(202).json({ message: "SMS sent", verificationCode });
     } catch (err) {
       console.log(err);
       return res.status(404).json({ message: "SMS not sent" });
