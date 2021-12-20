@@ -111,15 +111,6 @@ const ContentContainer = styled.div`
     min-height: 2rem;
   }
   display: flex;
-  > * {
-    margin-right: 0.75rem;
-    :last-child {
-      margin-right: 0;
-    }
-  }
-`;
-
-const PasswordContentContainer = styled(ContentContainer)`
   flex-direction: column;
   > * {
     margin-right: 0;
@@ -133,8 +124,10 @@ const PasswordContentContainer = styled(ContentContainer)`
   }
   .current,
   .new,
-  .btn {
+  .btn,
+  .name {
     display: flex;
+    align-items: center;
     > * {
       margin-right: 0.75rem;
       :last-child {
@@ -142,29 +135,34 @@ const PasswordContentContainer = styled(ContentContainer)`
       }
     }
   }
-  .new {
-    ${(props) =>
-      props.warn &&
-      css`
+
+  ${(props) =>
+    props.warn &&
+    css`
+      .new,
+      .name {
         .input {
           border-color: var(--color-red);
         }
-      `}
-  }
+      }
+    `}
   .input-label,
   .warn-msg,
-  #find-pw {
+  #find-pw,
+  #check-name {
     padding: 0.125rem 0;
     font-size: 0.75rem;
   }
   .input-label {
     color: var(--color-gray);
   }
-  .warn-msg {
+  .warn-msg,
+  #check-name {
+    /* align-self: center; */
     color: var(--color-red);
   }
   #find-pw {
-    align-self: center;
+    /* align-self: center; */
     color: var(--color-blue);
     :hover {
       text-decoration: underline;
@@ -250,19 +248,24 @@ const Mypage = () => {
     tel,
     dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
   });
+  const [nameUpdated, setNameUpdated] = useState(false);
+  const [nameUniqueness, setNameUniqueness] = useState("unchecked"); // unchecked, available, banned
   const [passwords, setPasswords] = useState({ current: "", new: "", check: "" });
   const [warns, setWarns] = useState({ name: false, password: false });
 
   const handleApplyUpdate = async () => {
     try {
-      // 바뀐 정보 clubInfo로 DB 업데이트
-      await clubApi.modifyClubInfo(clubInfo);
-      // 리덕스 스토어 업데이트
-      const res = await authApi.me();
-      if (res.status === 200) {
-        dispatch(loginAction(res.data));
+      // 아이디를 변경하지 않은 경우, 또는 아이디 중복 검사를 성공적으로 수행한 경우에만
+      if (!nameUpdated || nameUniqueness === "available") {
+        // 바뀐 정보 clubInfo로 DB 업데이트
+        await clubApi.modifyClubInfo(clubInfo);
+        // 리덕스 스토어 업데이트
+        const res = await authApi.me();
+        if (res.status === 200) {
+          dispatch(loginAction(res.data));
+        }
+        setIsEditing(false);
       }
-      setIsEditing(false);
     } catch (err) {
       console.error(err);
     }
@@ -276,6 +279,18 @@ const Mypage = () => {
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
     });
     setIsEditing(false);
+  };
+
+  const handleNameUniquenessCheck = async () => {
+    try {
+      // 아이디 중복 검사
+      const res = await clubApi.checkClubNameUniqueness(clubInfo.name);
+      if (res.status === 200) setNameUniqueness("available");
+      setNameUpdated(true);
+    } catch (err) {
+      setNameUniqueness("banned");
+      setNameUpdated(true);
+    }
   };
 
   const handleChangePassword = async () => {
@@ -313,10 +328,6 @@ const Mypage = () => {
   }, []);
 
   useEffect(() => {
-    setPasswords({ current: "", new: "", check: "" });
-  }, [isEditing]);
-
-  useEffect(() => {
     setClubInfo({
       id: clubId,
       name,
@@ -326,11 +337,30 @@ const Mypage = () => {
   }, [clubId, name, tel, dayList]);
 
   useEffect(() => {
+    setNameUpdated(false);
+  }, [clubInfo.name]);
+
+  useEffect(() => {
+    setWarns((prevState) => ({
+      ...prevState,
+      name: nameUpdated && nameUniqueness !== "available",
+    }));
+  }, [nameUpdated, nameUniqueness]);
+
+  useEffect(() => {
     setWarns((prevState) => ({
       ...prevState,
       password: passwords.new && passwords.check && passwords.new !== passwords.check,
     }));
   }, [passwords]);
+
+  useEffect(() => {
+    if (!nameUpdated) {
+      setNameUniqueness("unchecked");
+      setPasswords({ current: "", new: "", check: "" });
+      setWarns({ name: false, password: false });
+    }
+  }, [isEditing, nameUpdated]);
 
   return (
     <MypageContainer>
@@ -348,14 +378,27 @@ const Mypage = () => {
           <InfoIndex>아이디</InfoIndex>
           <InfoContent>
             {isEditing ? (
-              <ContentContainer>
-                <TextInput
-                  className="input"
-                  content="name"
-                  inputValue={clubInfo.name || ""}
-                  setInputValue={setClubInfo}
-                />
-                <UniqueCheckButton disabled={!clubInfo.name}>중복 확인</UniqueCheckButton>
+              <ContentContainer warn={warns.name}>
+                <div className="name">
+                  <TextInput
+                    className="input"
+                    content="name"
+                    inputValue={clubInfo.name || ""}
+                    setInputValue={setClubInfo}
+                  />
+                  <UniqueCheckButton
+                    disabled={!clubInfo.name || clubInfo.name === name}
+                    onClick={handleNameUniquenessCheck}
+                  >
+                    중복 확인
+                  </UniqueCheckButton>
+                </div>
+                {warns.name && (
+                  <span id="check-name">
+                    {nameUniqueness === "unchecked" && "아이디 중복 확인을 해주세요."}
+                    {nameUniqueness === "banned" && "사용할 수 없는 아이디입니다."}
+                  </span>
+                )}
               </ContentContainer>
             ) : (
               clubInfo.name && clubInfo.name
@@ -366,7 +409,7 @@ const Mypage = () => {
           <>
             <Info>
               <InfoIndex>비밀번호</InfoIndex>
-              <PasswordContentContainer warn={warns.password}>
+              <ContentContainer warn={warns.password}>
                 <div className="current">
                   <InfoContent direction="column">
                     <span className="input-label" id="current-pw">
@@ -419,7 +462,7 @@ const Mypage = () => {
                   </ChangePasswordButton>
                   <span id="find-pw">비밀번호를 잊어버리셨나요?</span>
                 </div>
-              </PasswordContentContainer>
+              </ContentContainer>
             </Info>
           </>
         )}
