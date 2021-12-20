@@ -29,4 +29,10 @@ module.exports = {
   cors: {
     allowedOrigin: required("CORS_ALLOW_ORIGIN"),
   },
+  sens: {
+    accessKey: required("NCP_SENS_ACCESS"),
+    secretKey: required("NCP_SENS_SECRET"),
+    serviceId: required("NCP_SENS_ID"),
+    callNumber: required("NCP_SENS_NUMBER"),
+  },
 };
