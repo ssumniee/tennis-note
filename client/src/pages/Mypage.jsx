@@ -28,7 +28,7 @@ const Alert = styled.div`
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
   background-color: var(--color-paleblue);
-  :new-of-type {
+  :first-child {
     margin-top: 0;
   }
   font-family: Interop-Medium;
@@ -53,8 +53,8 @@ const Alert = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 2rem 0 1.5rem;
-  :new-of-type {
+  margin: 3rem 0 1.5rem;
+  :first-child {
     margin-top: 0;
   }
   padding: 0 1.5rem;
@@ -80,11 +80,11 @@ const Info = styled.div`
 const InfoInner = styled.div`
   display: flex;
   align-items: center;
+  align-self: flex-start;
 `;
 
 const InfoIndex = styled(InfoInner)`
   min-height: 2rem;
-  align-self: flex-start;
   flex: 0 0 1;
   font-size: 0.875rem;
   color: var(--color-gray);
@@ -96,7 +96,6 @@ const InfoIndex = styled(InfoInner)`
 const InfoContent = styled(InfoInner)`
   flex: 1 1 0;
   display: flex;
-  align-items: flex-start;
   ${(props) =>
     props.direction &&
     css`
@@ -105,13 +104,14 @@ const InfoContent = styled(InfoInner)`
 `;
 
 const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   .input {
     width: 12rem;
     max-width: 12rem;
     min-height: 2rem;
   }
-  display: flex;
-  flex-direction: column;
   > * {
     margin-right: 0;
     margin-top: 0.5rem;
@@ -154,15 +154,14 @@ const ContentContainer = styled.div`
     font-size: 0.75rem;
   }
   .input-label {
+    align-self: flex-start;
     color: var(--color-gray);
   }
   .warn-msg,
   #check-name {
-    /* align-self: center; */
     color: var(--color-red);
   }
   #find-pw {
-    /* align-self: center; */
     color: var(--color-blue);
     :hover {
       text-decoration: underline;
@@ -219,13 +218,13 @@ const ButtonContainer = styled.div`
 const Button = styled.button`
   flex: 1 1 0;
   font-size: 0.925rem;
-  line-height: 2rem;
+  line-height: 2.25rem;
   padding: 0 1rem;
   margin-right: 0.5rem;
   :last-child {
     margin-right: 0;
   }
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   text-align: center;
 `;
 
