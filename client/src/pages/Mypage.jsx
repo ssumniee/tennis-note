@@ -15,7 +15,7 @@ import ResetPwBtn from "../components/ResetPwBtn";
 
 const MypageContainer = styled.div`
   width: 100%;
-  max-width: 46rem;
+  max-width: 50rem;
   height: 100%;
   margin: 0 auto;
   padding: 2rem;
@@ -54,11 +54,10 @@ const Alert = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 3rem 0 1.5rem;
+  margin: 4rem 0 2rem;
   :first-child {
     margin-top: 0;
   }
-  padding: 0 1.5rem;
   font-size: 1.25rem;
   font-family: Interop-Medium;
   font-weight: normal;
@@ -71,10 +70,10 @@ const InfoContainer = styled.div`
 
 const Info = styled.div`
   display: flex;
-  padding: 0.5rem 1.5rem;
-  border-top: 1px solid var(--color-palegray);
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-palegray);
   :last-child {
-    border-bottom: 1px solid var(--color-palegray);
+    border-bottom: none;
   }
 `;
 
@@ -85,13 +84,13 @@ const InfoInner = styled.div`
 `;
 
 const InfoIndex = styled(InfoInner)`
+  width: 8rem;
   min-height: 2rem;
   flex: 0 0 1;
   font-size: 0.875rem;
   color: var(--color-gray);
   text-align: right;
   margin-right: 4rem;
-  width: 6rem;
 `;
 
 const InfoContent = styled(InfoInner)`
@@ -150,7 +149,7 @@ const ContentContainer = styled.div`
   .input-label,
   .warn-msg,
   .reset-pw,
-  #check-name {
+  .check-name {
     padding: 0.125rem 0;
     font-size: 0.75rem;
   }
@@ -159,7 +158,7 @@ const ContentContainer = styled.div`
     color: var(--color-gray);
   }
   .warn-msg,
-  #check-name {
+  .check-name {
     color: var(--color-red);
   }
   .reset-pw {
@@ -197,8 +196,7 @@ const ChangePasswordButton = styled(InputButton)`
 
 const ButtonContainer = styled.div`
   display: flex;
-  margin: 1.5rem 0;
-  width: 19.5rem;
+  margin: 2rem 0;
   #edit,
   #cancel {
     border: 1px solid var(--color-blue);
@@ -218,6 +216,7 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   flex: 1 1 0;
+  max-width: 12rem;
   font-size: 0.925rem;
   line-height: 2.25rem;
   padding: 0 1rem;
@@ -394,7 +393,7 @@ const Mypage = () => {
                   </UniqueCheckButton>
                 </div>
                 {warns.name && (
-                  <span id="check-name">
+                  <span className="check-name">
                     {nameUniqueness === "unchecked" && "아이디 중복 확인을 해주세요."}
                     {nameUniqueness === "banned" && "사용할 수 없는 아이디입니다."}
                   </span>
