@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
-const ResetPwMessage = ({ className }) => {
+const ResetPwBtn = ({ className }) => {
   const { id: clubId } = useSelector(({ authReducer }) => authReducer);
 
   const openPasswordResetPopup = ({ width = 500, height = 500 }) => {
@@ -21,8 +21,8 @@ const ResetPwMessage = ({ className }) => {
   );
 };
 
-ResetPwMessage.propTypes = {
+ResetPwBtn.propTypes = {
   className: PropTypes.string,
 };
 
-export default ResetPwMessage;
+export default ResetPwBtn;
