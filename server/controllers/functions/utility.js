@@ -5,4 +5,7 @@ module.exports = {
   createRandomString: () => {
     return Math.random().toString(36).slice(2);
   },
+  createRandomNumber: (len = 6) => {
+    return Math.random().toFixed(len).toString().slice(2);
+  },
 };
