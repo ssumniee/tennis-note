@@ -71,6 +71,17 @@ module.exports = {
       DBERROR(res, err);
     }
   },
+  resetClubPassword: async (req, res) => {
+    try {
+      const { id, password } = req.body;
+      // 클럽 비밀번호 재설정
+      const hashed = await bcrypt.hash(password, saltRounds);
+      await updateClubInfo({ id, password: hashed });
+      return res.status(200).json({ message: "password reset", reset: { club_id: id } });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
   addClubInfo: async (req, res) => {
     try {
       // 클럽 정보 생성
