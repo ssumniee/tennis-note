@@ -94,6 +94,16 @@ module.exports = {
       DBERROR(res, err);
     }
   },
+  checkClubNameUniqueness: async (req, res) => {
+    try {
+      const { name } = req.body;
+      const clubAccount = await findOneClub({ name });
+      if (clubAccount) return res.status(409).json({ message: "사용할 수 없는 아이디입니다" });
+      return res.status(200).json({ message: "사용할 수 있는 아이디입니다", name });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
   modifyTeacherInfo: async (req, res) => {
     try {
       // 강사 정보 수정
