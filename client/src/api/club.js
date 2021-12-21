@@ -9,6 +9,17 @@ const clubApi = {
       console.error(err);
     }
   },
+  getOneClubId: async (queries) => {
+    try {
+      const queryString = Object.keys(queries)
+        .map((query) => `${query}=${queries[query]}`)
+        .join("&");
+      const res = await api.get(`/club/id?${queryString}`);
+      if (res.status === 200) return res.data.club_id;
+    } catch (err) {
+      console.error(err);
+    }
+  },
   modifyClubInfo: async (clubInfo) => {
     try {
       const res = await api.put("/club", { updated: { ...clubInfo } });
