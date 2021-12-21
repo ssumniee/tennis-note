@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-// import media from "styled-media-query";
 import clubApi from "../api/club";
 import utilApi from "../api/util";
 import TextInput from "../components/input/TextInput";
@@ -76,6 +75,9 @@ const NotiContainer = styled.div`
     color: var(--color-red);
     margin: 0;
   }
+  .expired {
+    color: var(--color-red);
+  }
   #not-found,
   #result {
     flex: 1 1 0;
@@ -116,10 +118,11 @@ const Button = styled.button`
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--color-blue);
+    color: var(--color-gray);
     :hover {
       opacity: unset;
       text-decoration: underline;
+      color: var(--color-darkgray);
     }
   }
 `;
@@ -128,7 +131,8 @@ const PasswordReset = () => {
   const [step, setStep] = useState("insert-info"); // insert-info > code-sent > verification-completed > process-completed
   const [inputValue, setInputValue] = useState({ name: "", tel: "", code: "", newPw: "" });
   const [clubId, setClubId] = useState(null);
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState(null);
+  const [codeValidTime, setCodeValidTime] = useState(180000);
   const [codeMatch, setCodeMatch] = useState("unchecked"); // unchekced, not-match, match
   const [pwResetAvailable, setPwResetAvailable] = useState(false);
   const [pwUpdated, setPwUpdated] = useState(false);
@@ -140,6 +144,7 @@ const PasswordReset = () => {
       setClubId(resId);
       const resCode = await utilApi.getVerificationCode(inputValue.tel);
       setVerificationCode(resCode);
+      setCodeValidTime(180000);
       setStep("code-sent");
     } catch (err) {
       console.error(err);
@@ -148,7 +153,7 @@ const PasswordReset = () => {
 
   const confirmVerificationCode = async () => {
     try {
-      if (verificationCode === inputValue.code) {
+      if (verificationCode === inputValue.code && codeValidTime > 0) {
         setCodeMatch("match");
         setPwResetAvailable(true);
         setStep("verification-completed");
@@ -174,6 +179,21 @@ const PasswordReset = () => {
   useEffect(() => {
     setCodeMatch("unchecked");
   }, [inputValue.code]);
+
+  useEffect(() => {
+    let timer;
+    if (verificationCode) {
+      timer = setInterval(() => {
+        setCodeValidTime((prevState) => prevState - 1000);
+      }, 1000);
+    }
+    if (codeValidTime <= 0) {
+      clearInterval(timer);
+    }
+    return () => {
+      clearInterval(timer);
+    };
+  }, [verificationCode, codeValidTime]);
 
   return (
     <PopupContainer>
@@ -205,7 +225,11 @@ const PasswordReset = () => {
             </InputContainer>
           </InputArea>
           <InputArea>
-            <Button id="send-code" disabled={!inputValue.tel} onClick={sendVerificationMessage}>
+            <Button
+              id="send-code"
+              disabled={!inputValue.name || !inputValue.tel}
+              onClick={sendVerificationMessage}
+            >
               인증번호 전송
             </Button>
           </InputArea>
@@ -214,11 +238,29 @@ const PasswordReset = () => {
 
       {step === "code-sent" && (
         <>
-          <NotiContainer>
-            <span id="code-sent">{verificationCode && "인증번호가 전송되었습니다."}</span>
-            <span id="timer">남은 시간 {`${"3"}:${"00"}`}</span>
-          </NotiContainer>
-          <InputArea warn={codeMatch === "not-match"}>
+          {verificationCode && (
+            <NotiContainer>
+              {codeValidTime > 0 ? (
+                <>
+                  <span>인증번호가 전송되었습니다.</span>
+                  <span>
+                    남은 시간{" "}
+                    {`${Math.floor(codeValidTime / 1000 / 60)}:${
+                      (codeValidTime / 1000) % 60 < 10
+                        ? "0" + ((codeValidTime / 1000) % 60)
+                        : (codeValidTime / 1000) % 60
+                    }`}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="expired">인증번호를 다시 전송해주세요.</span>
+                  <span className="expired">시간 초과</span>
+                </>
+              )}
+            </NotiContainer>
+          )}
+          <InputArea warn={codeValidTime <= 0 || codeMatch === "not-match"}>
             <InputContainer>
               <TextInput
                 className="input"
@@ -235,7 +277,7 @@ const PasswordReset = () => {
               확인
             </Button>
           </InputArea>
-          {codeMatch === "not-match" && (
+          {codeValidTime > 0 && codeMatch === "not-match" && (
             <NotiContainer>
               <span id="not-match">인증번호가 일치하지 않습니다.</span>
             </NotiContainer>
