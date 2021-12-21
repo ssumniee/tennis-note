@@ -1,17 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 
 const ResetPwBtn = ({ className }) => {
-  const { id: clubId } = useSelector(({ authReducer }) => authReducer);
-
   const openPasswordResetPopup = ({ width = 500, height = 500 }) => {
     const popupWidth = width;
     const popupHeight = height;
     const popupX = (window.screen.width - width) / 2;
     const popupY = (window.screen.height - height) / 2;
     const windowOptions = `width=${popupWidth}, height=${popupHeight}, top=${popupY}, left=${popupX}`;
-    window.open(`/popup/password-reset/${clubId}`, "password reset popup", windowOptions);
+    window.open("/popup/password-reset", "password reset popup", windowOptions);
   };
 
   return (

@@ -63,7 +63,7 @@ const App = () => {
               </>
             }
           />
-          <Route path="/popup/password-reset/:id" element={<ResetPassword />} />
+          <Route path="/popup/password-reset" element={<ResetPassword />} />
         </Routes>
       </BrowserRouter>
     </LocalizationProvider>
