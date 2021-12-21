@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ResetPwBtn = ({ className }) => {
-  const openPasswordResetPopup = ({ width = 500, height = 500 }) => {
+  const openPasswordResetPopup = ({ width = 500, height = 400 }) => {
     const popupWidth = width;
     const popupHeight = height;
     const popupX = (window.screen.width - width) / 2;
