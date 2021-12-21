@@ -1,43 +1,18 @@
 import api from "./index";
 
 const studentApi = {
-  getAllStudentInfo: async () => {
-    try {
-      const res = await api.get("/student");
-      if (res.status === 200) return res;
-    } catch (err) {
-      console.error(err);
-    }
+  getAllStudentInfo: () => api.get("/student"),
+  modifyStudentInfo: (studentInfo) => api.put("/student", { updated: { ...studentInfo } }),
+  addStudentInfo: (newStudentInfo) => {
+    const { student, days } = newStudentInfo;
+    return api.post("/student", { student, days });
   },
-  modifyStudentInfo: async (studentInfo) => {
-    try {
-      const res = await api.put("/student", { updated: { ...studentInfo } });
-      if (res.status === 200) return res;
-    } catch (err) {
-      console.error(err);
-    }
-  },
-  addStudentInfo: async (newStudentInfo) => {
-    try {
-      const { student, days } = newStudentInfo;
-      const res = await api.post("/student", { student, days });
-      if (res.status === 200) return res;
-    } catch (err) {
-      console.error(err);
-    }
-  },
-  deleteStudentInfo: async (studentId) => {
-    try {
-      const res = await api.delete("/student", {
-        data: {
-          id: studentId,
-        },
-      });
-      if (res.status === 200) return res;
-    } catch (err) {
-      console.error(err);
-    }
-  },
+  deleteStudentInfo: (studentId) =>
+    api.delete("/student", {
+      data: {
+        id: studentId,
+      },
+    }),
 };
 
 export default studentApi;
