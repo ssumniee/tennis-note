@@ -103,7 +103,7 @@ const InfoContent = styled(InfoInner)`
     `}
 `;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;

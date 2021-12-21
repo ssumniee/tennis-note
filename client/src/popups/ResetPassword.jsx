@@ -1,8 +1,128 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
+// import media from "styled-media-query";
 import clubApi from "../api/club";
 import utilApi from "../api/util";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
+
+const PopupContainer = styled.div`
+  height: 100vh;
+  margin: 0 auto;
+  padding: 2rem 0 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  margin: 0 0 2rem;
+  font-size: 1.25rem;
+  font-family: Interop-Medium;
+  font-weight: normal;
+  text-align: center;
+`;
+
+const InputArea = styled.div`
+  width: 20rem;
+  height: 2.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  margin: 0.5rem 0;
+  > * {
+    margin-right: 0.5rem;
+    :last-child {
+      margin-right: 0;
+    }
+  }
+  ${(props) =>
+    props.warn &&
+    css`
+      .input {
+        border-color: var(--color-red);
+      }
+    `}
+`;
+
+const IndexContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 3.5rem;
+  margin-right: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-gray);
+`;
+
+const InputContainer = styled.div`
+  flex: 1 1 0;
+  position: relative;
+`;
+
+const NotiContainer = styled.div`
+  width: 20rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.925rem;
+  color: var(--color-blue);
+  > * {
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+  #not-match {
+    font-size: 0.875rem;
+    color: var(--color-red);
+    margin: 0;
+  }
+  #not-found,
+  #result {
+    flex: 1 1 0;
+    font-size: 1rem;
+    color: var(--color-darkgray);
+    margin: 0.5rem 0 2rem;
+  }
+`;
+
+const Button = styled.button`
+  text-align: center;
+  border-radius: 0.25rem;
+  font-size: 0.925rem;
+  padding: 0 0.5rem;
+  min-width: 4.5rem;
+  height: 2.25rem;
+  :hover {
+    opacity: 0.8;
+  }
+  :disabled {
+    opacity: 0.4;
+  }
+  &#send-code {
+    margin-left: 5rem;
+    padding: 0 1rem;
+  }
+  &#send-code,
+  &#confirm-code,
+  &#reset-pw,
+  &.close {
+    background-color: var(--color-blue);
+    color: var(--color-white);
+  }
+  &#resend-code {
+    min-width: max-content;
+    font-size: 0.875rem;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-blue);
+    :hover {
+      opacity: unset;
+      text-decoration: underline;
+    }
+  }
+`;
 
 const PasswordReset = () => {
   const [step, setStep] = useState("insert-info"); // insert-info > code-sent > verification-completed > process-completed
@@ -18,10 +138,8 @@ const PasswordReset = () => {
       // 이름으로 계정 id 받아오기
       const resId = await clubApi.getOneClubId({ name: inputValue.name });
       setClubId(resId);
-      console.log("clubId", clubId);
       const resCode = await utilApi.getVerificationCode(inputValue.tel);
       setVerificationCode(resCode);
-      console.log("resCode", resCode);
       setStep("code-sent");
     } catch (err) {
       console.error(err);
@@ -53,76 +171,130 @@ const PasswordReset = () => {
     }
   };
 
+  useEffect(() => {
+    setCodeMatch("unchecked");
+  }, [inputValue.code]);
+
   return (
-    <>
-      {step === ("insert-info" || "code-sent") && (
+    <PopupContainer>
+      <Title>비밀번호 재설정</Title>
+      {step === "insert-info" && (
         <>
-          <TextInput
-            className="name"
-            content="name"
-            inputValue={inputValue.name}
-            setInputValue={setInputValue}
-            placeholder="아이디"
-          />
-          <TextInput
-            className="tel"
-            content="tel"
-            inputValue={inputValue.tel}
-            setInputValue={setInputValue}
-            placeholder="전화번호"
-          />
-          <button onClick={sendVerificationMessage}>인증번호 전송</button>
+          <InputArea>
+            <IndexContainer>아이디</IndexContainer>
+            <InputContainer>
+              <TextInput
+                className="input"
+                content="name"
+                inputValue={inputValue.name}
+                setInputValue={setInputValue}
+                placeholder="아이디"
+              />
+            </InputContainer>
+          </InputArea>
+          <InputArea>
+            <IndexContainer>전화번호</IndexContainer>
+            <InputContainer>
+              <TextInput
+                className="input"
+                content="tel"
+                inputValue={inputValue.tel}
+                setInputValue={setInputValue}
+                placeholder="전화번호"
+              />
+            </InputContainer>
+          </InputArea>
+          <InputArea>
+            <Button id="send-code" disabled={!inputValue.tel} onClick={sendVerificationMessage}>
+              인증번호 전송
+            </Button>
+          </InputArea>
         </>
       )}
 
       {step === "code-sent" && (
         <>
-          <span>{verificationCode && "인증번호가 전송되었습니다."}</span>
-          <span>남은 시간 {`${"3"}:${"00"}`}</span>
-          <TextInput
-            className="code"
-            content="code"
-            inputValue={inputValue.code}
-            setInputValue={setInputValue}
-            placeholder="인증번호"
-          />
-          <button onClick={confirmVerificationCode}>확인</button>
-          {codeMatch === "not-match" && <span>인증번호가 일치하지 않습니다.</span>}
-        </>
-      )}
-
-      {step === "verification-completed" && (
-        <>
-          {clubId && pwResetAvailable ? (
-            <>
-              <PasswordInput
-                className="new-pw"
-                content="newPw"
-                inputValue={inputValue.newPw}
+          <NotiContainer>
+            <span id="code-sent">{verificationCode && "인증번호가 전송되었습니다."}</span>
+            <span id="timer">남은 시간 {`${"3"}:${"00"}`}</span>
+          </NotiContainer>
+          <InputArea warn={codeMatch === "not-match"}>
+            <InputContainer>
+              <TextInput
+                className="input"
+                content="code"
+                inputValue={inputValue.code}
                 setInputValue={setInputValue}
-                placeholder="새로운 비밀번호"
+                placeholder="인증번호"
               />
-              <button onClick={handlePasswordChange}>비밀번호 변경</button>
-            </>
-          ) : (
-            <span>사용자를 찾을 수 없습니다.</span>
+              <Button id="resend-code" onClick={sendVerificationMessage}>
+                재전송
+              </Button>
+            </InputContainer>
+            <Button id="confirm-code" disabled={!inputValue.code} onClick={confirmVerificationCode}>
+              확인
+            </Button>
+          </InputArea>
+          {codeMatch === "not-match" && (
+            <NotiContainer>
+              <span id="not-match">인증번호가 일치하지 않습니다.</span>
+            </NotiContainer>
           )}
         </>
       )}
 
+      {step === "verification-completed" &&
+        (clubId && pwResetAvailable ? (
+          <>
+            <InputArea>
+              <InputContainer>
+                <PasswordInput
+                  className="input"
+                  content="newPw"
+                  inputValue={inputValue.newPw}
+                  setInputValue={setInputValue}
+                  placeholder="새로운 비밀번호"
+                />
+              </InputContainer>
+              <Button id="reset-pw" disabled={!inputValue.newPw} onClick={handlePasswordChange}>
+                변경하기
+              </Button>
+            </InputArea>
+          </>
+        ) : (
+          <>
+            <NotiContainer>
+              <span id="not-found">사용자를 찾을 수 없습니다.</span>
+            </NotiContainer>
+            <Button
+              className="close"
+              onClick={() => {
+                window.close();
+              }}
+            >
+              닫기
+            </Button>
+          </>
+        ))}
+
       {step === "process-completed" && (
         <>
-          <span>{pwUpdated ? "비밀번호가 변경되었습니다." : "비밀번호를 변경할 수 없습니다."}</span>
-          <button
+          <NotiContainer>
+            <span id="result">
+              {pwUpdated ? "비밀번호가 변경되었습니다." : "비밀번호를 변경할 수 없습니다."}
+            </span>
+          </NotiContainer>
+          <Button
+            className="close"
             onClick={() => {
               window.close();
             }}
           >
-            닫기
-          </button>
+            {pwUpdated ? "확인" : "닫기"}
+          </Button>
         </>
       )}
-    </>
+    </PopupContainer>
   );
 };
 
