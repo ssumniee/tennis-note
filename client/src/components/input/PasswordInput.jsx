@@ -98,6 +98,7 @@ const PasswordInput = ({
   placeholder,
   blurred,
   random,
+  autoFocus,
 }) => {
   const input = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -125,7 +126,7 @@ const PasswordInput = ({
       fontSize={fontSize}
       tabIndex="0"
       onFocus={() => {
-        input.current.focus();
+        if (input.current) input.current.focus();
       }}
     >
       <InputInner
@@ -136,6 +137,7 @@ const PasswordInput = ({
         placeholder={placeholder}
         tabIndex="-1"
         ref={input}
+        autoFocus={autoFocus}
       />
       {random ? (
         <RefreshBtn type="button" onClick={handleInputRefresh} tabIndex="-1">
@@ -174,6 +176,7 @@ const PasswordInput = ({
 PasswordInput.defaultProps = {
   blurred: false,
   random: false,
+  autoFocus: false,
 };
 
 PasswordInput.propTypes = {
@@ -185,6 +188,7 @@ PasswordInput.propTypes = {
   blurred: PropTypes.bool,
   random: PropTypes.bool,
   placeholder: PropTypes.string,
+  autoFocus: PropTypes.bool,
 };
 
 export default PasswordInput;

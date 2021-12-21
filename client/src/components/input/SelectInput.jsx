@@ -121,7 +121,7 @@ const SelectInput = ({
           }));
         }}
         renderValue={(inputValue) =>
-          inputValue ? list.find((item) => item.id === inputValue).name : ""
+          inputValue ? list.find((item) => item.id === inputValue)?.name : ""
         }
         inputProps={{ tabIndex: "-1" }}
       >

@@ -59,7 +59,15 @@ const ClearBtn = styled.button`
   }
 `;
 
-const TextInput = ({ className, content, inputValue, setInputValue, fontSize, placeholder }) => {
+const TextInput = ({
+  className,
+  content,
+  inputValue,
+  setInputValue,
+  fontSize,
+  placeholder,
+  autoFocus,
+}) => {
   const input = useRef(null);
 
   useEffect(() => {
@@ -93,7 +101,7 @@ const TextInput = ({ className, content, inputValue, setInputValue, fontSize, pl
       fontSize={fontSize}
       tabIndex="0"
       onFocus={() => {
-        input.current.focus();
+        if (input.current) input.current.focus();
       }}
     >
       <InputInner
@@ -103,6 +111,7 @@ const TextInput = ({ className, content, inputValue, setInputValue, fontSize, pl
         placeholder={placeholder}
         tabIndex="-1"
         ref={input}
+        autoFocus={autoFocus}
       />
       {!!inputValue && (
         <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
@@ -113,6 +122,10 @@ const TextInput = ({ className, content, inputValue, setInputValue, fontSize, pl
   );
 };
 
+TextInput.defaultProps = {
+  autoFocus: false,
+};
+
 TextInput.propTypes = {
   className: PropTypes.string,
   content: PropTypes.string.isRequired,
@@ -120,6 +133,7 @@ TextInput.propTypes = {
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
   placeholder: PropTypes.string,
+  autoFocus: PropTypes.bool,
 };
 
 export default TextInput;

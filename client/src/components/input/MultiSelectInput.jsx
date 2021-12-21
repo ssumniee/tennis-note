@@ -113,7 +113,7 @@ const MultiSelectInput = ({
         }}
         renderValue={(inputValue) =>
           inputValue
-            ? inputValue.map((id) => list.find((item) => item.id === id).name).join(", ")
+            ? inputValue.map((id) => list.find((item) => item.id === id)?.name).join(", ")
             : ""
         }
         inputProps={{ tabIndex: "-1" }}
