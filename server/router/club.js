@@ -6,6 +6,7 @@ const {
   modifyClubInfo,
   addClubInfo,
   deleteClubInfo,
+  getOneClubId,
   checkClubNameUniqueness,
   modifyClubPassword,
   resetClubPassword,
@@ -22,8 +23,9 @@ router.put("/", isAuth, modifyClubInfo);
 router.post("/", isAuth, addClubInfo);
 router.delete("/", isAuth, deleteClubInfo);
 router.post("/name", isAuth, checkClubNameUniqueness);
+router.get("/id", getOneClubId);
 router.put("/password", isAuth, modifyClubPassword);
-router.post("/password", isAuth, resetClubPassword);
+router.post("/password", resetClubPassword);
 router.put("/teacher", isAuth, modifyTeacherInfo);
 router.post("/teacher", isAuth, addTeacherInfo);
 router.delete("/teacher", isAuth, deleteTeacherInfo);
