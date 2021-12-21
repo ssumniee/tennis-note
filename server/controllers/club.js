@@ -34,6 +34,16 @@ module.exports = {
       DBERROR(res, err);
     }
   },
+  getOneClubId: async (req, res) => {
+    try {
+      const queries = req.query;
+      const clubAccount = await findOneClub({ ...queries });
+      const { id: club_id } = clubAccount.dataValues;
+      return res.status(200).json({ club_id });
+    } catch (err) {
+      DBERROR(res, err);
+    }
+  },
   modifyClubInfo: async (req, res) => {
     try {
       // 클럽 정보 수정
