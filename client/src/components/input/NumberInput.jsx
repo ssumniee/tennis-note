@@ -64,7 +64,7 @@ const NumberInput = ({ className, content, inputValue, setInputValue, fontSize }
       fontSize={fontSize}
       tabIndex="0"
       onFocus={() => {
-        input.current.focus();
+        if (input.current) input.current.focus();
       }}
     >
       <PlusMinus
