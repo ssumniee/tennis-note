@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import media from "styled-media-query";
 import Row from "./Row";
+import EmptyRow from "./EmptyRow";
 
 const TableContainer = styled.table`
   width: 100%;
@@ -44,10 +45,12 @@ const MypageTable = ({ subject, isAdding, infoList = [] }) => {
       <TableBody>
         {isAdding ? (
           <Row subject={subject} isOnAdd />
-        ) : (
+        ) : infoList.length ? (
           infoList.map((info, idx) => (
             <Row key={idx} subject={subject} info={{ ...info, num: idx + 1 }}></Row>
           ))
+        ) : (
+          <EmptyRow subject={subject} />
         )}
       </TableBody>
     </TableContainer>
