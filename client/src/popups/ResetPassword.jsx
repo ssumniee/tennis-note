@@ -183,6 +183,7 @@ const PasswordReset = () => {
   useEffect(() => {
     let timer;
     if (verificationCode) {
+      clearInterval(timer);
       timer = setInterval(() => {
         setCodeValidTime((prevState) => prevState - 1000);
       }, 1000);
