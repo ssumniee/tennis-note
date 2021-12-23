@@ -44,7 +44,7 @@ const CellContainer = styled.th`
     if (props.content === "count")
       return css`
         .content {
-          justify-content: space-around;
+          justify-content: center;
         }
         ${media.lessThan("medium")`
           border: none;
@@ -100,7 +100,7 @@ const StudentCell = ({
       {isOnHead ? (
         <Content className="content">{children}</Content>
       ) : !isEditing && !isOnAdd ? (
-        tableInfo[content] && (
+        (tableInfo[content] || tableInfo[content] >= 0) && (
           <Content className="content">
             {content === "teacher_id" || content === "days" ? (
               <>
