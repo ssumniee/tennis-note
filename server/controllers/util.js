@@ -24,4 +24,14 @@ module.exports = {
       return res.status(404).json({ message: "Verification SMS not sent" });
     }
   },
+  sendRepaymentSMS: ({ club, toSend }) => {
+    try {
+      const telList = toSend.map((item) => item.tel.split("-").join("")); // SMS를 수신할 전화번호 목록
+      const text = `[${club.name}] 결제일이 되었습니다. 다음 수업 전에 결제해주세요.`;
+
+      sendMessage(telList, text);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
