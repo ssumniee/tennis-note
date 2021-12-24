@@ -124,7 +124,7 @@ const heads = {
     days: "요일",
     count: "등록 횟수",
   },
-  club: { name: "이름", password: "비밀번호", createdAt: "가입일" },
+  club: { clubname: "클럽명", username: "아이디", password: "비밀번호", createdAt: "가입일" },
   teacher: { name: "이름", court_id: "코트" },
   court: { name: "이름" },
 };
@@ -142,6 +142,7 @@ const MypageRow = ({ subject, isOnHead, isOnAdd, info }) => {
         case "student":
           await studentApi.modifyStudentInfo({
             ...tableInfo,
+            clubname: tableInfo.clubname || null,
             tel: tableInfo.tel || null,
             teacher_id: tableInfo.teacher_id || null,
           });
@@ -500,6 +501,8 @@ MypageRow.propTypes = {
     id: PropTypes.number,
     num: PropTypes.number,
     name: PropTypes.string,
+    username: PropTypes.string,
+    clubname: PropTypes.string,
     club_id: PropTypes.number,
     teacher_id: PropTypes.number,
     tel: PropTypes.string,

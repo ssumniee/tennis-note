@@ -76,7 +76,7 @@ const Admin = () => {
     temps: tempList,
     clubs: clubList,
   } = useSelector(({ clubReducer }) => clubReducer);
-  const [clubInfo, setClubInfo] = useState({ name: "", is_admin: false });
+  const [clubInfo, setClubInfo] = useState({ username: "", is_admin: false });
 
   const handleCreateClub = async () => {
     try {
@@ -88,7 +88,7 @@ const Admin = () => {
         dispatch(getAllClubInfoAction(res.data));
       }
       // 클럽 정보 input state 초기화
-      setClubInfo({ name: "", is_admin: false });
+      setClubInfo({ username: "", is_admin: false });
     } catch (err) {
       console.error(err);
     }
@@ -132,8 +132,8 @@ const Admin = () => {
         <InputContainer>
           <TextInput
             className="input"
-            content="name"
-            inputValue={clubInfo.name}
+            content="username"
+            inputValue={clubInfo.username}
             setInputValue={setClubInfo}
             fontSize={1}
             placeholder="아이디"
@@ -147,7 +147,7 @@ const Admin = () => {
             description="관리자 계정입니다"
           />
         </InputContainer>
-        <Button onClick={handleCreateClub} disabled={!clubInfo.name}>
+        <Button onClick={handleCreateClub} disabled={!clubInfo.username}>
           추가하기
         </Button>
       </InputArea>

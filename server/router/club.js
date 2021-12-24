@@ -7,7 +7,7 @@ const {
   addClubInfo,
   deleteClubInfo,
   getOneClubId,
-  checkClubNameUniqueness,
+  checkClubUsernameUniqueness,
   modifyClubPassword,
   resetClubPassword,
   modifyTeacherInfo,
@@ -22,7 +22,7 @@ router.get("/", isAuth, getAllClubInfo);
 router.put("/", isAuth, modifyClubInfo);
 router.post("/", isAuth, addClubInfo);
 router.delete("/", isAuth, deleteClubInfo);
-router.post("/name", isAuth, checkClubNameUniqueness);
+router.post("/username", isAuth, checkClubUsernameUniqueness);
 router.get("/id", getOneClubId);
 router.put("/password", isAuth, modifyClubPassword);
 router.post("/password", resetClubPassword);

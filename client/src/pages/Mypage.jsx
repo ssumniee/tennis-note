@@ -125,7 +125,7 @@ const ContentContainer = styled.form`
   .current,
   .new,
   .btn,
-  .name {
+  .username {
     display: flex;
     align-items: center;
     > * {
@@ -140,7 +140,7 @@ const ContentContainer = styled.form`
     props.warn &&
     css`
       .new,
-      .name {
+      .username {
         .input {
           border-color: var(--color-red);
         }
@@ -234,7 +234,8 @@ const Mypage = () => {
   const {
     isTemp,
     id: clubId,
-    name,
+    username,
+    clubname,
     tel,
     days: dayList,
     teachers: teacherList,
@@ -243,19 +244,20 @@ const Mypage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [clubInfo, setClubInfo] = useState({
     id: clubId,
-    name,
+    username,
+    clubname,
     tel,
     dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
   });
-  const [nameUpdated, setNameUpdated] = useState(false);
-  const [nameUniqueness, setNameUniqueness] = useState("unchecked"); // unchecked, available, banned
+  const [usernameUpdated, setUsernameUpdated] = useState(false);
+  const [usernameUniqueness, setUsernameUniqueness] = useState("unchecked"); // unchecked, available, banned
   const [passwords, setPasswords] = useState({ current: "", new: "", check: "" });
-  const [warns, setWarns] = useState({ name: false, password: false });
+  const [warns, setWarns] = useState({ username: false, password: false });
 
   const handleApplyUpdate = async () => {
     try {
       // 아이디를 변경하지 않은 경우, 또는 아이디 중복 검사를 성공적으로 수행한 경우에만
-      if (!nameUpdated || nameUniqueness === "available") {
+      if (!usernameUpdated || usernameUniqueness === "available") {
         // 바뀐 정보 clubInfo로 DB 업데이트
         await clubApi.modifyClubInfo(clubInfo);
         // 리덕스 스토어 업데이트
@@ -273,7 +275,8 @@ const Mypage = () => {
   const handleQuitUpdate = () => {
     setClubInfo({
       id: clubId,
-      name,
+      username,
+      clubname,
       tel,
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
     });
@@ -283,12 +286,12 @@ const Mypage = () => {
   const handleNameUniquenessCheck = async () => {
     try {
       // 아이디 중복 검사
-      const res = await clubApi.checkClubNameUniqueness(clubInfo.name);
-      if (res.status === 200) setNameUniqueness("available");
-      setNameUpdated(true);
+      const res = await clubApi.checkClubUsernameUniqueness(clubInfo.username);
+      if (res.status === 200) setUsernameUniqueness("available");
+      setUsernameUpdated(true);
     } catch (err) {
-      setNameUniqueness("banned");
-      setNameUpdated(true);
+      setUsernameUniqueness("banned");
+      setUsernameUpdated(true);
     }
   };
 
@@ -336,15 +339,15 @@ const Mypage = () => {
   }, [clubId, name, tel, dayList]);
 
   useEffect(() => {
-    setNameUpdated(false);
-  }, [clubInfo.name]);
+    setUsernameUpdated(false);
+  }, [clubInfo.username]);
 
   useEffect(() => {
     setWarns((prevState) => ({
       ...prevState,
-      name: nameUpdated && nameUniqueness !== "available",
+      username: usernameUpdated && usernameUniqueness !== "available",
     }));
-  }, [nameUpdated, nameUniqueness]);
+  }, [usernameUpdated, usernameUniqueness]);
 
   useEffect(() => {
     setWarns((prevState) => ({
@@ -354,12 +357,12 @@ const Mypage = () => {
   }, [passwords]);
 
   useEffect(() => {
-    if (!nameUpdated) {
-      setNameUniqueness("unchecked");
+    if (!usernameUpdated) {
+      setUsernameUniqueness("unchecked");
       setPasswords({ current: "", new: "", check: "" });
-      setWarns({ name: false, password: false });
+      setWarns({ username: false, password: false });
     }
-  }, [isEditing, nameUpdated]);
+  }, [isEditing, usernameUpdated]);
 
   return (
     <MypageContainer>
@@ -374,35 +377,54 @@ const Mypage = () => {
       <Title>프로필</Title>
       <InfoContainer>
         <Info>
+          <InfoIndex>클럽명</InfoIndex>
+          <ContentContainer>
+            <InfoContent>
+              {isEditing ? (
+                <TextInput
+                  className="input"
+                  content="clubname"
+                  inputValue={clubInfo.clubname || ""}
+                  setInputValue={setClubInfo}
+                />
+              ) : (
+                clubInfo.clubname && clubInfo.clubname
+              )}
+            </InfoContent>
+          </ContentContainer>
+        </Info>
+        <Info>
           <InfoIndex>아이디</InfoIndex>
-          <InfoContent>
-            {isEditing ? (
-              <ContentContainer warn={warns.name}>
-                <div className="name">
-                  <TextInput
-                    className="input"
-                    content="name"
-                    inputValue={clubInfo.name || ""}
-                    setInputValue={setClubInfo}
-                  />
-                  <UniqueCheckButton
-                    disabled={!clubInfo.name || clubInfo.name === name}
-                    onClick={handleNameUniquenessCheck}
-                  >
-                    중복 확인
-                  </UniqueCheckButton>
-                </div>
-                {warns.name && (
-                  <span className="check-name">
-                    {nameUniqueness === "unchecked" && "아이디 중복 확인을 해주세요."}
-                    {nameUniqueness === "banned" && "사용할 수 없는 아이디입니다."}
-                  </span>
-                )}
-              </ContentContainer>
-            ) : (
-              clubInfo.name && clubInfo.name
-            )}
-          </InfoContent>
+          <ContentContainer warn={warns.username}>
+            <InfoContent>
+              {isEditing ? (
+                <>
+                  <div className="username">
+                    <TextInput
+                      className="input"
+                      content="username"
+                      inputValue={clubInfo.username || ""}
+                      setInputValue={setClubInfo}
+                    />
+                    <UniqueCheckButton
+                      disabled={!clubInfo.username || clubInfo.username === username}
+                      onClick={handleNameUniquenessCheck}
+                    >
+                      중복 확인
+                    </UniqueCheckButton>
+                  </div>
+                  {warns.username && (
+                    <span className="check-name">
+                      {usernameUniqueness === "unchecked" && "아이디 중복 확인을 해주세요."}
+                      {usernameUniqueness === "banned" && "사용할 수 없는 아이디입니다."}
+                    </span>
+                  )}
+                </>
+              ) : (
+                clubInfo.username && clubInfo.username
+              )}
+            </InfoContent>
+          </ContentContainer>
         </Info>
         {isEditing && (
           <>

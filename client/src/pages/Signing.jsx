@@ -89,7 +89,7 @@ const Alert = styled.div`
 const Signing = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState({ name: "", password: "" });
+  const [inputValue, setInputValue] = useState({ username: "", password: "" });
   const [btnDisabled, setBtnDisabled] = useState(true);
   // const [alert, setAlert] = useState("");
   const [isAlert, setIsAlert] = useState(false);
@@ -133,7 +133,7 @@ const Signing = () => {
   }, []);
 
   useEffect(() => {
-    setBtnDisabled(!inputValue.name || !inputValue.password);
+    setBtnDisabled(!inputValue.username || !inputValue.password);
     setIsAlert(false);
   }, [inputValue]);
 
@@ -144,8 +144,8 @@ const Signing = () => {
         <InputContainer className="input">
           <TextInput
             className="input"
-            content="name"
-            inputValue={inputValue.name}
+            content="username"
+            inputValue={inputValue.username}
             setInputValue={setInputValue}
             placeholder="아이디"
           />
