@@ -15,10 +15,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   club.init(
     {
-      name: {
+      username: {
         allowNull: false,
         type: DataTypes.STRING,
         unique: true,
+      },
+      clubname: {
+        type: DataTypes.STRING,
       },
       password: {
         allowNull: false,
