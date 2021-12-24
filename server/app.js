@@ -70,7 +70,7 @@ const {
   findStudentToRepayByClubId,
 } = require("./controllers/functions/sequelize");
 const { sendRepaymentSMS } = require("./controllers/util");
-cron.schedule("45 51 17 * * *", async () => {
+cron.schedule("0 0 10 * * *", async () => {
   try {
     const { clubs } = await findAllClubInfo();
     clubs.forEach(async (club) => {
