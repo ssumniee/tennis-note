@@ -169,6 +169,13 @@ module.exports = {
     );
     return updated;
   },
+  findStudentToRepayByClubId: async (club_id) => {
+    const studentsData = await student.findAll({
+      where: { club_id, count: 0 },
+      attributes: ["id", "tel"],
+    });
+    return studentsData.map((data) => data.dataValues);
+  },
   findAllTeacherInfo: async (club_id) => {
     const teachersData = await teacher.findAll({
       where: { club_id },
