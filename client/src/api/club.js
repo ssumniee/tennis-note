@@ -14,7 +14,7 @@ const clubApi = {
     }
   },
   modifyClubInfo: (clubInfo) => api.put("/club", { updated: { ...clubInfo } }),
-  checkClubNameUniqueness: (name) => api.post("/club/name", { name }),
+  checkClubUsernameUniqueness: (username) => api.post("/club/username", { username }),
   modifyClubPassword: ({ id, password }) => api.put("/club/password", { id, password }),
   resetClubPassword: ({ id, password }) => api.post("/club/password", { id, password }),
   addClubInfo: (newClubInfo) => api.post("/club", { ...newClubInfo }),

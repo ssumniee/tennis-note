@@ -11,8 +11,8 @@ const bcrypt = require("bcrypt");
 module.exports = {
   login: async (req, res) => {
     try {
-      const { name, password } = req.body;
-      const clubAccount = await findOneClub({ name });
+      const { username, password } = req.body;
+      const clubAccount = await findOneClub({ username });
       if (!clubAccount) {
         return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
       }
@@ -26,7 +26,7 @@ module.exports = {
         if (!passwordValid)
           return res.status(401).json({ message: "유효하지 않은 아이디 또는 비밀번호입니다" });
       }
-      const info = { id, name, tel };
+      const info = { id, username, tel };
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);
@@ -51,8 +51,8 @@ module.exports = {
     try {
       const { club_id } = res.locals;
       const clubInfo = await findOneClub({ id: club_id });
-      const { is_admin, temp, id, name, tel } = clubInfo.dataValues;
-      const info = { id, name, tel };
+      const { is_admin, temp, id, username, clubname, tel } = clubInfo.dataValues;
+      const info = { id, username, clubname, tel };
       if (!is_admin) {
         info.days = await findAllDayInfo(id);
         info.teachers = await findAllTeacherInfo(id);

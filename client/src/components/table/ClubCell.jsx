@@ -5,7 +5,7 @@ import media from "styled-media-query";
 import TextInput from "../input/TextInput";
 import PasswordInput from "../input/PasswordInput";
 
-const rates = { name: 4, password: 5, createdAt: 6 };
+const rates = { clubname: 3, username: 4, password: 4, createdAt: 3 };
 const sum = Object.keys(rates).reduce((acc, cur) => acc + rates[cur], 0);
 const onlyPCSum = sum;
 
@@ -60,19 +60,23 @@ const ClubCell = ({ content, isOnHead, isEditing, tableInfo, setTableInfo, child
       ) : !isEditing || content === "createdAt" ? (
         tableInfo[content] && (
           <Content className="content">
-            {content === "createdAt"
-              ? `${tableInfo.createdAt.split("T")[0]} ${
-                  tableInfo.createdAt.split("T")[1].split(".")[0]
-                }`
-              : tableInfo[content]}
+            {content === "createdAt" ? `${tableInfo.createdAt.split("T")[0]}` : tableInfo[content]}
           </Content>
         )
       ) : (
         <>
-          {content === "name" && (
+          {content === "clubname" && (
             <TextInput
               content={content}
-              inputValue={tableInfo.name || ""}
+              inputValue={tableInfo.clubname || ""}
+              setInputValue={setTableInfo}
+              placeholder="클럽명"
+            />
+          )}
+          {content === "username" && (
+            <TextInput
+              content={content}
+              inputValue={tableInfo.username || ""}
               setInputValue={setTableInfo}
               placeholder="아이디"
             />
@@ -105,7 +109,8 @@ ClubCell.propTypes = {
     is_admin: PropTypes.bool,
     temp: PropTypes.bool,
     num: PropTypes.number,
-    name: PropTypes.string,
+    username: PropTypes.string,
+    clubname: PropTypes.string,
     password: PropTypes.string,
     createdAt: PropTypes.date,
   }),

@@ -95,9 +95,9 @@ module.exports = {
   addClubInfo: async (req, res) => {
     try {
       // 클럽 정보 생성
-      const { name, is_admin, temp = !is_admin } = req.body;
+      const { username, is_admin, temp = !is_admin } = req.body;
       const password = createRandomString();
-      const createdInfo = await createClubInfo({ name, password, is_admin, temp });
+      const createdInfo = await createClubInfo({ username, password, is_admin, temp });
       return res
         .status(200)
         .json({ message: "club created", created: { club_id: createdInfo.id } });
@@ -115,12 +115,12 @@ module.exports = {
       DBERROR(res, err);
     }
   },
-  checkClubNameUniqueness: async (req, res) => {
+  checkClubUsernameUniqueness: async (req, res) => {
     try {
-      const { name } = req.body;
-      const clubAccount = await findOneClub({ name });
+      const { username } = req.body;
+      const clubAccount = await findOneClub({ username });
       if (clubAccount) return res.status(409).json({ message: "사용할 수 없는 아이디입니다" });
-      return res.status(200).json({ message: "사용할 수 있는 아이디입니다", name });
+      return res.status(200).json({ message: "사용할 수 있는 아이디입니다", username });
     } catch (err) {
       DBERROR(res, err);
     }
