@@ -332,11 +332,12 @@ const Mypage = () => {
   useEffect(() => {
     setClubInfo({
       id: clubId,
-      name,
+      username,
+      clubname,
       tel,
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
     });
-  }, [clubId, name, tel, dayList]);
+  }, [clubId, username, clubname, tel, dayList]);
 
   useEffect(() => {
     setUsernameUpdated(false);
