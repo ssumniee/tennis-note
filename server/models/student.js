@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
       count: {
         type: DataTypes.INTEGER,
       },
+      repayNotiSent: {
+        allowNull: false,
+        defaultValue: false,
+        type: DataTypes.BOOLEAN,
+      },
     },
     {
       sequelize,

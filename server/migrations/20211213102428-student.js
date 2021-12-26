@@ -28,6 +28,11 @@ module.exports = {
       count: {
         type: Sequelize.INTEGER,
       },
+      repayNotiSent: {
+        allowNull: false,
+        defaultValue: false,
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),
