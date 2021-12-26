@@ -1,23 +1,23 @@
 const { club, student, teacher, day, student_day, club_day, court } = require("../../models");
 
 module.exports = {
-  findOneClub: async (queries, excludes = []) => {
+  findOneClub: async (queries = {}, excludes = []) => {
     return await club.findOne({
       where: { ...queries },
       attributes: { exclude: [...excludes] },
     });
   },
-  findAllClubInfo: async () => {
+  findAllClubInfo: async (queries = {}) => {
     const adminsData = await club.findAll({
-      where: { is_admin: true },
+      where: { ...queries, is_admin: true },
       order: ["createdAt"],
     });
     const tempsData = await club.findAll({
-      where: { temp: true },
+      where: { ...queries, temp: true },
       order: ["createdAt"],
     });
     const clubsData = await club.findAll({
-      where: { is_admin: false, temp: false },
+      where: { ...queries, is_admin: false, temp: false },
       attributes: { exclude: ["password"] },
       order: ["createdAt"],
     });
@@ -36,7 +36,7 @@ module.exports = {
         id: club_id,
       },
     });
-    if (dayoffs) {
+    if (dayoffs.length) {
       // 기존 휴무일 id값들
       const prevDayoffsData = await club_day.findAll({
         where: { club_id },
@@ -71,8 +71,16 @@ module.exports = {
     await club.destroy({ where: { id: club_id } });
     return { club_id };
   },
-  findAllStudentInfo: async (club_id) => {
-    // club_id로 필요한 학생 정보 가져오기
+  findAllStudentInfo: async (queries = {}) => {
+    const studentsData = await student.findAll({
+      where: { ...queries },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    return studentsData.map((data) => data.dataValues);
+  },
+  findAllStudentInfoByClubId: async (club_id) => {
     const raw = await student.findAll({
       where: { club_id },
       attributes: {
@@ -96,37 +104,43 @@ module.exports = {
   },
   updateStudentInfo: async (updated) => {
     // 변경된 학생 정보
-    const { id: student_id, name, tel, start_date, teacher_id, days, count } = updated;
+    const { id: student_id, days, count, ...rest } = updated;
     // 학생 정보 갱신
     await student.update(
-      { name, tel, start_date, teacher_id, count },
+      count !== undefined
+        ? count > 0
+          ? { ...rest, count, repayNotiSent: false }
+          : { ...rest, count }
+        : { ...rest },
       {
         where: {
           id: student_id,
         },
       }
     );
-    // 기존 수업 요일 id값들
-    const prevDaysData = await student_day.findAll({
-      where: { student_id },
-      attributes: ["day_id"],
-      order: ["day_id"],
-    });
-    const prevDays = prevDaysData.map((data) => data.day_id);
-    // updated에 따른 수업 요일 id값들 받아오기
-    const updatedDays = [...days];
-    // 새로 추가된 수업 요일 id값들
-    const toCreate = updatedDays.filter((id) => !prevDays.includes(id));
-    // 수업이 없어진 요일 id값들
-    const toDestroy = prevDays.filter((id) => !updatedDays.includes(id));
-    // 새로 추가된 수업 요일 정보 student_day 테이블에 생성
-    await Promise.all(
-      toCreate.map(async (id) => await student_day.create({ student_id, day_id: id }))
-    );
-    // 수업이 없어진 요일 정보 student_day 테이블에서 삭제
-    await Promise.all(
-      toDestroy.map(async (id) => await student_day.destroy({ where: { day_id: id } }))
-    );
+    if (days.length) {
+      // 기존 수업 요일 id값들
+      const prevDaysData = await student_day.findAll({
+        where: { student_id },
+        attributes: ["day_id"],
+        order: ["day_id"],
+      });
+      const prevDays = prevDaysData.map((data) => data.day_id);
+      // updated에 따른 수업 요일 id값들 받아오기
+      const updatedDays = [...days];
+      // 새로 추가된 수업 요일 id값들
+      const toCreate = updatedDays.filter((id) => !prevDays.includes(id));
+      // 수업이 없어진 요일 id값들
+      const toDestroy = prevDays.filter((id) => !updatedDays.includes(id));
+      // 새로 추가된 수업 요일 정보 student_day 테이블에 생성
+      await Promise.all(
+        toCreate.map(async (id) => await student_day.create({ student_id, day_id: id }))
+      );
+      // 수업이 없어진 요일 정보 student_day 테이블에서 삭제
+      await Promise.all(
+        toDestroy.map(async (id) => await student_day.destroy({ where: { day_id: id } }))
+      );
+    }
     return { ...updated };
   },
   createStudentInfo: async ({ student: student_info, days }) => {
@@ -171,8 +185,10 @@ module.exports = {
   },
   findStudentToRepayByClubId: async (club_id) => {
     const studentsData = await student.findAll({
-      where: { club_id, count: 0 },
-      attributes: ["id", "tel"],
+      where: { club_id, count: 0, repayNotiSent: false },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
     });
     return studentsData.map((data) => data.dataValues);
   },
@@ -185,10 +201,10 @@ module.exports = {
   },
   updateTeacherInfo: async (updated) => {
     // 변경된 강사 정보
-    const { id: teacher_id, name, club_id, court_id } = updated;
+    const { id: teacher_id, club_id, ...rest } = updated;
     // 강사 정보 갱신
     await teacher.update(
-      { name, court_id },
+      { ...rest },
       {
         where: {
           id: teacher_id,
@@ -218,10 +234,10 @@ module.exports = {
   },
   updateCourtInfo: async (updated) => {
     // 변경된 코트 정보
-    const { id: court_id, name } = updated;
+    const { id: court_id, ...rest } = updated;
     // 코트 정보 갱신
     await court.update(
-      { name },
+      { ...rest },
       {
         where: {
           id: court_id,

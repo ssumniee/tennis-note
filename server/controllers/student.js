@@ -1,5 +1,5 @@
 const {
-  findAllStudentInfo,
+  findAllStudentInfoByClubId,
   updateStudentInfo,
   createStudentInfo,
   destroyStudentInfo,
@@ -10,7 +10,7 @@ module.exports = {
   getAllStudentInfo: async (req, res) => {
     try {
       const { club_id } = res.locals;
-      const allStudentInfo = await findAllStudentInfo(club_id);
+      const allStudentInfo = await findAllStudentInfoByClubId(club_id);
       return res.status(200).json({ students: allStudentInfo });
     } catch (err) {
       DBERROR(res, err);
