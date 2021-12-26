@@ -33,9 +33,12 @@ const LogoutButton = styled.button`
   width: max-content;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  background-color: var(--color-blue);
-  color: var(--color-white);
+  border: 1px solid var(--color-blue);
+  color: var(--color-blue);
   text-align: center;
+  :hover {
+    background-color: var(--color-paleblue);
+  }
 `;
 
 const NavContainer = styled.div`

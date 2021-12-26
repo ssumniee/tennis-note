@@ -12,7 +12,7 @@ const TableContainer = styled.table`
   display: flex;
   flex-direction: column;
   margin-top: 2.25rem;
-  :first-child {
+  :first-of-type {
     margin-top: 0;
   }
   ${(props) =>
