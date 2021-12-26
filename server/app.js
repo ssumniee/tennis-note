@@ -65,22 +65,12 @@ days.forEach((day) => {
 });
 
 // 스케쥴러 설정: 매일 오전 10시마다, 수업 횟수가 0인 수강생에게 재결제 알림 보내기
-const {
-  findAllClubInfo,
-  findStudentToRepayByClubId,
-} = require("./controllers/functions/sequelize");
+const { findAllClubInfo } = require("./controllers/functions/sequelize");
 const { sendRepaymentSMS } = require("./controllers/util");
-cron.schedule("0 0 10 * * *", async () => {
+cron.schedule("0 0 9 * * *", async () => {
   try {
     const { clubs } = await findAllClubInfo();
-    clubs.forEach(async (club) => {
-      const toSend = await findStudentToRepayByClubId(club.id);
-      if (toSend.length > 0) sendRepaymentSMS({ club, toSend });
-      console.log({
-        message: "notification SMS sent",
-        sent: toSend.map((info) => ({ student_id: info.id })),
-      });
-    });
+    clubs.forEach(async (clubInfo) => await sendRepaymentSMS(clubInfo));
   } catch (err) {
     console.error(err);
   }

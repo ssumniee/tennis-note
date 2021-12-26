@@ -11,7 +11,7 @@ module.exports = {
   createRandomNumber: (len = 6) => {
     return Math.random().toFixed(len).toString().slice(2);
   },
-  sendMessage: async (telList, text) => {
+  sendMessage: async (infoList) => {
     try {
       const { apiKey, apiSecret, callingNumber } = coolsms;
       config.init({
@@ -20,7 +20,7 @@ module.exports = {
       });
 
       const msgRes = await msg.send({
-        messages: telList.map((tel) => ({ to: tel, from: callingNumber, text })),
+        messages: infoList.map((info) => ({ to: info.tel, from: callingNumber, text: info.text })),
       });
       console.log(msgRes);
     } catch (err) {
