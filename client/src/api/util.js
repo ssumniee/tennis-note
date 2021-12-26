@@ -17,6 +17,12 @@ const utilApi = {
       console.error(err);
     }
   },
+  importTableData: () => {
+    console.log("data imported");
+  },
+  exportTableData: () => {
+    console.log("data exported");
+  },
 };
 
 export default utilApi;
