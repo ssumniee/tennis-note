@@ -112,7 +112,7 @@ const DatePickerInput = ({
                 fontFamily: "Interop-Regular",
                 fontSize: fontSize ? `${fontSize}rem` : "0.875rem",
                 input: {
-                  width: "calc(100% - 2rem)",
+                  width: "calc(100% - 1.75rem)",
                 },
                 position: "relative",
                 div: {
@@ -120,7 +120,7 @@ const DatePickerInput = ({
                   margin: "0",
                   button: {
                     position: "absolute",
-                    right: "0.25rem",
+                    right: "0.2rem",
                     padding: "0.25rem",
                     margin: "0",
                     ":hover": {
