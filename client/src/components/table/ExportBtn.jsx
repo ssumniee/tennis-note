@@ -19,7 +19,7 @@ const heads = {
   court: { name: "이름" },
 };
 
-const ExportBtn = ({ subject, infoList }) => {
+const ExportBtn = ({ subject, infoList, fontSize }) => {
   const {
     teachers: teacherList,
     days: dayList,
@@ -86,7 +86,7 @@ const ExportBtn = ({ subject, infoList }) => {
   };
 
   return (
-    <TopBarBtn className="export" onClick={exportTableData}>
+    <TopBarBtn className="export" onClick={exportTableData} fontSize={fontSize}>
       <p>다운로드</p>
       <BsCloudArrowDown className="icon" />
     </TopBarBtn>
@@ -123,6 +123,7 @@ ExportBtn.propTypes = {
       )
     ),
   ]),
+  fontSize: PropTypes.string,
 };
 
 export default ExportBtn;
