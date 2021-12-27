@@ -26,7 +26,8 @@
     "styled-components": "^5.3.3",
     "styled-media-query": "^2.1.2",
     "styled-normalize": "^8.0.7",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "xlsx": "^0.17.4"
   },
   "scripts": {
     "start": "react-scripts start",
