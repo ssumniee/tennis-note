@@ -11,13 +11,10 @@ const TableContainer = styled.table`
   border: 1px solid var(--color-gray);
   display: flex;
   flex-direction: column;
-  margin-top: 2.25rem;
-  :first-of-type {
-    margin-top: 0;
-  }
   ${(props) =>
     props.isAdding &&
     css`
+      margin-top: 2.25rem;
       ${media.lessThan("medium")`
           display: none;
         `}
