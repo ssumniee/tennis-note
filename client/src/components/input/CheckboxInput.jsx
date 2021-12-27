@@ -37,8 +37,8 @@ const InputContainer = styled.div`
             font-size: ${props.fontSize}rem;
           }
           label {
-            width: ${props.fontSize + 0.25}rem;
-            height: ${props.fontSize + 0.25}rem;
+            width: ${props.fontSize + 0.125}rem;
+            height: ${props.fontSize + 0.125}rem;
           }
         `
       : css`
@@ -82,28 +82,31 @@ const CheckboxInput = ({
   description,
   fontSize,
 }) => {
-  const handleInputChange = (event) => {
-    switch (content) {
-      default:
-        setInputValue((prevState) => ({ ...prevState, [content]: event.target.checked }));
-        break;
-    }
-  };
-
   return (
     <InputContainer checked={inputValue} className={className} fontSize={fontSize} tabIndex="0">
       <Label className="checkbox" htmlFor="is_admin">
         {inputValue && <BsCheckLg />}
       </Label>
       <Description className="description">{description}</Description>
-      <input id="is_admin" type="checkbox" onChange={handleInputChange} tabIndex="-1" />
+      <input
+        id="is_admin"
+        type="checkbox"
+        onChange={(event) => {
+          setInputValue(
+            content
+              ? (prevState) => ({ ...prevState, [content]: event.target.checked })
+              : event.target.checked
+          );
+        }}
+        tabIndex="-1"
+      />
     </InputContainer>
   );
 };
 
 CheckboxInput.propTypes = {
   className: PropTypes.string,
-  content: PropTypes.string.isRequired,
+  content: PropTypes.string,
   inputValue: PropTypes.bool.isRequired,
   setInputValue: PropTypes.func.isRequired,
   description: PropTypes.string,
