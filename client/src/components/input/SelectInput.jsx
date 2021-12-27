@@ -64,14 +64,13 @@ const SelectContainer = styled.div`
     border-radius: 1.5rem;
     position: absolute;
     top: calc((100% - 1.5rem) * 0.5);
-    right: 0.25rem;
+    right: 0.125rem;
     :focus {
       background-color: var(--color-lightgray);
     }
   }
   .arrow {
     border-radius: 2rem;
-    /* top: 0; */
     bottom: 0.25rem;
     :focus {
       background-color: var(--color-lightgray);

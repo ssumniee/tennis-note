@@ -65,7 +65,7 @@ const SelectContainer = styled.div`
     height: 100%;
     position: absolute;
     top: 0;
-    right: 0.25rem;
+    right: 0.125rem;
   }
 `;
 
