@@ -9,6 +9,7 @@ import { loginAction, logoutAction, getAllClubInfoAction } from "../store/action
 import Table from "../components/table/Table";
 import TextInput from "../components/input/TextInput";
 import CheckboxInput from "../components/input/CheckboxInput";
+import TitleArea from "../components/TitleArea";
 import ExportBtn from "../components/table/ExportBtn";
 
 const AdminContainer = styled.div`
@@ -19,23 +20,12 @@ const AdminContainer = styled.div`
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
-  `}
-`;
-
-const TitleArea = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 2rem 0 1rem;
-  :first-child {
-    margin-top: 0;
-  }
-  > * {
-    margin: 0 0.5rem 0 0;
-    :last-child {
-      margin-right: 0;
+    .title {
+      button {
+        display: none;
+      }
     }
-  }
+  `}
 `;
 
 const Title = styled.h1`
@@ -45,7 +35,7 @@ const Title = styled.h1`
 `;
 
 const SubTitle = styled.h2`
-  margin: 1rem 0 0.5rem;
+  margin: 1.5rem 0 0.75rem;
   font-size: 0.875rem;
   font-family: Interop-Regular;
   font-weight: normal;
@@ -151,7 +141,7 @@ const Admin = () => {
 
   return (
     <AdminContainer>
-      <TitleArea>
+      <TitleArea className="title">
         <Title>계정 추가</Title>
       </TitleArea>
       <InputArea>
@@ -177,7 +167,7 @@ const Admin = () => {
           추가하기
         </Button>
       </InputArea>
-      <TitleArea>
+      <TitleArea className="title">
         <Title>계정 목록</Title>
         <ExportBtn subject="club" infoList={{ admin: adminList, temp: tempList, club: clubList }} />
       </TitleArea>
