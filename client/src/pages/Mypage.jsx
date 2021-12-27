@@ -12,7 +12,7 @@ import MultiSelectInput from "../components/input/MultiSelectInput";
 import Table from "../components/table/Table";
 import { IoAlertCircle } from "react-icons/io5";
 import ResetPwBtn from "../components/ResetPwBtn";
-import TopBar from "../components/table/TopBar";
+import TitleArea from "../components/TitleArea";
 import ExportBtn from "../components/table/ExportBtn";
 
 const MypageContainer = styled.div`
@@ -23,6 +23,11 @@ const MypageContainer = styled.div`
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
+    .title {
+      button {
+        display: none;
+      }
+    }
   `}
 `;
 
@@ -56,11 +61,7 @@ const Alert = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 4rem 0 2rem;
-  :first-child {
-    margin-top: 0;
-  }
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-family: Interop-Medium;
   font-weight: normal;
 `;
@@ -377,7 +378,9 @@ const Mypage = () => {
           </p>
         </Alert>
       )}
-      <Title>프로필</Title>
+      <TitleArea className="title">
+        <Title>프로필</Title>
+      </TitleArea>
       <InfoContainer>
         <Info>
           <InfoIndex>클럽명</InfoIndex>
@@ -553,16 +556,16 @@ const Mypage = () => {
       </ButtonContainer>
       {!isTemp && (
         <>
-          <Title>강사</Title>
-          <TopBar>
+          <TitleArea className="title">
+            <Title>강사</Title>
             <ExportBtn subject="teacher" infoList={teacherList} />
-          </TopBar>
+          </TitleArea>
           <Table subject="teacher" infoList={teacherList} />
           <Table subject="teacher" isAdding />
-          <Title>코트</Title>
-          <TopBar>
+          <TitleArea className="title">
+            <Title>코트</Title>
             <ExportBtn subject="court" infoList={courtList} />
-          </TopBar>
+          </TitleArea>
           <Table subject="court" infoList={courtList} />
           <Table subject="court" isAdding />
         </>

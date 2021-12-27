@@ -7,7 +7,7 @@ import authApi from "../api/auth";
 import studentApi from "../api/student";
 import { loginAction, logoutAction, getAllStudentInfoAction } from "../store/actions";
 import Table from "../components/table/Table";
-import TopBar from "../components/table/TopBar";
+import TitleArea from "../components/TitleArea";
 import ExportBtn from "../components/table/ExportBtn";
 import Sort from "../components/table/Sort";
 
@@ -17,6 +17,9 @@ const StudentContainer = styled.div`
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
+    .top-bar {
+      display: none;
+    }
   `}
 `;
 
@@ -58,10 +61,10 @@ const Student = () => {
 
   return (
     <StudentContainer>
-      <TopBar>
+      <TitleArea className="top-bar">
         <Sort subject="student" originList={studentList} />
         <ExportBtn subject="student" infoList={studentList} />
-      </TopBar>
+      </TitleArea>
       <Table subject="student" infoList={studentList} />
       <Table subject="student" isAdding />
     </StudentContainer>
