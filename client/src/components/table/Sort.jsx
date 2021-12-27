@@ -3,25 +3,33 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { getAllStudentInfoAction } from "../../store/actions";
+import SelectInput from "../input/SelectInput";
+import CheckboxInput from "../input/CheckboxInput";
 
 const SortContainer = styled.div`
   display: flex;
   align-items: center;
-  > * {
-    margin-right: 0.5rem;
-    :last-child {
-      margin-right: 0;
-    }
+  height: 1.75rem;
+  .input {
+    width: max-content;
+    min-width: max-content;
   }
-  * {
-    align-items: center;
-    display: flex;
+  .checkbox {
+    margin-left: 0.5rem;
   }
 `;
 
+const lists = {
+  student: [
+    { id: "id", name: "기본" },
+    { id: "name", name: "이름" },
+    { id: "count", name: "등록 횟수" },
+  ],
+};
+
 const Sort = ({ subject, originList }) => {
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState({ id: true, name: false, count: false, court: false });
+  const [selected, setSelected] = useState("id");
   const [isDesc, setIsDesc] = useState(false);
 
   useEffect(() => {
@@ -46,20 +54,20 @@ const Sort = ({ subject, originList }) => {
 
   return (
     <SortContainer>
-      <select onChange={(event) => setSelected(event.target.value)} value={selected}>
-        <option value="id">기본순</option>
-        <option value="name">이름순</option>
-        {subject === "student" && <option value="count">횟수순</option>}
-      </select>
+      <SelectInput
+        className="input"
+        list={lists[subject]}
+        inputValue={selected}
+        setInputValue={setSelected}
+        unclearable
+      />
       {selected !== "id" && (
-        <div>
-          <input
-            type="checkbox"
-            checked={isDesc}
-            onChange={(event) => setIsDesc(event.target.checked)}
-          />
-          <p>내림차순</p>
-        </div>
+        <CheckboxInput
+          className="checkbox"
+          inputValue={isDesc}
+          setInputValue={setIsDesc}
+          description="내림차순"
+        />
       )}
     </SortContainer>
   );
