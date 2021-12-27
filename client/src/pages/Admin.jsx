@@ -9,29 +9,47 @@ import { loginAction, logoutAction, getAllClubInfoAction } from "../store/action
 import Table from "../components/table/Table";
 import TextInput from "../components/input/TextInput";
 import CheckboxInput from "../components/input/CheckboxInput";
-import TopBar from "../components/table/TopBar";
 import ExportBtn from "../components/table/ExportBtn";
 
 const AdminContainer = styled.div`
-  width: 100vw;
+  width: 100%;
+  max-width: 50rem;
   height: 100%;
+  margin: 0 auto;
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
   `}
-  > table {
-    max-width: 40rem;
+`;
+
+const TitleArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem 0 1rem;
+  :first-child {
+    margin-top: 0;
+  }
+  > * {
+    margin: 0 0.5rem 0 0;
+    :last-child {
+      margin-right: 0;
+    }
   }
 `;
 
 const Title = styled.h1`
-  margin: 2rem 0 1rem;
-  :first-of-type {
-    margin-top: 0;
-  }
   font-size: 1.125rem;
   font-family: Interop-Medium;
   font-weight: normal;
+`;
+
+const SubTitle = styled.h2`
+  margin: 1rem 0 0.5rem;
+  font-size: 0.875rem;
+  font-family: Interop-Regular;
+  font-weight: normal;
+  color: var(--color-darkgray);
 `;
 
 const InputArea = styled.div`
@@ -48,23 +66,27 @@ const InputArea = styled.div`
 
 const InputContainer = styled.div`
   max-width: 15rem;
-  height: 2.25rem;
+  height: 2rem;
   .input {
     input {
-      font-size: 0.925rem !important;
+      font-size: 0.875rem;
     }
   }
 `;
 
 const Button = styled.button`
+  font-size: 0.925rem;
   flex: 0 0 1;
-  line-height: 2.25rem;
+  line-height: 2rem;
   padding: 0 1rem;
   margin-left: 0.5rem;
   border-radius: 0.25rem;
   background-color: var(--color-blue);
   color: var(--color-white);
   text-align: center;
+  :hover {
+    opacity: 0.8;
+  }
   :disabled {
     opacity: 0.4;
   }
@@ -129,7 +151,9 @@ const Admin = () => {
 
   return (
     <AdminContainer>
-      <Title>계정 추가</Title>
+      <TitleArea>
+        <Title>계정 추가</Title>
+      </TitleArea>
       <InputArea>
         <InputContainer>
           <TextInput
@@ -153,20 +177,15 @@ const Admin = () => {
           추가하기
         </Button>
       </InputArea>
-      <Title>관리자 계정</Title>
-      <TopBar>
-        <ExportBtn subject="club" infoList={adminList} />
-      </TopBar>
+      <TitleArea>
+        <Title>계정 목록</Title>
+        <ExportBtn subject="club" infoList={{ admin: adminList, temp: tempList, club: clubList }} />
+      </TitleArea>
+      <SubTitle>관리자 계정</SubTitle>
       <Table subject="club" infoList={adminList} />
-      <Title>임시 계정</Title>
-      <TopBar>
-        <ExportBtn subject="club" infoList={tempList} />
-      </TopBar>
+      <SubTitle>임시 계정</SubTitle>
       <Table subject="club" infoList={tempList} />
-      <Title>클럽 계정</Title>
-      <TopBar>
-        <ExportBtn subject="club" infoList={clubList} />
-      </TopBar>
+      <SubTitle>클럽 계정</SubTitle>
       <Table subject="club" infoList={clubList} />
     </AdminContainer>
   );
