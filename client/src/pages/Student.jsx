@@ -7,7 +7,8 @@ import authApi from "../api/auth";
 import studentApi from "../api/student";
 import { loginAction, logoutAction, getAllStudentInfoAction } from "../store/actions";
 import Table from "../components/table/Table";
-import TableTopBar from "../components/table/TableTopBar";
+import TopBar from "../components/table/TopBar";
+import ExportBtn from "../components/table/ExportBtn";
 
 const StudentContainer = styled.div`
   width: 100vw;
@@ -56,7 +57,9 @@ const Student = () => {
 
   return (
     <StudentContainer>
-      <TableTopBar subject="student" />
+      <TopBar>
+        <ExportBtn subject="student" infoList={studentList} />
+      </TopBar>
       <Table subject="student" infoList={studentList} />
       <Table subject="student" isAdding />
     </StudentContainer>

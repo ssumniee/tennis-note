@@ -12,6 +12,8 @@ import MultiSelectInput from "../components/input/MultiSelectInput";
 import Table from "../components/table/Table";
 import { IoAlertCircle } from "react-icons/io5";
 import ResetPwBtn from "../components/ResetPwBtn";
+import TopBar from "../components/table/TopBar";
+import ExportBtn from "../components/table/ExportBtn";
 
 const MypageContainer = styled.div`
   width: 100%;
@@ -552,9 +554,15 @@ const Mypage = () => {
       {!isTemp && (
         <>
           <Title>강사</Title>
+          <TopBar>
+            <ExportBtn subject="teacher" infoList={teacherList} />
+          </TopBar>
           <Table subject="teacher" infoList={teacherList} />
           <Table subject="teacher" isAdding />
           <Title>코트</Title>
+          <TopBar>
+            <ExportBtn subject="court" infoList={courtList} />
+          </TopBar>
           <Table subject="court" infoList={courtList} />
           <Table subject="court" isAdding />
         </>
