@@ -102,9 +102,10 @@ const SelectInput = ({
   setInputValue,
   fontSize,
   placeholder,
+  unclearable,
 }) => {
   const handleInputClear = () => {
-    setInputValue((prevState) => ({ ...prevState, [content]: "" }));
+    setInputValue(content ? (prevState) => ({ ...prevState, [content]: "" }) : "");
   };
 
   return (
@@ -115,10 +116,14 @@ const SelectInput = ({
         placeholder={placeholder}
         value={inputValue}
         onChange={(event) => {
-          setInputValue((prevState) => ({
-            ...prevState,
-            [content]: event.target.value,
-          }));
+          setInputValue(
+            content
+              ? (prevState) => ({
+                  ...prevState,
+                  [content]: event.target.value,
+                })
+              : event.target.value
+          );
         }}
         renderValue={(inputValue) =>
           inputValue ? list.find((item) => item.id === inputValue)?.name : ""
@@ -131,7 +136,7 @@ const SelectInput = ({
           </MenuItem>
         ))}
       </Select>
-      {!!inputValue && (
+      {!unclearable && !!inputValue && (
         <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
           <IoCloseCircle />
         </ClearBtn>
@@ -140,14 +145,19 @@ const SelectInput = ({
   );
 };
 
+SelectInput.defaultProps = {
+  unclearable: false,
+};
+
 SelectInput.propTypes = {
   className: PropTypes.string,
-  content: PropTypes.string.isRequired,
+  content: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   inputValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
   placeholder: PropTypes.string,
+  unclearable: PropTypes.bool,
 };
 
 export default SelectInput;

@@ -92,9 +92,10 @@ const MultiSelectInput = ({
   setInputValue,
   fontSize,
   placeholder,
+  unclearable,
 }) => {
   const handleInputClear = () => {
-    setInputValue((prevState) => ({ ...prevState, [content]: [] }));
+    setInputValue(content ? (prevState) => ({ ...prevState, [content]: [] }) : []);
   };
 
   return (
@@ -106,10 +107,14 @@ const MultiSelectInput = ({
         placeholder={placeholder}
         value={inputValue}
         onChange={(event) => {
-          setInputValue((prevState) => ({
-            ...prevState,
-            [content]: [...event.target.value].sort((a, b) => a - b),
-          }));
+          setInputValue(
+            content
+              ? (prevState) => ({
+                  ...prevState,
+                  [content]: [...event.target.value].sort((a, b) => a - b),
+                })
+              : [...event.target.value].sort((a, b) => a - b)
+          );
         }}
         renderValue={(inputValue) =>
           inputValue
@@ -124,7 +129,7 @@ const MultiSelectInput = ({
           </MenuItem>
         ))}
       </Select>
-      {!!inputValue.length && (
+      {!unclearable && !!inputValue.length && (
         <ClearBtn type="button" className="clear" onClick={handleInputClear} tabIndex="-1">
           <IoCloseCircle />
         </ClearBtn>
@@ -133,14 +138,19 @@ const MultiSelectInput = ({
   );
 };
 
+MultiSelectInput.defaultProps = {
+  unclearable: false,
+};
+
 MultiSelectInput.propTypes = {
   className: PropTypes.string,
-  content: PropTypes.string.isRequired,
+  content: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   inputValue: PropTypes.arrayOf(PropTypes.number).isRequired,
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
   placeholder: PropTypes.string,
+  unclearable: PropTypes.bool,
 };
 
 export default MultiSelectInput;
