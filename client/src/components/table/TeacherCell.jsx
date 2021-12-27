@@ -91,7 +91,7 @@ const TeacherCell = ({
         tableInfo[content] && (
           <Content className="content">
             {content === "court_id" && courtList.length
-              ? courtList.find((court) => court.id === tableInfo.court_id).name
+              ? courtList.find((court) => court.id === tableInfo.court_id)?.name
               : tableInfo[content]}
           </Content>
         )
