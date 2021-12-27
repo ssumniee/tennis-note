@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import media from "styled-media-query";
-import ImportExportBtn from "./ImportExportBtn";
+import PropTypes from "prop-types";
 
 const TopBarContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 1rem 0;
   :first-child {
     margin-top: 0;
@@ -27,13 +27,12 @@ const TopBarContainer = styled.div`
   `}
 `;
 
-const TableTopBar = () => {
-  return (
-    <TopBarContainer>
-      <ImportExportBtn isImport />
-      <ImportExportBtn />
-    </TopBarContainer>
-  );
+const TopBar = ({ children }) => {
+  return <TopBarContainer>{children}</TopBarContainer>;
 };
 
-export default TableTopBar;
+TopBar.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.node]),
+};
+
+export default TopBar;

@@ -9,6 +9,8 @@ import { loginAction, logoutAction, getAllClubInfoAction } from "../store/action
 import Table from "../components/table/Table";
 import TextInput from "../components/input/TextInput";
 import CheckboxInput from "../components/input/CheckboxInput";
+import TopBar from "../components/table/TopBar";
+import ExportBtn from "../components/table/ExportBtn";
 
 const AdminContainer = styled.div`
   width: 100vw;
@@ -152,10 +154,19 @@ const Admin = () => {
         </Button>
       </InputArea>
       <Title>관리자 계정</Title>
+      <TopBar>
+        <ExportBtn subject="club" infoList={adminList} />
+      </TopBar>
       <Table subject="club" infoList={adminList} />
       <Title>임시 계정</Title>
+      <TopBar>
+        <ExportBtn subject="club" infoList={tempList} />
+      </TopBar>
       <Table subject="club" infoList={tempList} />
       <Title>클럽 계정</Title>
+      <TopBar>
+        <ExportBtn subject="club" infoList={clubList} />
+      </TopBar>
       <Table subject="club" infoList={clubList} />
     </AdminContainer>
   );
