@@ -8,7 +8,6 @@ const InputContainer = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0.5rem 0;
   #is_admin {
     display: none;
   }
