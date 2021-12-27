@@ -25,6 +25,8 @@ const GlobalStyle = createGlobalStyle`
       font-size: var(--fontSize-root--small);
     `}
 
+    position: relative;
+
     * {
       /* 스크롤 바 제거 */
       -ms-overflow-style: none; /* IE and Edge */

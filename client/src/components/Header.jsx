@@ -4,7 +4,8 @@ import { useNavigate, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
-import { logoutAction } from "../store/actions";
+import { logoutAction, navDrawerOnAction } from "../store/actions";
+import { HiOutlineMenu } from "react-icons/hi";
 
 const HeaderContainer = styled.header`
   position: sticky;
@@ -20,6 +21,17 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--color-lightgray);
+  .mobile {
+    display: none;
+  }
+  ${media.lessThan("medium")`
+    .desktop {
+      display: none;
+    }
+    .mobile {
+      display: block;
+    }
+  `}
 `;
 
 const Logo = styled.div`
@@ -82,6 +94,14 @@ const Nav = styled(NavLink)`
   }
 `;
 
+const MobileButton = styled.button`
+  flex: 0 0 1;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.5rem;
+  padding: 0.25rem;
+`;
+
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -99,21 +119,21 @@ const Header = () => {
     <HeaderContainer>
       <Logo>테니스노트</Logo>
       {!isAdmin && (
-        <NavContainer>
+        <NavContainer className="desktop">
           {!isTemp && (
             <>
               <Nav to={"/student"}>
                 회원
                 <div className="underline"></div>
               </Nav>
-              <Nav to={"/schedule"}>
+              {/* <Nav to={"/schedule"}>
                 시간표
                 <div className="underline"></div>
               </Nav>
               <Nav to={"/sales"}>
                 수강료
                 <div className="underline"></div>
-              </Nav>
+              </Nav> */}
             </>
           )}
           <Nav to={"/mypage"}>
@@ -122,7 +142,17 @@ const Header = () => {
           </Nav>
         </NavContainer>
       )}
-      <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      <LogoutButton className="desktop" onClick={handleLogout}>
+        로그아웃
+      </LogoutButton>
+      <MobileButton
+        className="mobile"
+        onClick={() => {
+          dispatch(navDrawerOnAction);
+        }}
+      >
+        <HiOutlineMenu />
+      </MobileButton>
     </HeaderContainer>
   );
 };
