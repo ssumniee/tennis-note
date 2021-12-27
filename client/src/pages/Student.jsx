@@ -9,6 +9,7 @@ import { loginAction, logoutAction, getAllStudentInfoAction } from "../store/act
 import Table from "../components/table/Table";
 import TopBar from "../components/table/TopBar";
 import ExportBtn from "../components/table/ExportBtn";
+import Sort from "../components/table/Sort";
 
 const StudentContainer = styled.div`
   width: 100vw;
@@ -58,6 +59,7 @@ const Student = () => {
   return (
     <StudentContainer>
       <TopBar>
+        <Sort subject="student" originList={studentList} />
         <ExportBtn subject="student" infoList={studentList} />
       </TopBar>
       <Table subject="student" infoList={studentList} />
