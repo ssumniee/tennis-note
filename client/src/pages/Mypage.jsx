@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import clubApi from "../api/club";
-import { loginAction, logoutAction } from "../store/actions";
+import { loginAction, logoutAction, componentOffAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
@@ -23,11 +23,6 @@ const MypageContainer = styled.div`
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
-    .title {
-      button {
-        display: none;
-      }
-    }
   `}
 `;
 
@@ -94,6 +89,13 @@ const InfoIndex = styled(InfoInner)`
   color: var(--color-gray);
   text-align: right;
   margin-right: 4rem;
+  ${media.between("small", "medium")`
+    margin-right: 2rem;
+  `}
+  ${media.lessThan("small")`
+    width: 4rem;
+    margin-right: 1rem;
+  `}
 `;
 
 const InfoContent = styled(InfoInner)`
@@ -114,6 +116,9 @@ const ContentContainer = styled.form`
     width: 12rem;
     max-width: 12rem;
     min-height: 2rem;
+    ${media.lessThan("medium")`
+      width: 9.25rem;
+    `}
   }
   > * {
     margin-right: 0;
@@ -138,6 +143,19 @@ const ContentContainer = styled.form`
       }
     }
   }
+  ${media.lessThan("small")`
+    .new,
+    .btn {
+      flex-direction: column;
+      align-items: flex-start;
+      > * {
+        margin-bottom: 0.25rem;
+        :last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  `}
 
   ${(props) =>
     props.warn &&
@@ -229,6 +247,11 @@ const Button = styled.button`
   }
   border-radius: 0.5rem;
   text-align: center;
+  ${media.lessThan("small")`
+    max-width: unset;
+    width: 100%;
+    height: 2.5rem;
+  `}
 `;
 
 const Mypage = () => {
@@ -368,6 +391,10 @@ const Mypage = () => {
     }
   }, [isEditing, usernameUpdated]);
 
+  useEffect(() => {
+    dispatch(componentOffAction);
+  }, []);
+
   return (
     <MypageContainer>
       {isTemp && (
@@ -378,7 +405,7 @@ const Mypage = () => {
           </p>
         </Alert>
       )}
-      <TitleArea className="title">
+      <TitleArea>
         <Title>프로필</Title>
       </TitleArea>
       <InfoContainer>
@@ -556,13 +583,13 @@ const Mypage = () => {
       </ButtonContainer>
       {!isTemp && (
         <>
-          <TitleArea className="title">
+          <TitleArea>
             <Title>강사</Title>
             <ExportBtn subject="teacher" infoList={teacherList} />
           </TitleArea>
           <Table subject="teacher" infoList={teacherList} />
           <Table subject="teacher" isAdding />
-          <TitleArea className="title">
+          <TitleArea>
             <Title>코트</Title>
             <ExportBtn subject="court" infoList={courtList} />
           </TitleArea>
