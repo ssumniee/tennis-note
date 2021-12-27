@@ -5,7 +5,12 @@ import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import studentApi from "../api/student";
-import { loginAction, logoutAction, getAllStudentInfoAction } from "../store/actions";
+import {
+  loginAction,
+  logoutAction,
+  getAllStudentInfoAction,
+  componentOffAction,
+} from "../store/actions";
 import Table from "../components/table/Table";
 import TitleArea from "../components/TitleArea";
 import ExportBtn from "../components/table/ExportBtn";
@@ -57,6 +62,10 @@ const Student = () => {
       }
     };
     getAndSetAllStudentInfo();
+  }, []);
+
+  useEffect(() => {
+    dispatch(componentOffAction);
   }, []);
 
   return (

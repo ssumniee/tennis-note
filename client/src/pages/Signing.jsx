@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import authApi from "../api/auth";
-import { loginAction, logoutAction } from "../store/actions";
+import { loginAction, logoutAction, componentOffAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
 import ResetPwBtn from "../components/ResetPwBtn";
@@ -136,6 +136,10 @@ const Signing = () => {
     setBtnDisabled(!inputValue.username || !inputValue.password);
     setIsAlert(false);
   }, [inputValue]);
+
+  useEffect(() => {
+    dispatch(componentOffAction);
+  }, []);
 
   return (
     <SigningContainer alert={isAlert}>

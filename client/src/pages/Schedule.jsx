@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
-import { loginAction, logoutAction } from "../store/actions";
+import { loginAction, logoutAction, componentOffAction } from "../store/actions";
 
 const ScheduleContainer = styled.div`
   width: 100vw;
@@ -34,6 +34,10 @@ const Schedule = () => {
       }
     };
     checkValidUser();
+  }, []);
+
+  useEffect(() => {
+    dispatch(componentOffAction);
   }, []);
 
   return <ScheduleContainer></ScheduleContainer>;

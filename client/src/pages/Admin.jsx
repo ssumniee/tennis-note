@@ -5,7 +5,12 @@ import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import clubApi from "../api/club";
-import { loginAction, logoutAction, getAllClubInfoAction } from "../store/actions";
+import {
+  loginAction,
+  logoutAction,
+  getAllClubInfoAction,
+  componentOffAction,
+} from "../store/actions";
 import Table from "../components/table/Table";
 import TextInput from "../components/input/TextInput";
 import CheckboxInput from "../components/input/CheckboxInput";
@@ -20,11 +25,6 @@ const AdminContainer = styled.div`
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
-    .title {
-      button {
-        display: none;
-      }
-    }
   `}
 `;
 
@@ -139,9 +139,13 @@ const Admin = () => {
     getAndSetAllClubInfo();
   }, []);
 
+  useEffect(() => {
+    dispatch(componentOffAction);
+  }, []);
+
   return (
     <AdminContainer>
-      <TitleArea className="title">
+      <TitleArea>
         <Title>계정 추가</Title>
       </TitleArea>
       <InputArea>
@@ -167,7 +171,7 @@ const Admin = () => {
           추가하기
         </Button>
       </InputArea>
-      <TitleArea className="title">
+      <TitleArea>
         <Title>계정 목록</Title>
         <ExportBtn subject="club" infoList={{ admin: adminList, temp: tempList, club: clubList }} />
       </TitleArea>
