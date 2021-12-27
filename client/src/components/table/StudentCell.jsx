@@ -106,11 +106,11 @@ const StudentCell = ({
               <>
                 {content === "teacher_id" &&
                   teacherList.length &&
-                  teacherList.find((teacher) => teacher.id === tableInfo.teacher_id).name}
+                  teacherList.find((teacher) => teacher.id === tableInfo.teacher_id)?.name}
                 {content === "days" &&
                   dayList.length &&
                   tableInfo.days
-                    .map((dayId) => dayList.find((day) => day.id === dayId).name)
+                    .map((dayId) => dayList.find((day) => day.id === dayId)?.name)
                     .join(", ")}
               </>
             ) : (
