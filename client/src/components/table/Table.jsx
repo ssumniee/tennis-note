@@ -34,7 +34,7 @@ const TableBody = styled.tbody`
   flex-direction: column;
 `;
 
-const MypageTable = ({ subject, isAdding, infoList = [] }) => {
+const Table = ({ subject, isAdding, infoList = [] }) => {
   return (
     <TableContainer isAdding={isAdding}>
       {!isAdding && (
@@ -57,21 +57,23 @@ const MypageTable = ({ subject, isAdding, infoList = [] }) => {
   );
 };
 
-MypageTable.defaultProps = {
+Table.defaultProps = {
   isAdding: false,
 };
 
-MypageTable.propTypes = {
+Table.propTypes = {
   subject: PropTypes.string,
   isAdding: PropTypes.bool,
   infoList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
+      username: PropTypes.string,
+      clubname: PropTypes.string,
       club_id: PropTypes.number,
       court_id: PropTypes.number,
     })
   ),
 };
 
-export default MypageTable;
+export default Table;
