@@ -19,14 +19,53 @@ const App = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
       <BrowserRouter>
-        <Header />
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/student" element={<Student />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/sales" element={<Sales />} />
-          <Route path="/mypage" element={<Mypage />} />
+          <Route
+            path="/admin"
+            element={
+              <>
+                <Header />
+                <Admin />
+              </>
+            }
+          />
+          <Route
+            path="/student"
+            element={
+              <>
+                <Header />
+                <Student />
+              </>
+            }
+          />
+          <Route
+            path="/schedule"
+            element={
+              <>
+                <Header />
+                <Schedule />
+              </>
+            }
+          />
+          <Route
+            path="/sales"
+            element={
+              <>
+                <Header />
+                <Sales />
+              </>
+            }
+          />
+          <Route
+            path="/mypage"
+            element={
+              <>
+                <Header />
+                <Mypage />
+              </>
+            }
+          />
           <Route path="/popup/password-reset" element={<ResetPassword />} />
         </Routes>
         {isNavDrawer && <NavDrawer />}
