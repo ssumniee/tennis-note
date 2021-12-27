@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 const TopBarContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 1rem 0;
   :first-child {
     margin-top: 0;
