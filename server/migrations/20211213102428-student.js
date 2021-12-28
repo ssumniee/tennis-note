@@ -28,7 +28,7 @@ module.exports = {
       count: {
         type: Sequelize.INTEGER,
       },
-      repaySMS_sent: {
+      repayNotiSent: {
         allowNull: false,
         defaultValue: false,
         type: Sequelize.BOOLEAN,

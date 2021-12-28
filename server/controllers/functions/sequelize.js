@@ -109,7 +109,7 @@ module.exports = {
     await student.update(
       count !== undefined
         ? count > 0
-          ? { ...rest, count, repaySMS_sent: false }
+          ? { ...rest, count, repayNotiSent: false }
           : { ...rest, count }
         : { ...rest },
       {
@@ -185,7 +185,7 @@ module.exports = {
   },
   findStudentToRepayByClubId: async (club_id) => {
     const studentsData = await student.findAll({
-      where: { club_id, count: 0, repaySMS_sent: false },
+      where: { club_id, count: 0, repayNotiSent: false },
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
