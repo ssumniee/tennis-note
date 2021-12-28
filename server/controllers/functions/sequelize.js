@@ -10,16 +10,16 @@ module.exports = {
   findAllClubInfo: async (queries = {}) => {
     const adminsData = await club.findAll({
       where: { ...queries, is_admin: true },
-      order: ["createdAt"],
+      order: ["created_at"],
     });
     const tempsData = await club.findAll({
       where: { ...queries, temp: true },
-      order: ["createdAt"],
+      order: ["created_at"],
     });
     const clubsData = await club.findAll({
       where: { ...queries, is_admin: false, temp: false },
       attributes: { exclude: ["password"] },
-      order: ["createdAt"],
+      order: ["created_at"],
     });
     return {
       admins: adminsData.map((admin) => admin.dataValues),
@@ -75,7 +75,7 @@ module.exports = {
     const studentsData = await student.findAll({
       where: { ...queries },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["created_at", "updated_at"],
       },
     });
     return studentsData.map((data) => data.dataValues);
@@ -84,7 +84,7 @@ module.exports = {
     const raw = await student.findAll({
       where: { club_id },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["created_at", "updated_at"],
       },
     });
     // 학생 정보 가공: 요일 정보 합치기
@@ -109,7 +109,7 @@ module.exports = {
     await student.update(
       count !== undefined
         ? count > 0
-          ? { ...rest, count, repayNotiSent: false }
+          ? { ...rest, count, repaySMS_sent: false }
           : { ...rest, count }
         : { ...rest },
       {
@@ -185,9 +185,9 @@ module.exports = {
   },
   findStudentToRepayByClubId: async (club_id) => {
     const studentsData = await student.findAll({
-      where: { club_id, count: 0, repayNotiSent: false },
+      where: { club_id, count: 0, repaySMS_sent: false },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["created_at", "updated_at"],
       },
     });
     return studentsData.map((data) => data.dataValues);
@@ -195,7 +195,7 @@ module.exports = {
   findAllTeacherInfo: async (club_id) => {
     const teachersData = await teacher.findAll({
       where: { club_id },
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+      attributes: { exclude: ["created_at", "updated_at"] },
     });
     return teachersData.map((data) => data.dataValues);
   },
@@ -227,7 +227,7 @@ module.exports = {
   findAllCourtInfo: async (club_id) => {
     const courtsData = await court.findAll({
       where: { club_id },
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+      attributes: { exclude: ["created_at", "updated_at"] },
       order: ["name"],
     });
     return courtsData.map((data) => data.dataValues);
@@ -258,7 +258,7 @@ module.exports = {
   },
   findAllDayInfo: async (club_id) => {
     const daysData = await day.findAll({
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+      attributes: { exclude: ["created_at", "updated_at"] },
       order: ["id"],
     });
     const offDaysData = await club_day.findAll({
