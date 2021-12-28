@@ -10,10 +10,11 @@ import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
 import Table from "../components/table/Table";
-import { IoAlertCircle } from "react-icons/io5";
 import ResetPwBtn from "../components/ResetPwBtn";
 import TitleArea from "../components/TitleArea";
 import ExportBtn from "../components/table/ExportBtn";
+import { IoAlertCircle } from "react-icons/io5";
+import { BsCheck } from "react-icons/bs";
 
 const MypageContainer = styled.div`
   width: 100%;
@@ -102,10 +103,34 @@ const InfoContent = styled(InfoInner)`
   flex: 1 1 0;
   display: flex;
   ${(props) =>
-    props.direction &&
-    css`
-      flex-direction: ${props.direction};
-    `}
+    props.direction === "column"
+      ? css`
+          flex-direction: ${props.direction};
+          > * {
+            margin: 0.5rem 0 0;
+            :first-child {
+              margin-top: 0;
+            }
+          }
+        `
+      : css`
+          > * {
+            margin: 0 0 0 0.5rem;
+            :first-child {
+              margin-left: 0;
+            }
+          }
+        `}
+  ${media.lessThan("medium")`
+    flex-direction: column;
+    align-items: flex-start;
+    > * {
+      margin: 0.5rem 0 0;
+      :first-child {
+        margin-top: 0;
+      }
+    }
+  `}
 `;
 
 const ContentContainer = styled.form`
@@ -121,8 +146,7 @@ const ContentContainer = styled.form`
     `}
   }
   > * {
-    margin-right: 0;
-    margin-top: 0.5rem;
+    margin: 0.5rem 0 0;
     :first-child {
       margin-top: 0;
     }
@@ -168,9 +192,9 @@ const ContentContainer = styled.form`
       }
     `}
   .input-label,
-  .warn-msg,
   .reset-pw,
-  .check-name {
+  .warn-msg,
+  .ok-msg {
     padding: 0.125rem 0;
     font-size: 0.75rem;
   }
@@ -178,14 +202,21 @@ const ContentContainer = styled.form`
     align-self: flex-start;
     color: var(--color-gray);
   }
-  .warn-msg,
-  .check-name {
-    color: var(--color-red);
-  }
   .reset-pw {
-    color: var(--color-blue);
+    color: var(--color-darkgray);
     :hover {
       text-decoration: underline;
+    }
+  }
+  .warn-msg {
+    color: var(--color-red);
+  }
+  .ok-msg {
+    color: var(--color-blue);
+    display: flex;
+    align-items: center;
+    .check {
+      font-size: calc(1em + 0.5rem);
     }
   }
 `;
@@ -267,7 +298,7 @@ const Mypage = () => {
     teachers: teacherList,
     courts: courtList,
   } = useSelector(({ authReducer }) => authReducer);
-  const [isEditing, setIsEditing] = useState(false);
+  const [profileEditing, setProfileEditing] = useState(false);
   const [clubInfo, setClubInfo] = useState({
     id: clubId,
     username,
@@ -279,8 +310,10 @@ const Mypage = () => {
   const [usernameUniqueness, setUsernameUniqueness] = useState("unchecked"); // unchecked, available, banned
   const [passwords, setPasswords] = useState({ current: "", new: "", check: "" });
   const [warns, setWarns] = useState({ username: false, password: false });
+  const [okays, setOkays] = useState({ username: false, password: false });
 
-  const handleApplyUpdate = async () => {
+  const handleApplyUpdate = async (event) => {
+    event.preventDefault();
     try {
       // 아이디를 변경하지 않은 경우, 또는 아이디 중복 검사를 성공적으로 수행한 경우에만
       if (!usernameUpdated || usernameUniqueness === "available") {
@@ -291,7 +324,10 @@ const Mypage = () => {
         if (res.status === 200) {
           dispatch(loginAction(res.data));
         }
-        setIsEditing(false);
+        setProfileEditing(false);
+      } else {
+        // 아이디 중복 검사를 성공적으로 수행하지 않은 경우
+        setWarns((prevState) => ({ ...prevState, username: true }));
       }
     } catch (err) {
       console.error(err);
@@ -306,22 +342,24 @@ const Mypage = () => {
       tel,
       dayoffs: dayList.filter((day) => day.off).map((day) => day.id),
     });
-    setIsEditing(false);
+    setProfileEditing(false);
   };
 
-  const handleNameUniquenessCheck = async () => {
+  const handleNameUniquenessCheck = async (event) => {
+    event.preventDefault();
     try {
       // 아이디 중복 검사
       const res = await clubApi.checkClubUsernameUniqueness(clubInfo.username);
       if (res.status === 200) setUsernameUniqueness("available");
-      setUsernameUpdated(true);
+      // setUsernameUpdated(true);
     } catch (err) {
       setUsernameUniqueness("banned");
-      setUsernameUpdated(true);
+      // setUsernameUpdated(true);
     }
   };
 
-  const handleChangePassword = async () => {
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
     try {
       await clubApi.modifyClubPassword({
         id: clubId,
@@ -333,6 +371,7 @@ const Mypage = () => {
       if (res.status === 200) {
         dispatch(loginAction(res.data));
       }
+      setOkays((prevState) => ({ ...prevState, password: true }));
     } catch (err) {
       console.error(err);
     }
@@ -366,7 +405,10 @@ const Mypage = () => {
   }, [clubId, username, clubname, tel, dayList]);
 
   useEffect(() => {
-    setUsernameUpdated(false);
+    setWarns((prevState) => ({ ...prevState, username: false }));
+    setOkays((prevState) => ({ ...prevState, username: false }));
+    setUsernameUpdated(clubInfo.username && clubInfo.username !== username);
+    setUsernameUniqueness("unchecked");
   }, [clubInfo.username]);
 
   useEffect(() => {
@@ -374,26 +416,31 @@ const Mypage = () => {
       ...prevState,
       username: usernameUpdated && usernameUniqueness !== "available",
     }));
-  }, [usernameUpdated, usernameUniqueness]);
+    setOkays((prevState) => ({
+      ...prevState,
+      username: usernameUpdated && usernameUniqueness === "available",
+    }));
+  }, [usernameUniqueness]);
 
   useEffect(() => {
     setWarns((prevState) => ({
       ...prevState,
       password: passwords.new && passwords.check && passwords.new !== passwords.check,
     }));
+    setOkays((prevState) => ({ ...prevState, password: false }));
   }, [passwords]);
-
-  useEffect(() => {
-    if (!usernameUpdated) {
-      setUsernameUniqueness("unchecked");
-      setPasswords({ current: "", new: "", check: "" });
-      setWarns({ username: false, password: false });
-    }
-  }, [isEditing, usernameUpdated]);
 
   useEffect(() => {
     dispatch(componentOffAction);
   }, []);
+
+  useEffect(() => {
+    setUsernameUpdated(false);
+    setUsernameUniqueness("unchecked");
+    setPasswords({ current: "", new: "", check: "" });
+    setWarns({ username: false, password: false });
+    setOkays({ username: false, password: false });
+  }, [profileEditing]);
 
   return (
     <MypageContainer>
@@ -413,7 +460,7 @@ const Mypage = () => {
           <InfoIndex>클럽명</InfoIndex>
           <ContentContainer>
             <InfoContent>
-              {isEditing ? (
+              {profileEditing ? (
                 <TextInput
                   className="input"
                   content="clubname"
@@ -430,7 +477,7 @@ const Mypage = () => {
           <InfoIndex>아이디</InfoIndex>
           <ContentContainer warn={warns.username}>
             <InfoContent>
-              {isEditing ? (
+              {profileEditing ? (
                 <>
                   <div className="username">
                     <TextInput
@@ -440,16 +487,22 @@ const Mypage = () => {
                       setInputValue={setClubInfo}
                     />
                     <UniqueCheckButton
-                      disabled={!clubInfo.username || clubInfo.username === username}
+                      disabled={!usernameUpdated}
                       onClick={handleNameUniquenessCheck}
                     >
                       중복 확인
                     </UniqueCheckButton>
                   </div>
                   {warns.username && (
-                    <span className="check-name">
+                    <span className="warn-msg">
                       {usernameUniqueness === "unchecked" && "아이디 중복 확인을 해주세요."}
                       {usernameUniqueness === "banned" && "사용할 수 없는 아이디입니다."}
+                    </span>
+                  )}
+                  {okays.username && usernameUniqueness === "available" && (
+                    <span className="ok-msg">
+                      <BsCheck className="check" />
+                      사용 가능한 아이디입니다.
                     </span>
                   )}
                 </>
@@ -459,7 +512,7 @@ const Mypage = () => {
             </InfoContent>
           </ContentContainer>
         </Info>
-        {isEditing && (
+        {profileEditing && (
           <>
             <Info>
               <InfoIndex>비밀번호</InfoIndex>
@@ -516,6 +569,12 @@ const Mypage = () => {
                   </ChangePasswordButton>
                   <ResetPwBtn className="reset-pw" />
                 </div>
+                {okays.password && (
+                  <span className="ok-msg">
+                    <BsCheck className="check" />
+                    비밀번호가 변경되었습니다.
+                  </span>
+                )}
               </ContentContainer>
             </Info>
           </>
@@ -524,7 +583,7 @@ const Mypage = () => {
           <InfoIndex>전화번호</InfoIndex>
           <ContentContainer>
             <InfoContent>
-              {isEditing ? (
+              {profileEditing ? (
                 <TextInput
                   className="input"
                   content="tel"
@@ -542,7 +601,7 @@ const Mypage = () => {
           <ContentContainer>
             <InfoContent>
               {dayList.length &&
-                (isEditing ? (
+                (profileEditing ? (
                   <MultiSelectInput
                     className="input"
                     content="dayoffs"
@@ -561,7 +620,7 @@ const Mypage = () => {
         </Info>
       </InfoContainer>
       <ButtonContainer>
-        {isEditing ? (
+        {profileEditing ? (
           <>
             <Button id="cancel" onClick={handleQuitUpdate}>
               취소
@@ -574,7 +633,7 @@ const Mypage = () => {
           <Button
             id="edit"
             onClick={() => {
-              setIsEditing(true);
+              setProfileEditing(true);
             }}
           >
             프로필 수정
