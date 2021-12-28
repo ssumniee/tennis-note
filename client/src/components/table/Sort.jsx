@@ -33,6 +33,7 @@ const Sort = ({ subject, originList }) => {
   const [isDesc, setIsDesc] = useState(false);
 
   useEffect(() => {
+    if (selected === "id") setIsDesc(false);
     switch (subject) {
       case "student":
         dispatch(
