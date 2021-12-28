@@ -19,12 +19,12 @@ module.exports = {
       court_id: {
         type: Sequelize.INTEGER,
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),
         type: Sequelize.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),
         type: Sequelize.DATE,
