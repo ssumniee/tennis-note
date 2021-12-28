@@ -39,7 +39,7 @@ module.exports = {
         await updateStudentInfo({ id: item.id, repayNotiSent: true });
         sentList.push({ id: item.id });
       });
-      console.log({ message: "repay noti SMS sent", sent: sentList });
+      console.log({ message: "repay SMS sent", sent: sentList });
     } catch (err) {
       console.log(err);
     }
