@@ -36,7 +36,7 @@ module.exports = {
         id: club_id,
       },
     });
-    if (dayoffs.length) {
+    if (dayoffs !== undefined) {
       // 기존 휴무일 id값들
       const prevDayoffsData = await club_day.findAll({
         where: { club_id },
@@ -118,7 +118,7 @@ module.exports = {
         },
       }
     );
-    if (days.length) {
+    if (days !== undefined) {
       // 기존 수업 요일 id값들
       const prevDaysData = await student_day.findAll({
         where: { student_id },
