@@ -93,6 +93,7 @@ const DatePickerInput = ({
     <DatePickerContainer className={className} fontSize={fontSize} tabIndex="0">
       <Stack sx={{ flex: "1 1 0" }}>
         <DatePicker
+          showToolbar={false}
           reduceAnimations={true}
           allowSameDateSelection
           showDaysOutsideCurrentMonth
