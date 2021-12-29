@@ -5,6 +5,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { sequelize } = require("./models");
 const config = require("./config");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./tennisnote.yaml");
 const {
   cors: { allowedOrigin },
 } = require("./config");
@@ -17,6 +20,8 @@ const utilRouter = require("./router/util");
 const app = express();
 
 const corsOption = { origin: allowedOrigin, optionsSuccessStatus: 200, credentials: true };
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(cors(corsOption));
 app.use(helmet());
 app.use(morgan("tiny"));
