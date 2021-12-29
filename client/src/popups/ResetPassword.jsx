@@ -129,7 +129,7 @@ const Button = styled.button`
 
 const PasswordReset = () => {
   const [step, setStep] = useState("insert-info"); // insert-info > code-sent > verification-completed > process-completed
-  const [inputValue, setInputValue] = useState({ name: "", tel: "", code: "", newPw: "" });
+  const [inputValue, setInputValue] = useState({ username: "", tel: "", code: "", newPw: "" });
   const [clubId, setClubId] = useState(null);
   const [verificationCode, setVerificationCode] = useState(null);
   const [codeValidTime, setCodeValidTime] = useState(180000);
@@ -140,7 +140,7 @@ const PasswordReset = () => {
   const sendVerificationMessage = async () => {
     try {
       // 이름으로 계정 id 받아오기
-      const resId = await clubApi.getOneClubId({ name: inputValue.name });
+      const resId = await clubApi.getOneClubIdByUsername(inputValue.username);
       setClubId(resId);
       const resCode = await utilApi.getVerificationCode(inputValue.tel);
       setVerificationCode(resCode);
@@ -206,8 +206,8 @@ const PasswordReset = () => {
             <InputContainer>
               <TextInput
                 className="input"
-                content="name"
-                inputValue={inputValue.name}
+                content="username"
+                inputValue={inputValue.username}
                 setInputValue={setInputValue}
                 placeholder="아이디"
               />

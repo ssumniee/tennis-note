@@ -2,12 +2,9 @@ import api from "./index";
 
 const clubApi = {
   getAllClubInfo: () => api.get("/club"),
-  getOneClubId: async (queries) => {
+  getOneClubIdByUsername: async (username) => {
     try {
-      const queryString = Object.keys(queries)
-        .map((query) => `${query}=${queries[query]}`)
-        .join("&");
-      const res = await api.get(`/club/id?${queryString}`);
+      const res = await api.get(`/club/id?username=${username}`);
       if (res.status === 200) return res.data.club_id;
     } catch (err) {
       console.error(err);

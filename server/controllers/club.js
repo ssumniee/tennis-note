@@ -26,7 +26,7 @@ module.exports = {
       const clubAccount = await findOneClub({ id: club_id });
       const { is_admin } = clubAccount.dataValues;
       if (!is_admin) {
-        return res.status(403).json({ message: "not authorized" });
+        return res.status(403).json({ message: "인증 오류" });
       }
       const { admins, temps, clubs } = await findAllClubInfo();
       return res.status(200).json({ admins, temps, clubs });
@@ -34,10 +34,10 @@ module.exports = {
       DBERROR(res, err);
     }
   },
-  getOneClubId: async (req, res) => {
+  getOneClubIdByUsername: async (req, res) => {
     try {
-      const queries = req.query;
-      const clubAccount = await findOneClub({ ...queries });
+      const { username } = req.query;
+      const clubAccount = await findOneClub({ username });
       const { id: club_id } = clubAccount.dataValues;
       return res.status(200).json({ club_id });
     } catch (err) {
