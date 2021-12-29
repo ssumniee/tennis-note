@@ -25,13 +25,6 @@
 <br>
 <br>
 
-# ⚒ Tech Stack
-
-<img alt="architecture" src ="이미지주소"/>
-
-<br>
-<br>
-
 # 🔥 Final App View
 
 <details>
