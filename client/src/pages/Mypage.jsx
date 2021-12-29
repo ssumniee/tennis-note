@@ -608,6 +608,7 @@ const Mypage = () => {
                     list={dayList}
                     inputValue={clubInfo.dayoffs || []}
                     setInputValue={setClubInfo}
+                    allEnabled
                   />
                 ) : (
                   clubInfo.dayoffs &&

@@ -93,6 +93,7 @@ const MultiSelectInput = ({
   fontSize,
   placeholder,
   unclearable,
+  allEnabled,
 }) => {
   const handleInputClear = () => {
     setInputValue(content ? (prevState) => ({ ...prevState, [content]: [] }) : []);
@@ -124,7 +125,7 @@ const MultiSelectInput = ({
         inputProps={{ tabIndex: "-1" }}
       >
         {list.map((item, idx) => (
-          <MenuItem key={idx} value={item.id} disabled={item.off}>
+          <MenuItem key={idx} value={item.id} disabled={!allEnabled && item.off}>
             {item.name}
           </MenuItem>
         ))}
@@ -140,6 +141,7 @@ const MultiSelectInput = ({
 
 MultiSelectInput.defaultProps = {
   unclearable: false,
+  allEnabled: false,
 };
 
 MultiSelectInput.propTypes = {
@@ -151,6 +153,7 @@ MultiSelectInput.propTypes = {
   fontSize: PropTypes.number,
   placeholder: PropTypes.string,
   unclearable: PropTypes.bool,
+  allEnabled: PropTypes.bool,
 };
 
 export default MultiSelectInput;
