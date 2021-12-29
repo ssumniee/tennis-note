@@ -22,9 +22,6 @@ const StudentContainer = styled.div`
   padding: 2rem;
   ${media.lessThan("medium")`
     padding: 1rem;
-    .top-bar {
-      display: none;
-    }
   `}
 `;
 
@@ -70,7 +67,7 @@ const Student = () => {
 
   return (
     <StudentContainer>
-      <TitleArea className="top-bar">
+      <TitleArea>
         <Sort subject="student" originList={studentList} />
         <ExportBtn subject="student" infoList={studentList} />
       </TitleArea>
