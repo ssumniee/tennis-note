@@ -5,12 +5,7 @@ import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import clubApi from "../api/club";
-import {
-  loginAction,
-  logoutAction,
-  getAllClubInfoAction,
-  componentOffAction,
-} from "../store/actions";
+import { loginAction, logoutAction, getAllClubInfoAction, windowOffAction } from "../store/actions";
 import Table from "../components/table/Table";
 import TextInput from "../components/input/TextInput";
 import CheckboxInput from "../components/input/CheckboxInput";
@@ -140,7 +135,7 @@ const Admin = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(componentOffAction);
+    dispatch(windowOffAction);
   }, []);
 
   return (

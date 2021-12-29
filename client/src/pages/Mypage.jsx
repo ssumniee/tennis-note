@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
 import clubApi from "../api/club";
-import { loginAction, logoutAction, componentOffAction } from "../store/actions";
+import { loginAction, logoutAction, windowOffAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
 import MultiSelectInput from "../components/input/MultiSelectInput";
@@ -431,7 +431,7 @@ const Mypage = () => {
   }, [passwords]);
 
   useEffect(() => {
-    dispatch(componentOffAction);
+    dispatch(windowOffAction);
   }, []);
 
   useEffect(() => {

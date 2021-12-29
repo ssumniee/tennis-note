@@ -2,29 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
-import { componentOffAction, logoutAction } from "../store/actions";
+import { logoutAction } from "../store/actions";
 import authApi from "../api/auth";
-import { IoClose } from "react-icons/io5";
-
-const NavDrawerContainer = styled.div`
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--color-white);
-  padding: 2rem 1rem;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-`;
-
-const CloseButton = styled.button`
-  flex: 0 0 1;
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.5rem;
-  padding: 0.25rem;
-`;
+import Modal from "../components/Modal";
 
 const NavContainer = styled.div`
   margin: 4rem 0.5rem;
@@ -80,14 +60,7 @@ function NavDrawer() {
   };
 
   return (
-    <NavDrawerContainer>
-      <CloseButton
-        onClick={() => {
-          dispatch(componentOffAction);
-        }}
-      >
-        <IoClose />
-      </CloseButton>
+    <Modal>
       {!isAdmin && (
         <NavContainer className="desktop">
           {!isTemp && (
@@ -113,7 +86,7 @@ function NavDrawer() {
         </NavContainer>
       )}
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-    </NavDrawerContainer>
+    </Modal>
   );
 }
 

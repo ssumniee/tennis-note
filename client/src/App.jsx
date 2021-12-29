@@ -11,11 +11,12 @@ import Header from "./components/Header";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import koLocale from "date-fns/locale/ko";
-import ResetPassword from "./popups/ResetPassword";
-import NavDrawer from "./components/NavDrawer";
+import ResetPwPopup from "./windows/ResetPwPopup";
+import NavModal from "./windows/NavModal";
+import ResetPwModal from "./windows/ResetPwModal";
 
 const App = () => {
-  const { isNavDrawer } = useSelector(({ componentReducer }) => componentReducer);
+  const { isNavModal, isResetPwModal } = useSelector(({ windowReducer }) => windowReducer);
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
       <BrowserRouter>
@@ -66,9 +67,10 @@ const App = () => {
               </>
             }
           />
-          <Route path="/popup/password-reset" element={<ResetPassword />} />
+          <Route path="/popup/password-reset" element={<ResetPwPopup />} />
         </Routes>
-        {isNavDrawer && <NavDrawer />}
+        {isNavModal && <NavModal />}
+        {isResetPwModal && <ResetPwModal />}
       </BrowserRouter>
     </LocalizationProvider>
   );

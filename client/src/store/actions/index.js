@@ -3,8 +3,9 @@ import {
   LOG_OUT,
   GET_ALL_STUDENT_INFO,
   GET_ALL_CLUB_INFO,
-  NAV_DRAWER_ON,
-  COMPONENT_OFF,
+  NAV_MODAL_ON,
+  RESET_PW_MODAL_ON,
+  WINDOW_OFF,
 } from "./actionTypes";
 
 // Auth
@@ -28,10 +29,13 @@ export const getAllClubInfoAction = (data) => ({
   payload: { ...data },
 });
 
-// Component: Drawer, Modal, ...
-export const navDrawerOnAction = {
-  type: NAV_DRAWER_ON,
+// Window
+export const navModalOnAction = {
+  type: NAV_MODAL_ON,
 };
-export const componentOffAction = {
-  type: COMPONENT_OFF,
+export const resetPwModalOnAction = {
+  type: RESET_PW_MODAL_ON,
+};
+export const windowOffAction = {
+  type: WINDOW_OFF,
 };

@@ -8,6 +8,7 @@ export const GET_ALL_STUDENT_INFO = "GET_ALL_STUDENT_INFO";
 // Club
 export const GET_ALL_CLUB_INFO = "GET_ALL_CLUB_INFO";
 
-// Component: Drawer, Modal, ...
-export const NAV_DRAWER_ON = "NAV_DRAWER_ON";
-export const COMPONENT_OFF = "COMPONENT_OFF";
+// Window
+export const NAV_MODAL_ON = "NAV_MODAL_ON";
+export const RESET_PW_MODAL_ON = "RESET_PW_MODAL_ON";
+export const WINDOW_OFF = "WINDOW_OFF";

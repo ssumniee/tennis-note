@@ -4,7 +4,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
-import { logoutAction, navDrawerOnAction } from "../store/actions";
+import { logoutAction, navModalOnAction } from "../store/actions";
 import { HiOutlineMenu } from "react-icons/hi";
 
 const HeaderContainer = styled.header`
@@ -148,7 +148,7 @@ const Header = () => {
       <MobileButton
         className="mobile"
         onClick={() => {
-          dispatch(navDrawerOnAction);
+          dispatch(navModalOnAction);
         }}
       >
         <HiOutlineMenu />

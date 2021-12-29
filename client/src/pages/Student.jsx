@@ -9,7 +9,7 @@ import {
   loginAction,
   logoutAction,
   getAllStudentInfoAction,
-  componentOffAction,
+  windowOffAction,
 } from "../store/actions";
 import Table from "../components/table/Table";
 import TitleArea from "../components/TitleArea";
@@ -65,7 +65,7 @@ const Student = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(componentOffAction);
+    dispatch(windowOffAction);
   }, []);
 
   return (

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import authApi from "../api/auth";
-import { loginAction, logoutAction, componentOffAction } from "../store/actions";
+import { loginAction, logoutAction, windowOffAction } from "../store/actions";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
 import ResetPwBtn from "../components/ResetPwBtn";
@@ -138,7 +138,7 @@ const Signing = () => {
   }, [inputValue]);
 
   useEffect(() => {
-    dispatch(componentOffAction);
+    dispatch(windowOffAction);
   }, []);
 
   return (

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import media from "styled-media-query";
 import authApi from "../api/auth";
-import { loginAction, logoutAction, componentOffAction } from "../store/actions";
+import { loginAction, logoutAction, windowOffAction } from "../store/actions";
 
 const SalesContainer = styled.div`
   width: 100vw;
@@ -37,7 +37,7 @@ const Sales = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(componentOffAction);
+    dispatch(windowOffAction);
   }, []);
 
   return <SalesContainer></SalesContainer>;

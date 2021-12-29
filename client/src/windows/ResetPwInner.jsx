@@ -5,9 +5,9 @@ import utilApi from "../api/util";
 import TextInput from "../components/input/TextInput";
 import PasswordInput from "../components/input/PasswordInput";
 
-const PopupContainer = styled.div`
-  height: 100vh;
-  margin: 0 auto;
+const ResetPwContainer = styled.div`
+  margin: auto;
+  flex: 1 1 0;
   padding: 2rem 0 6rem;
   display: flex;
   flex-direction: column;
@@ -127,7 +127,7 @@ const Button = styled.button`
   }
 `;
 
-const PasswordReset = () => {
+const ResetPwInner = () => {
   const [step, setStep] = useState("insert-info"); // insert-info > code-sent > verification-completed > process-completed
   const [inputValue, setInputValue] = useState({ username: "", tel: "", code: "", newPw: "" });
   const [clubId, setClubId] = useState(null);
@@ -197,7 +197,7 @@ const PasswordReset = () => {
   }, [verificationCode, codeValidTime]);
 
   return (
-    <PopupContainer>
+    <ResetPwContainer>
       <Title>비밀번호 재설정</Title>
       {step === "insert-info" && (
         <>
@@ -228,7 +228,7 @@ const PasswordReset = () => {
           <InputArea>
             <Button
               id="send-code"
-              disabled={!inputValue.name || !inputValue.tel}
+              disabled={!inputValue.username || !inputValue.tel}
               onClick={sendVerificationMessage}
             >
               인증번호 전송
@@ -337,8 +337,8 @@ const PasswordReset = () => {
           </Button>
         </>
       )}
-    </PopupContainer>
+    </ResetPwContainer>
   );
 };
 
-export default PasswordReset;
+export default ResetPwInner;
