@@ -1,0 +1,1149 @@
+openapi: 3.0.0
+info:
+  title: Tennis Note
+  description: Tennis Note API
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: auth
+    description: Operations about authentication
+  - name: club
+    description: Operations about club
+  - name: student
+    description: Operations about student
+  - name: util
+    description: Operations about utility
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Log in
+      description: Log in to Tennis Note
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+            example:
+              username: happytennis
+              password: "1234"
+        required: true
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthClubResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthInvalidMessage"
+  /auth/logout:
+    get:
+      tags:
+        - auth
+      summary: Log out
+      description: Log out to Tennis Note
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: 로그아웃 되었습니다
+  /auth/me:
+    get:
+      tags:
+        - auth
+      summary: Verify token
+      description: Check if the token is valid
+      parameters:
+        - name: accessToken
+          in: cookie
+          description: Check if it's a valid token by accessToken
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthClubResponse"
+        "403":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthErrorMessage"
+  /club:
+    get:
+      tags:
+        - club
+      summary: Get all club info
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  admins:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AdminInformation"
+                  temps:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TempInformation"
+                  clubs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ClubInformation"
+        "403":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthErrorMessage"
+    put:
+      tags:
+        - club
+      summary: Modify club info
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                updated:
+                  $ref: "#/components/schemas/ClubInformation"
+              required:
+                - updated
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string  
+                  updated:
+                    type: object
+                    properties:
+                      club_id:
+                        type: integer
+                required:
+                  - message
+                  - updated
+                example:
+                  message: club updated
+                  updated: 2
+    post:
+      tags:
+        - club
+      summary: Add club info
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                is_admin:
+                  type: boolean
+                temp:
+                  type: boolean
+              required:
+                - username
+                - is_admin
+                - temp
+              example:
+                username: joytennis
+                is_admin: false
+                temp: true
+      responses:
+        "200":
+          description:  Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  created:
+                    type: object
+                    properties:
+                      club_id:
+                        type: integer
+                required:
+                  - message
+                  - created
+                example:
+                  message: club created
+                  created:
+                    club_id: 5
+    delete:
+      tags:
+        - club
+      summary: Delete club info
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+              example:
+                id: 4
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  deleted:
+                    type: object
+                    properties:
+                      club_id:
+                        type: integer
+                required:
+                  - message
+                  - deleted
+                example:
+                  message: club deleted
+                  deleted:
+                    club_id: 4
+  /club/username:
+    post:
+      tags:
+        - club
+      summary: Check club's username uniqueness
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+              example:
+                username: joyfultennis
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  username:
+                    type: string
+                required:
+                  - message
+                  - username
+                example:
+                  message: 사용할 수 있는 아이디입니다
+                  username: joyfultennis
+        "409":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: 사용할 수 없는 아이디입니다
+  /club/id:
+    get:
+      tags:
+        - club
+      summary: Get club id by queries
+      parameters:
+        - name: username
+          in: query
+          description: club's username
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  club_id:
+                    type: integer
+                required:
+                  - club_id
+                example:
+                  club_id: 2
+  /club/password:
+    put:
+      tags:
+        - club
+      summary: Modify club password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                password:
+                  type: object
+                  properties:
+                    current:
+                      type: string
+                    new:
+                      type: string
+                  required:
+                    - current
+                    - new
+              required:
+                - id
+                - password
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updated:
+                    type: object
+                    properties:
+                      club_id:
+                        type: integer
+                    required:
+                      - club_id
+                required:
+                  - message
+                  - updated
+                example:
+                  message: password updated
+                  updated:
+                      club_id: 2
+        "401":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: 유효하지 않은 비밀번호입니다
+    post:
+      tags:
+        - club
+      summary: Reset club password
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  reset:
+                    type: object
+                    properties:
+                      club_id:
+                        type: integer
+                    required:
+                      - club_id
+                required:
+                  - message
+                  - reset
+                example:
+                  message: password reset
+                  reset:
+                      club_id: 2
+  /club/teacher:
+    put:
+      tags:
+        - club
+      summary: Modify club's teacher info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                updated:
+                  $ref: "#/components/schemas/TeacherInformation"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updated:
+                    type: object
+                    properties:
+                      teacher_id:
+                        type: integer
+                    required:
+                      - teacher_id
+                required:
+                  - message
+                  - updated
+                example:
+                  message: teacher updated
+                  updated:
+                      teacher_id: 1
+    post:
+      tags:
+        - club
+      summary: Add club's teacher info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                club_id: 
+                  type: integer
+                court_id: 
+                  type: integer
+              required:
+                - name
+                - club_id
+                - court_id
+              example:
+                name: 홍길동
+                club_id: 2
+                court_id: 1
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  created:
+                    type: object
+                    properties:
+                      teacher_id:
+                        type: integer
+                    required:
+                      - teacher_id
+                required:
+                  - message
+                  - created
+                example:
+                  message: teacher created
+                  created:
+                      teacher_id: 3
+    delete:
+      tags:
+        - club
+      summary: Delete club's teacher info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+              example:
+                id: 3
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  deleted:
+                    type: object
+                    properties:
+                      teacher_id:
+                        type: integer
+                    required:
+                      - teacher_id
+                required:
+                  - message
+                  - deleted
+                example:
+                  message: teacher deleted
+                  deleted:
+                      teacher_id: 3
+  /club/court:
+    put:
+      tags:
+        - club
+      summary: Modify club's court info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                updated:
+                  $ref: "#/components/schemas/CourtInformation"
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updated:
+                    type: object
+                    properties:
+                      court_id:
+                        type: integer
+                    required:
+                      - court_id
+                required:
+                  - message
+                  - updated
+                example:
+                  message: court updated
+                  updated:
+                      court_id: 1
+    post:
+      tags:
+        - club
+      summary: Add club's court info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                club_id: 
+                  type: integer
+              required:
+                - name
+                - club_id
+              example:
+                name: C
+                club_id: 3
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  created:
+                    type: object
+                    properties:
+                      court_id:
+                        type: integer
+                    required:
+                      - court_id
+                required:
+                  - message
+                  - created
+                example:
+                  message: court created
+                  created:
+                      court_id: 3
+    delete:
+      tags:
+        - club
+      summary: Delete club's court info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+              example:
+                id: 3
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  deleted:
+                    type: object
+                    properties:
+                      court_id:
+                        type: integer
+                    required:
+                      - court_id
+                required:
+                  - message
+                  - deleted
+                example:
+                  message: court deleted
+                  deleted:
+                      court_id: 3
+  /student:
+    get:
+      tags:
+        - student
+      summary: Get student info
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  students:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/StudentInformation"
+                required:
+                  - students
+    put:
+      tags:
+        - student
+      summary: Modify student info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                updated:
+                  $ref: "#/components/schemas/StudentInformation"
+              required:
+                - updated
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updated:
+                    type: object
+                    properties:
+                      student_id:
+                        type: integer
+                    required: 
+                      - student_id
+                required:
+                  - message
+                  - updated
+                example:
+                  message: student updated
+                  updated: 
+                    student_id: 1
+    post:
+      tags:
+        - student
+      summary: Add student info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                student:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    club_id:
+                      type: integer
+                    teacher_id:
+                      type: integer
+                    start_date:
+                      type: string
+                    count:
+                      type: integer
+                days:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - student
+                - days
+              example:
+                student:
+                  id: 1
+                  name: 이희진
+                  club_id: 2
+                  teacher_id: 1
+                  start_date: "2022-01-15"
+                  count: 8
+                days: 
+                  - 2
+                  - 6
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  created:
+                    type: object
+                    properties:
+                      student_id:
+                        type: integer
+                    required: 
+                      - student_id
+                required:
+                  - message
+                  - created
+                example:
+                  message: student created
+                  created: 
+                    student_id: 1
+    delete:
+      tags:
+        - student
+      summary: Delete student info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+              example:
+                id: 3
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  deleted:
+                    type: object
+                    properties:
+                      student_id:
+                        type: integer
+                    required: 
+                      - student_id
+                required:
+                  - message
+                  - deleted
+                example:
+                  message: student deleted
+                  deleted: 
+                    student_id: 3
+  /util/password:
+    get:
+      tags:
+        - util
+      summary: Get temporary password
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tempPassword:
+                    type: string
+                required:
+                  - tempPassword
+                example:
+                  tempPassword: random-password
+  /util/message/code:
+    post:
+      tags:
+        - util
+      summary: Send verification SMS
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tel:
+                  type: string
+              required:
+                - tel
+              example:
+                tel: 010-1234-5678
+      responses:
+        "201":
+          description: Ok
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  verificationCode:
+                    type: string
+                required:
+                  - message
+                  - verificationCode
+                example:
+                  message: Verification SMS sent
+                  verificationCode: "123456"
+        "404":
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: Verification SMS not sent
+components:
+  schemas:
+    AuthErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      example:
+        message: 인증 오류
+    AuthInvalidMessage:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      example:
+        message: 유효하지 않은 아이디 또는 비밀번호입니다
+    AuthClubResponse:
+      type: object
+      properties:
+        is_admin:
+          type: boolean
+        temp:
+          type: boolean
+        info:
+          type: object
+          properties:
+            id:
+              type: integer
+            username:
+              type: string
+            clubname:
+              type: string
+            tel:
+              type: string
+            days: 
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name: 
+                    type: string
+            teachers: 
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name: 
+                    type: string
+                  club_id: 
+                    type: integer
+                  court_id: 
+                    type: integer
+            courts: 
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name: 
+                    type: string
+                  club_id: 
+                    type: integer
+          required:
+            - id
+            - username
+      example:
+        is_admin: false
+        temp: false
+        info:
+          id: 2
+          username: happytennis
+          clubname: 해피테니스
+          tel: 010-1234-5678
+          days:
+            - id: 1
+              name: 월
+            - id: 2
+              name: 화
+            - id: 3
+              name: 수
+            - id: 4
+              name: 목
+            - id: 5
+              name: 금
+            - id: 6
+              name: 토
+            - id: 7
+              name: 일
+          teachers:
+            - id: 1
+              name: 김철수
+              club_id: 2
+              court_id: 1
+            - id: 2
+              name: 박영희
+              club_id: 2
+              court_id: 3
+          courts:
+            - id: 1
+              name: A
+              club_id: 2
+            - id: 2
+              name: B
+              club_id: 2
+            - id: 3
+              name: C
+              club_id: 2
+    AdminInformation:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        clubname:
+          type: string
+        password:
+          type: string
+        tel:
+          type: string
+        temp: 
+          type: boolean
+        is_admin: 
+          type: boolean
+      required:
+        - id
+      example:
+        id: 1
+        username: admin1
+        clubname: null
+        password: "1234"
+        tel: null
+        temp: false
+        is_admin: true
+    TempInformation:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        clubname:
+          type: string
+        password:
+          type: string
+        tel:
+          type: string
+        temp: 
+          type: boolean
+        is_admin: 
+          type: boolean
+      required:
+        - id
+      example:
+        id: 3
+        username: null
+        clubname: letstennis
+        password: randomrandom-password
+        tel: null
+        temp: true
+        is_admin: false
+    ClubInformation:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        clubname:
+          type: string
+        password:
+          type: string
+        tel:
+          type: string
+        temp: 
+          type: boolean
+        is_admin: 
+          type: boolean
+      required:
+        - id
+      example:
+        id: 2
+        username: 해피테니스
+        clubname: happytennis
+        tel: 010-1234-5678
+        temp: false
+        is_admin: false
+    StudentInformation:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        club_id:
+          type: integer
+        teacher_id:
+          type: integer
+        start_date:
+          type: string
+        count:
+          type: integer
+        days:
+          type: array
+          items:
+            type: integer
+      example:
+        id: 1
+        name: 이희진
+        club_id: 2
+        teacher_id: 1
+        start_date: "2022-01-15"
+        count: 8
+        days:
+          - 2
+          - 6
+    TeacherInformation:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        club_id: 
+          type: integer
+        court_id: 
+          type: integer
+      required:
+        - id
+      example:
+        id: 1
+        name: 김철수
+        club_id: 2
+        court_id: 1
+    CourtInformation:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        club_id: 
+          type: integer
+      required:
+        - id
+      example:
+        id: 1
+        name: A
+        club_id: 2
