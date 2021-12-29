@@ -28,59 +28,104 @@
 # 🔥 Final App View
 
 <details>
-  <summary>관리자 페이지</summary>
-  <div markdown="1">       
-    <br>
-    <ul>
-      <li>관리자 계정 생성</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    <br>
-      <li>임시 계정 생성</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    <br>
-      <li>계정 정보 수정</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    </ul>
-  </div>
+<summary>관리자 페이지</summary>
+<div markdown="1"> 
+      
+#### 계정 목록 열람
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/1.png" width="1000">
+
+#### 관리자 계정 생성
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/2.gif" width="1000">
+
+#### 임시 계정 생성
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/3.gif" width="1000">
+
+#### 계정 정보 수정
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/4.gif" width="1000">
+
+#### 계정 정보 삭제
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/5.gif" width="1000">
+
+</div>
 </details>
 
 <details>
-  <summary>로그인</summary>
-  <div markdown="1">       
-    <br>
-    <ul>
-      <li>[임시계정] 마이페이지로 리디렉션</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    <br>
-      <li>[일반계정] 회원관리 페이지로 리디렉션</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    </ul>
-  </div>
+<summary>로그인</summary>
+<div markdown="1"> 
+      
+#### 관리자 계정 로그인
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/6-1.gif" width="1000">
+
+#### 임시 계정 로그인
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/6-2.gif" width="1000">
+
+#### 일반 계정 로그인
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/6-3.gif" width="1000">
+
+#### 비밀번호 찾기
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/7.gif" width="1000">
+
+</div>
 </details>
 
 <details>
-  <summary>마이페이지</summary>
-  <div markdown="1">       
-    <br>
-    <ul>
-      <li>[임시계정] 비밀번호 초기 변경 후 일반계정으로 전환</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    <br>
-      <li>[일반계정] 프로필 수정</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    <br>
-      <li>[일반계정] 코트 & 강사 정보 입력 및 수정</li>
-      <img src="데스크탑이미지주소" width="600">
-      <img src="모바일이미지주소" width="230">
-    </ul>
-  </div>
+<summary>마이페이지</summary>
+<div markdown="1"> 
+      
+#### 비밀번호 변경
+> 임시 계정 상태애서 초기 비밀번호 변경 후 일반 계정으로 전환
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/8.gif" width="1000">
+
+#### 테니스장 프로필 변경
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/9.gif" width="1000">
+
+#### 테니스장 코트 & 강사 목록 열람
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/10.png" width="1000">
+
+#### 테니스장 코트 & 강사 정보 입력
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/11.gif" width="1000">
+
+#### 테니스장 코트 & 강사 정보 수정
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/12.gif" width="1000">
+
+#### 테니스장 코트 & 강사 정보 삭제
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/13.gif" width="1000">
+
+</div>
+</details>
+
+<details>
+<summary>회원 관리</summary>
+<div markdown="1"> 
+      
+#### 회원 정보 목록 열람
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/14.gif" width="1000">
+
+#### 회원 정보 입력
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/15.gif" width="1000">
+
+#### 회원 정보 수정
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/16.gif" width="1000">
+
+#### 회원 정보 삭제
+
+<img src="https://raw.githubusercontent.com/ssumniee/tennis-note/dev/client/public/final-app-views/17.gif" width="1000">
+
+</div>
 </details>
 
 <br>
