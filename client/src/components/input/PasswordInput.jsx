@@ -97,7 +97,8 @@ const PasswordInput = ({
   fontSize,
   placeholder,
   blurred,
-  random,
+  isAdmin,
+  isTemp,
   autoFocus,
 }) => {
   const input = useRef(null);
@@ -130,23 +131,23 @@ const PasswordInput = ({
       }}
     >
       <InputInner
-        type={!random && (blurred || !isVisible) ? "password" : "text"}
+        type={!isTemp && !isAdmin && (blurred || !isVisible) ? "password" : "text"}
         value={inputValue}
-        onChange={!random ? handleInputChange : undefined}
-        readOnly={random}
+        onChange={!isTemp ? handleInputChange : undefined}
+        readOnly={isTemp}
         placeholder={placeholder}
         tabIndex="-1"
         ref={input}
         autoFocus={autoFocus}
       />
-      {random ? (
+      {isTemp ? (
         <RefreshBtn type="button" onClick={handleInputRefresh} tabIndex="-1">
           <FiRefreshCw />
         </RefreshBtn>
       ) : (
         !!inputValue && (
           <>
-            {!blurred && (
+            {!isAdmin && !blurred && (
               <ShowBtn type="button" tabIndex="-1">
                 {isVisible ? (
                   <HiEyeOff
@@ -175,7 +176,8 @@ const PasswordInput = ({
 
 PasswordInput.defaultProps = {
   blurred: false,
-  random: false,
+  isAdmin: false,
+  isTemp: false,
   autoFocus: false,
 };
 
@@ -186,7 +188,8 @@ PasswordInput.propTypes = {
   setInputValue: PropTypes.func.isRequired,
   fontSize: PropTypes.number,
   blurred: PropTypes.bool,
-  random: PropTypes.bool,
+  isAdmin: PropTypes.bool,
+  isTemp: PropTypes.bool,
   placeholder: PropTypes.string,
   autoFocus: PropTypes.bool,
 };

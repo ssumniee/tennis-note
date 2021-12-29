@@ -86,7 +86,8 @@ const ClubCell = ({ content, isOnHead, isEditing, tableInfo, setTableInfo, child
               content={content}
               inputValue={tableInfo.password || ""}
               setInputValue={setTableInfo}
-              random={!tableInfo.is_admin}
+              isAdmin={tableInfo.is_admin || false}
+              isTemp={tableInfo.temp || false}
               placeholder="비밀번호"
             />
           )}
