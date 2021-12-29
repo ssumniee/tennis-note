@@ -124,7 +124,7 @@ const MultiSelectInput = ({
         inputProps={{ tabIndex: "-1" }}
       >
         {list.map((item, idx) => (
-          <MenuItem key={idx} value={item.id}>
+          <MenuItem key={idx} value={item.id} disabled={item.off}>
             {item.name}
           </MenuItem>
         ))}
